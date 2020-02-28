@@ -478,7 +478,6 @@ PullTarget = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_PULLTARGET,
         __module__="google.cloud.tasks_v2beta2.proto.target_pb2",
         __doc__="""Pull target.
-  
   """,
         # @@protoc_insertion_point(class_scope:google.cloud.tasks.v2beta2.PullTarget)
     ),
