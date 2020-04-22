@@ -137,17 +137,8 @@ class CloudTasksGrpcTransport(object):
     def create_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.create_queue`.
 
-        Creates a queue.
-
-        Queues created with this method allow tasks to live for a maximum of 31
-        days. After a task is 31 days old, the task will be deleted regardless
-        of whether it was dispatched or not.
-
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        Configuration options for writing logs to `Stackdriver
+        Logging <https://cloud.google.com/logging/docs/>`__.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -160,20 +151,13 @@ class CloudTasksGrpcTransport(object):
     def update_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.update_queue`.
 
-        Updates a queue.
+        If specified, an `OAuth
+        token <https://developers.google.com/identity/protocols/OAuth2>`__ will
+        be generated and attached as an ``Authorization`` header in the HTTP
+        request.
 
-        This method creates the queue if it does not exist and updates the queue
-        if it does exist.
-
-        Queues created with this method allow tasks to live for a maximum of 31
-        days. After a task is 31 days old, the task will be deleted regardless
-        of whether it was dispatched or not.
-
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        This type of authorization should generally only be used when calling
+        Google APIs hosted on \*.googleapis.com.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -186,18 +170,7 @@ class CloudTasksGrpcTransport(object):
     def delete_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.delete_queue`.
 
-        Deletes a queue.
-
-        This command will delete the queue even if it has tasks in it.
-
-        Note: If you delete a queue, a queue with the same name can't be created
-        for 7 days.
-
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        Request message for getting a task using ``GetTask``.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -228,11 +201,10 @@ class CloudTasksGrpcTransport(object):
     def pause_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.pause_queue`.
 
-        Pauses the queue.
-
-        If a queue is paused then the system will stop dispatching tasks until
-        the queue is resumed via ``ResumeQueue``. Tasks can still be added when
-        the queue is paused. A queue is paused if its ``state`` is ``PAUSED``.
+        Specifies the fraction of operations to write to `Stackdriver
+        Logging <https://cloud.google.com/logging/docs/>`__. This field may
+        contain any value between 0.0 and 1.0, inclusive. 0.0 is the default and
+        means that no operations are logged.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -245,16 +217,8 @@ class CloudTasksGrpcTransport(object):
     def resume_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.resume_queue`.
 
-        Resume a queue.
-
-        This method resumes a queue after it has been ``PAUSED`` or
-        ``DISABLED``. The state of a queue is stored in the queue's ``state``;
-        after calling this method it will be set to ``RUNNING``.
-
-        WARNING: Resuming many high-QPS queues at the same time can lead to
-        target overloading. If you are resuming high-QPS queues, follow the
-        500/50/5 pattern described in `Managing Cloud Tasks Scaling
-        Risks <https://cloud.google.com/tasks/docs/manage-cloud-task-scaling>`__.
+        Required. The task name. For example:
+        ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -267,14 +231,14 @@ class CloudTasksGrpcTransport(object):
     def get_iam_policy(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.get_iam_policy`.
 
-        Gets the access control policy for a ``Queue``. Returns an empty policy
-        if the resource exists and does not have a policy set.
+        If specified, an
+        `OIDC <https://developers.google.com/identity/protocols/OpenIDConnect>`__
+        token will be generated and attached as an ``Authorization`` header in
+        the HTTP request.
 
-        Authorization requires the following `Google
-        IAM <https://cloud.google.com/iam>`__ permission on the specified
-        resource parent:
-
-        -  ``cloudtasks.queues.getIamPolicy``
+        This type of authorization can be used for many scenarios, including
+        calling Cloud Run, or endpoints where you intend to validate the token
+        yourself.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -287,17 +251,37 @@ class CloudTasksGrpcTransport(object):
     def set_iam_policy(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.set_iam_policy`.
 
-        Sets the access control policy for a ``Queue``. Replaces any existing
-        policy.
+        Protocol Buffers - Google's data interchange format Copyright 2008
+        Google Inc. All rights reserved.
+        https://developers.google.com/protocol-buffers/
 
-        Note: The Cloud Console does not check queue-level IAM permissions yet.
-        Project-level permissions are required to use the Cloud Console.
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are
+        met:
 
-        Authorization requires the following `Google
-        IAM <https://cloud.google.com/iam>`__ permission on the specified
-        resource parent:
+        ::
 
-        -  ``cloudtasks.queues.setIamPolicy``
+            * Redistributions of source code must retain the above copyright
+
+        notice, this list of conditions and the following disclaimer. \*
+        Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution. \*
+        Neither the name of Google Inc. nor the names of its contributors may be
+        used to endorse or promote products derived from this software without
+        specific prior written permission.
+
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+        IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+        TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+        OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+        EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+        PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+        LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+        SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -310,13 +294,18 @@ class CloudTasksGrpcTransport(object):
     def test_iam_permissions(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.test_iam_permissions`.
 
-        Returns permissions that a caller has on a ``Queue``. If the resource
-        does not exist, this will return an empty set of permissions, not a
-        ``NOT_FOUND`` error.
+        App Engine HTTP queue.
 
-        Note: This operation is designed to be used for building
-        permission-aware UIs and command-line tools, not for authorization
-        checking. This operation may "fail open" without warning.
+        The task will be delivered to the App Engine application hostname
+        specified by its ``AppEngineHttpQueue`` and ``AppEngineHttpRequest``.
+        The documentation for ``AppEngineHttpRequest`` explains how the task's
+        host URL is constructed.
+
+        Using ``AppEngineHttpQueue`` requires
+        ```appengine.applications.get`` <https://cloud.google.com/appengine/docs/admin-api/access-control>`__
+        Google IAM permission for the project and the following scope:
+
+        ``https://www.googleapis.com/auth/cloud-platform``
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -329,14 +318,17 @@ class CloudTasksGrpcTransport(object):
     def list_tasks(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.list_tasks`.
 
-        Lists the tasks in a queue.
+        Creates a queue.
 
-        By default, only the ``BASIC`` view is retrieved due to performance
-        considerations; ``response_view`` controls the subset of information
-        which is returned.
+        Queues created with this method allow tasks to live for a maximum of 31
+        days. After a task is 31 days old, the task will be deleted regardless
+        of whether it was dispatched or not.
 
-        The tasks may be returned in any order. The ordering may change at any
-        time.
+        WARNING: Using this method may have unintended side effects if you are
+        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
+        queues. Read `Overview of Queue Management and
+        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
+        using this method.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -362,11 +354,17 @@ class CloudTasksGrpcTransport(object):
     def create_task(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.create_task`.
 
-        Creates a task and adds it to a queue.
+        The response_view specifies which subset of the ``Task`` will be
+        returned.
 
-        Tasks cannot be updated after creation; there is no UpdateTask command.
+        By default response_view is ``BASIC``; not all information is retrieved
+        by default because some data, such as payloads, might be desirable to
+        return only when needed because of its large size or because of the
+        sensitivity of data that it contains.
 
-        -  The maximum task size is 100KB.
+        Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
+        `Google IAM <https://cloud.google.com/iam/>`__ permission on the
+        ``Task`` resource.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -396,27 +394,11 @@ class CloudTasksGrpcTransport(object):
     def run_task(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.run_task`.
 
-        Forces a task to run now.
+        Overrides for the ``task-level app_engine_routing``.
 
-        When this method is called, Cloud Tasks will dispatch the task, even if
-        the task is already running, the queue has reached its ``RateLimits`` or
-        is ``PAUSED``.
-
-        This command is meant to be used for manual debugging. For example,
-        ``RunTask`` can be used to retry a failed task after a fix has been made
-        or to manually force a task to be dispatched now.
-
-        The dispatched task is returned. That is, the task that is returned
-        contains the ``status`` after the task is dispatched but before the task
-        is received by its target.
-
-        If Cloud Tasks receives a successful response from the task's target,
-        then the task will be deleted; otherwise the task's ``schedule_time``
-        will be reset to the time that ``RunTask`` was called plus the retry
-        delay specified in the queue's ``RetryConfig``.
-
-        ``RunTask`` returns ``NOT_FOUND`` when it is called on a task that has
-        already succeeded or permanently failed.
+        If set, ``app_engine_routing_override`` is used for all tasks in the
+        queue, no matter what the setting is for the
+        ``task-level app_engine_routing``.
 
         Returns:
             Callable: A callable which accepts the appropriate

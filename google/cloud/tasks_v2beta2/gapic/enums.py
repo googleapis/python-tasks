@@ -47,32 +47,20 @@ class Queue(object):
 
         Attributes:
           STATE_UNSPECIFIED (int): Unspecified state.
-          RUNNING (int): The queue is running. Tasks can be dispatched.
+          RUNNING (int): Required. The queue name. For example:
+          ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
+          PAUSED (int): javalite_serializable
+          DISABLED (int): A generic empty message that you can re-use to avoid defining
+          duplicated empty messages in your APIs. A typical example is to use it
+          as the request or the response type of an API method. For instance:
 
-          If the queue was created using Cloud Tasks and the queue has had no
-          activity (method calls or task dispatches) for 30 days, the queue may
-          take a few minutes to re-activate. Some method calls may return
-          ``NOT_FOUND`` and tasks may not be dispatched for a few minutes until
-          the queue has been re-activated.
-          PAUSED (int): Tasks are paused by the user. If the queue is paused then Cloud Tasks
-          will stop delivering tasks from it, but more tasks can still be added to
-          it by the user. When a pull queue is paused, all ``LeaseTasks`` calls
-          will return a ``FAILED_PRECONDITION``.
-          DISABLED (int): The queue is disabled.
+          ::
 
-          A queue becomes ``DISABLED`` when
-          `queue.yaml <https://cloud.google.com/appengine/docs/python/config/queueref>`__
-          or
-          `queue.xml <https://cloud.google.com/appengine/docs/standard/java/config/queueref>`__
-          is uploaded which does not contain the queue. You cannot directly
-          disable a queue.
+              service Foo {
+                rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
+              }
 
-          When a queue is disabled, tasks can still be added to a queue but the
-          tasks are not dispatched and ``LeaseTasks`` calls return a
-          ``FAILED_PRECONDITION`` error.
-
-          To permanently delete this queue and all of its tasks, call
-          ``DeleteQueue``.
+          The JSON representation for ``Empty`` is empty JSON object ``{}``.
         """
 
         STATE_UNSPECIFIED = 0
@@ -84,27 +72,40 @@ class Queue(object):
 class Task(object):
     class View(enum.IntEnum):
         """
-        The view specifies a subset of ``Task`` data.
+        ``filter`` can be used to specify a subset of tasks to lease.
 
-        When a task is returned in a response, not all information is retrieved
-        by default because some data, such as payloads, might be desirable to
-        return only when needed because of its large size or because of the
-        sensitivity of data that it contains.
+        When ``filter`` is set to ``tag=<my-tag>`` then the ``response`` will
+        contain only tasks whose ``tag`` is equal to ``<my-tag>``. ``<my-tag>``
+        must be less than 500 characters.
+
+        When ``filter`` is set to ``tag_function=oldest_tag()``, only tasks
+        which have the same tag as the task with the oldest ``schedule_time``
+        will be returned.
+
+        Grammar Syntax:
+
+        -  ``filter = "tag=" tag | "tag_function=" function``
+
+        -  ``tag = string``
+
+        -  ``function = "oldest_tag()"``
+
+        The ``oldest_tag()`` function returns tasks which have the same tag as
+        the oldest task (ordered by schedule time).
+
+        SDK compatibility: Although the SDK allows tags to be either string or
+        `bytes <https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/taskqueue/TaskOptions.html#tag-byte:A->`__,
+        only UTF-8 encoded tags can be used in Cloud Tasks. Tag which aren't
+        UTF-8 encoded can't be used in the ``filter`` and the task's ``tag``
+        will be displayed as empty in Cloud Tasks.
 
         Attributes:
           VIEW_UNSPECIFIED (int): Unspecified. Defaults to BASIC.
-          BASIC (int): The basic view omits fields which can be large or can contain sensitive
-          data.
-
-          This view does not include the (``payload in AppEngineHttpRequest`` and
-          ``payload in PullMessage``). These payloads are desirable to return only
-          when needed, because they can be large and because of the sensitivity of
-          the data that you choose to store in it.
-          FULL (int): All information is returned.
-
-          Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-          `Google IAM <https://cloud.google.com/iam/>`__ permission on the
-          ``Queue`` resource.
+          BASIC (int): Request message for ``DeleteQueue``.
+          FULL (int): JSON name of this field. The value is set by protocol compiler. If
+          the user has set a "json_name" option on this field, that option's value
+          will be used. Otherwise, it's deduced from the field's name by
+          converting it to camelCase.
         """
 
         VIEW_UNSPECIFIED = 0

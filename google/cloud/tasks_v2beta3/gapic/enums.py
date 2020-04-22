@@ -51,30 +51,131 @@ class Queue(object):
 
         Attributes:
           STATE_UNSPECIFIED (int): Unspecified state.
-          RUNNING (int): The queue is running. Tasks can be dispatched.
+          RUNNING (int): A simple descriptor of a resource type.
 
-          If the queue was created using Cloud Tasks and the queue has had no
-          activity (method calls or task dispatches) for 30 days, the queue may
-          take a few minutes to re-activate. Some method calls may return
-          ``NOT_FOUND`` and tasks may not be dispatched for a few minutes until
-          the queue has been re-activated.
+          ResourceDescriptor annotates a resource message (either by means of a
+          protobuf annotation or use in the service config), and associates the
+          resource's schema, the resource type, and the pattern of the resource
+          name.
+
+          Example:
+
+          ::
+
+              message Topic {
+                // Indicates this message defines a resource schema.
+                // Declares the resource type in the format of {service}/{kind}.
+                // For Kubernetes resources, the format is {api group}/{kind}.
+                option (google.api.resource) = {
+                  type: "pubsub.googleapis.com/Topic"
+                  name_descriptor: {
+                    pattern: "projects/{project}/topics/{topic}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Project"
+                    parent_name_extractor: "projects/{project}"
+                  }
+                };
+              }
+
+          The ResourceDescriptor Yaml config will look like:
+
+          ::
+
+              resources:
+              - type: "pubsub.googleapis.com/Topic"
+                name_descriptor:
+                  - pattern: "projects/{project}/topics/{topic}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Project"
+                    parent_name_extractor: "projects/{project}"
+
+          Sometimes, resources have multiple patterns, typically because they can
+          live under multiple parents.
+
+          Example:
+
+          ::
+
+              message LogEntry {
+                option (google.api.resource) = {
+                  type: "logging.googleapis.com/LogEntry"
+                  name_descriptor: {
+                    pattern: "projects/{project}/logs/{log}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Project"
+                    parent_name_extractor: "projects/{project}"
+                  }
+                  name_descriptor: {
+                    pattern: "folders/{folder}/logs/{log}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Folder"
+                    parent_name_extractor: "folders/{folder}"
+                  }
+                  name_descriptor: {
+                    pattern: "organizations/{organization}/logs/{log}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Organization"
+                    parent_name_extractor: "organizations/{organization}"
+                  }
+                  name_descriptor: {
+                    pattern: "billingAccounts/{billing_account}/logs/{log}"
+                    parent_type: "billing.googleapis.com/BillingAccount"
+                    parent_name_extractor: "billingAccounts/{billing_account}"
+                  }
+                };
+              }
+
+          The ResourceDescriptor Yaml config will look like:
+
+          ::
+
+              resources:
+              - type: 'logging.googleapis.com/LogEntry'
+                name_descriptor:
+                  - pattern: "projects/{project}/logs/{log}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Project"
+                    parent_name_extractor: "projects/{project}"
+                  - pattern: "folders/{folder}/logs/{log}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Folder"
+                    parent_name_extractor: "folders/{folder}"
+                  - pattern: "organizations/{organization}/logs/{log}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Organization"
+                    parent_name_extractor: "organizations/{organization}"
+                  - pattern: "billingAccounts/{billing_account}/logs/{log}"
+                    parent_type: "billing.googleapis.com/BillingAccount"
+                    parent_name_extractor: "billingAccounts/{billing_account}"
+
+          For flexible resources, the resource name doesn't contain parent names,
+          but the resource itself has parents for policy evaluation.
+
+          Example:
+
+          ::
+
+              message Shelf {
+                option (google.api.resource) = {
+                  type: "library.googleapis.com/Shelf"
+                  name_descriptor: {
+                    pattern: "shelves/{shelf}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Project"
+                  }
+                  name_descriptor: {
+                    pattern: "shelves/{shelf}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Folder"
+                  }
+                };
+              }
+
+          The ResourceDescriptor Yaml config will look like:
+
+          ::
+
+              resources:
+              - type: 'library.googleapis.com/Shelf'
+                name_descriptor:
+                  - pattern: "shelves/{shelf}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Project"
+                  - pattern: "shelves/{shelf}"
+                    parent_type: "cloudresourcemanager.googleapis.com/Folder"
           PAUSED (int): Tasks are paused by the user. If the queue is paused then Cloud
           Tasks will stop delivering tasks from it, but more tasks can
           still be added to it by the user.
-          DISABLED (int): The queue is disabled.
-
-          A queue becomes ``DISABLED`` when
-          `queue.yaml <https://cloud.google.com/appengine/docs/python/config/queueref>`__
-          or
-          `queue.xml <https://cloud.google.com/appengine/docs/standard/java/config/queueref>`__
-          is uploaded which does not contain the queue. You cannot directly
-          disable a queue.
-
-          When a queue is disabled, tasks can still be added to a queue but the
-          tasks are not dispatched.
-
-          To permanently delete this queue and all of its tasks, call
-          ``DeleteQueue``.
+          DISABLED (int): Request message for ``UpdateQueue``.
         """
 
         STATE_UNSPECIFIED = 0
@@ -86,26 +187,27 @@ class Queue(object):
 class Task(object):
     class View(enum.IntEnum):
         """
-        The view specifies a subset of ``Task`` data.
-
-        When a task is returned in a response, not all information is retrieved
-        by default because some data, such as payloads, might be desirable to
-        return only when needed because of its large size or because of the
-        sensitivity of data that it contains.
+        The status code, which should be an enum value of
+        ``google.rpc.Code``.
 
         Attributes:
           VIEW_UNSPECIFIED (int): Unspecified. Defaults to BASIC.
-          BASIC (int): The basic view omits fields which can be large or can contain sensitive
-          data.
+          BASIC (int): Request message for ``PauseQueue``.
+          FULL (int): Set true to use the old proto1 MessageSet wire format for
+          extensions. This is provided for backwards-compatibility with the
+          MessageSet wire format. You should not use this for any other reason:
+          It's less efficient, has fewer features, and is more complicated.
 
-          This view does not include the ``body in AppEngineHttpRequest``. Bodies
-          are desirable to return only when needed, because they can be large and
-          because of the sensitivity of the data that you choose to store in it.
-          FULL (int): All information is returned.
+          The message must be defined exactly as follows: message Foo { option
+          message_set_wire_format = true; extensions 4 to max; } Note that the
+          message cannot have any defined fields; MessageSets only have
+          extensions.
 
-          Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-          `Google IAM <https://cloud.google.com/iam/>`__ permission on the
-          ``Queue`` resource.
+          All extensions of your type must be singular messages; e.g. they cannot
+          be int32s, enums, or repeated messages.
+
+          Because this is an option, the above two restrictions are not enforced
+          by the protocol compiler.
         """
 
         VIEW_UNSPECIFIED = 0

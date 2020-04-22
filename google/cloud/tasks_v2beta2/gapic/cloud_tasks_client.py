@@ -262,18 +262,19 @@ class CloudTasksClient(object):
             ...         pass
 
         Args:
-            parent (str): Required. The location name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID``
-            filter_ (str): ``filter`` can be used to specify a subset of queues. Any ``Queue``
-                field can be used as a filter and several operators as supported. For
-                example: ``<=, <, >=, >, !=, =, :``. The filter syntax is the same as
-                described in `Stackdriver's Advanced Logs
-                Filters <https://cloud.google.com/logging/docs/view/advanced_filters>`__.
+            parent (str): App Engine HTTP target.
 
-                Sample filter "app\_engine\_http\_target: \*".
+                The task will be delivered to the App Engine application hostname
+                specified by its ``AppEngineHttpTarget`` and ``AppEngineHttpRequest``.
+                The documentation for ``AppEngineHttpRequest`` explains how the task's
+                host URL is constructed.
 
-                Note that using filters might cause fewer queues than the
-                requested\_page size to be returned.
+                Using ``AppEngineHttpTarget`` requires
+                ```appengine.applications.get`` <https://cloud.google.com/appengine/docs/admin-api/access-control>`__
+                Google IAM permission for the project and the following scope:
+
+                ``https://www.googleapis.com/auth/cloud-platform``
+            filter_ (str): Request message for getting a task using ``GetTask``.
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -363,8 +364,45 @@ class CloudTasksClient(object):
             >>> response = client.get_queue(name)
 
         Args:
-            name (str): Required. The resource name of the queue. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
+            name (str): If this SourceCodeInfo represents a complete declaration, these are
+                any comments appearing before and after the declaration which appear to
+                be attached to the declaration.
+
+                A series of line comments appearing on consecutive lines, with no other
+                tokens appearing on those lines, will be treated as a single comment.
+
+                leading_detached_comments will keep paragraphs of comments that appear
+                before (but not connected to) the current element. Each paragraph,
+                separated by empty lines, will be one comment element in the repeated
+                field.
+
+                Only the comment content is provided; comment markers (e.g. //) are
+                stripped out. For block comments, leading whitespace and an asterisk
+                will be stripped from the beginning of each line other than the first.
+                Newlines are included in the output.
+
+                Examples:
+
+                optional int32 foo = 1; // Comment attached to foo. // Comment attached
+                to bar. optional int32 bar = 2;
+
+                optional string baz = 3; // Comment attached to baz. // Another line
+                attached to baz.
+
+                // Comment attached to qux. // // Another line attached to qux. optional
+                double qux = 4;
+
+                // Detached comment for corge. This is not leading or trailing comments
+                // to qux or corge because there are blank lines separating it from //
+                both.
+
+                // Detached comment for corge paragraph 2.
+
+                optional string corge = 5; /\* Block comment attached \* to corge.
+                Leading asterisks \* will be removed. */ /* Block comment attached to \*
+                grault. \*/ optional int32 grault = 6;
+
+                // ignored detached comments.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -422,17 +460,44 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Creates a queue.
+        A Location identifies a piece of source code in a .proto file which
+        corresponds to a particular definition. This information is intended to
+        be useful to IDEs, code indexers, documentation generators, and similar
+        tools.
 
-        Queues created with this method allow tasks to live for a maximum of 31
-        days. After a task is 31 days old, the task will be deleted regardless
-        of whether it was dispatched or not.
+        For example, say we have a file like: message Foo { optional string foo
+        = 1; } Let's look at just the field definition: optional string foo = 1;
+        ^ ^^ ^^ ^ ^^^ a bc de f ghi We have the following locations: span path
+        represents [a,i) [ 4, 0, 2, 0 ] The whole field definition. [a,b) [ 4,
+        0, 2, 0, 4 ] The label (optional). [c,d) [ 4, 0, 2, 0, 5 ] The type
+        (string). [e,f) [ 4, 0, 2, 0, 1 ] The name (foo). [g,h) [ 4, 0, 2, 0, 3
+        ] The number (1).
 
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        Notes:
+
+        -  A location may refer to a repeated field itself (i.e. not to any
+           particular index within it). This is used whenever a set of elements
+           are logically enclosed in a single code segment. For example, an
+           entire extend block (possibly containing multiple extension
+           definitions) will have an outer location whose path refers to the
+           "extensions" repeated field without an index.
+        -  Multiple locations may have the same path. This happens when a single
+           logical declaration is spread out across multiple places. The most
+           obvious example is the "extend" block again -- there may be multiple
+           extend blocks in the same scope, each of which will have the same
+           path.
+        -  A location's span is not always a subset of its parent's span. For
+           example, the "extendee" of an extension declaration appears at the
+           beginning of the "extend" block and is shared by all extensions
+           within the block.
+        -  Just because a location's span is a subset of some other location's
+           span does not mean that it is a descendant. For example, a "group"
+           defines both a type and a field in a single declaration. Thus, the
+           locations corresponding to the type and field and their components
+           will overlap.
+        -  Code which tries to interpret locations should probably be designed
+           to ignore those that it doesn't understand, as more types of
+           locations could be recorded in the future.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -447,14 +512,22 @@ class CloudTasksClient(object):
             >>> response = client.create_queue(parent, queue)
 
         Args:
-            parent (str): Required. The location name in which the queue will be created. For
-                example: ``projects/PROJECT_ID/locations/LOCATION_ID``
+            parent (str): Pauses the queue.
 
-                The list of allowed locations can be obtained by calling Cloud Tasks'
-                implementation of ``ListLocations``.
-            queue (Union[dict, ~google.cloud.tasks_v2beta2.types.Queue]): Required. The queue to create.
+                If a queue is paused then the system will stop dispatching tasks until
+                the queue is resumed via ``ResumeQueue``. Tasks can still be added when
+                the queue is paused. A queue is paused if its ``state`` is ``PAUSED``.
+            queue (Union[dict, ~google.cloud.tasks_v2beta2.types.Queue]): The response_view specifies which subset of the ``Task`` will be
+                returned.
 
-                ``Queue's name`` cannot be the same as an existing queue.
+                By default response_view is ``BASIC``; not all information is retrieved
+                by default because some data, such as payloads, might be desirable to
+                return only when needed because of its large size or because of the
+                sensitivity of data that it contains.
+
+                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
+                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
+                ``Task`` resource.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Queue`
@@ -515,20 +588,14 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Updates a queue.
+        A token identifying the page of results to return.
 
-        This method creates the queue if it does not exist and updates the queue
-        if it does exist.
+        To request the first page results, page_token must be empty. To request
+        the next page of results, page_token must be the value of
+        ``next_page_token`` returned from the previous call to ``ListTasks``
+        method.
 
-        Queues created with this method allow tasks to live for a maximum of 31
-        days. After a task is 31 days old, the task will be deleted regardless
-        of whether it was dispatched or not.
-
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        The page token is valid for only 2 hours.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -541,13 +608,14 @@ class CloudTasksClient(object):
             >>> response = client.update_queue(queue)
 
         Args:
-            queue (Union[dict, ~google.cloud.tasks_v2beta2.types.Queue]): Required. The queue to create or update.
+            queue (Union[dict, ~google.cloud.tasks_v2beta2.types.Queue]): The ``Status`` type defines a logical error model that is suitable
+                for different programming environments, including REST APIs and RPC
+                APIs. It is used by `gRPC <https://github.com/grpc>`__. Each ``Status``
+                message contains three pieces of data: error code, error message, and
+                error details.
 
-                The queue's ``name`` must be specified.
-
-                Output only fields cannot be modified using UpdateQueue. Any value
-                specified for an output only field will be ignored. The queue's ``name``
-                cannot be changed.
+                You can find out more about this error model and how to work with it in
+                the `API Design Guide <https://cloud.google.com/apis/design/errors>`__.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Queue`
@@ -615,18 +683,95 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Deletes a queue.
+        ``Any`` contains an arbitrary serialized protocol buffer message
+        along with a URL that describes the type of the serialized message.
 
-        This command will delete the queue even if it has tasks in it.
+        Protobuf library provides support to pack/unpack Any values in the form
+        of utility functions or additional generated methods of the Any type.
 
-        Note: If you delete a queue, a queue with the same name can't be created
-        for 7 days.
+        Example 1: Pack and unpack a message in C++.
 
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        ::
+
+            Foo foo = ...;
+            Any any;
+            any.PackFrom(foo);
+            ...
+            if (any.UnpackTo(&foo)) {
+              ...
+            }
+
+        Example 2: Pack and unpack a message in Java.
+
+        ::
+
+            Foo foo = ...;
+            Any any = Any.pack(foo);
+            ...
+            if (any.is(Foo.class)) {
+              foo = any.unpack(Foo.class);
+            }
+
+        Example 3: Pack and unpack a message in Python.
+
+        ::
+
+            foo = Foo(...)
+            any = Any()
+            any.Pack(foo)
+            ...
+            if any.Is(Foo.DESCRIPTOR):
+              any.Unpack(foo)
+              ...
+
+        Example 4: Pack and unpack a message in Go
+
+        ::
+
+             foo := &pb.Foo{...}
+             any, err := ptypes.MarshalAny(foo)
+             ...
+             foo := &pb.Foo{}
+             if err := ptypes.UnmarshalAny(any, foo); err != nil {
+               ...
+             }
+
+        The pack methods provided by protobuf library will by default use
+        'type.googleapis.com/full.type.name' as the type URL and the unpack
+        methods only use the fully qualified type name after the last '/' in the
+        type URL, for example "foo.bar.com/x/y.z" will yield type name "y.z".
+
+        # JSON
+
+        The JSON representation of an ``Any`` value uses the regular
+        representation of the deserialized, embedded message, with an additional
+        field ``@type`` which contains the type URL. Example:
+
+        ::
+
+            package google.profile;
+            message Person {
+              string first_name = 1;
+              string last_name = 2;
+            }
+
+            {
+              "@type": "type.googleapis.com/google.profile.Person",
+              "firstName": <string>,
+              "lastName": <string>
+            }
+
+        If the embedded message type is well-known and has a custom JSON
+        representation, that representation will be embedded adding a field
+        ``value`` which holds the custom JSON in addition to the ``@type``
+        field. Example (for message ``google.protobuf.Duration``):
+
+        ::
+
+            {
+              "@type": "type.googleapis.com/google.protobuf.Duration",
+              "value": "1.212s"
+            }
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -638,8 +783,8 @@ class CloudTasksClient(object):
             >>> client.delete_queue(name)
 
         Args:
-            name (str): Required. The queue name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
+            name (str): The status code, which should be an enum value of
+                ``google.rpc.Code``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -710,8 +855,16 @@ class CloudTasksClient(object):
             >>> response = client.purge_queue(name)
 
         Args:
-            name (str): Required. The queue name. For example:
-                ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
+            name (str): Resume a queue.
+
+                This method resumes a queue after it has been ``PAUSED`` or
+                ``DISABLED``. The state of a queue is stored in the queue's ``state``;
+                after calling this method it will be set to ``RUNNING``.
+
+                WARNING: Resuming many high-QPS queues at the same time can lead to
+                target overloading. If you are resuming high-QPS queues, follow the
+                500/50/5 pattern described in `Managing Cloud Tasks Scaling
+                Risks <https://cloud.google.com/tasks/docs/manage-cloud-task-scaling>`__.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -768,11 +921,32 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Pauses the queue.
+        A URL/resource name that uniquely identifies the type of the
+        serialized protocol buffer message. This string must contain at least
+        one "/" character. The last segment of the URL's path must represent the
+        fully qualified name of the type (as in
+        ``path/google.protobuf.Duration``). The name should be in a canonical
+        form (e.g., leading "." is not accepted).
 
-        If a queue is paused then the system will stop dispatching tasks until
-        the queue is resumed via ``ResumeQueue``. Tasks can still be added when
-        the queue is paused. A queue is paused if its ``state`` is ``PAUSED``.
+        In practice, teams usually precompile into the binary all types that
+        they expect it to use in the context of Any. However, for URLs which use
+        the scheme ``http``, ``https``, or no scheme, one can optionally set up
+        a type server that maps type URLs to message definitions as follows:
+
+        -  If no scheme is provided, ``https`` is assumed.
+        -  An HTTP GET on the URL must yield a ``google.protobuf.Type`` value in
+           binary format, or produce an error.
+        -  Applications are allowed to cache lookup results based on the URL, or
+           have them precompiled into a binary to avoid any lookup. Therefore,
+           binary compatibility needs to be preserved on changes to types. (Use
+           versioned type names to manage breaking changes.)
+
+        Note: this functionality is not currently available in the official
+        protobuf release, and it is not used for type URLs beginning with
+        type.googleapis.com.
+
+        Schemes other than ``http``, ``https`` (or the empty scheme) might be
+        used with implementation specific semantics.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -784,8 +958,45 @@ class CloudTasksClient(object):
             >>> response = client.pause_queue(name)
 
         Args:
-            name (str): Required. The queue name. For example:
-                ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
+            name (str): HTTP request headers.
+
+                This map contains the header field names and values. Headers can be set
+                when the ``task is created``. Repeated headers are not supported but a
+                header value can contain commas.
+
+                Cloud Tasks sets some headers to default values:
+
+                -  ``User-Agent``: By default, this header is
+                   ``"AppEngine-Google; (+http://code.google.com/appengine)"``. This
+                   header can be modified, but Cloud Tasks will append
+                   ``"AppEngine-Google; (+http://code.google.com/appengine)"`` to the
+                   modified ``User-Agent``.
+
+                If the task has a ``payload``, Cloud Tasks sets the following headers:
+
+                -  ``Content-Type``: By default, the ``Content-Type`` header is set to
+                   ``"application/octet-stream"``. The default can be overridden by
+                   explicitly setting ``Content-Type`` to a particular media type when
+                   the ``task is created``. For example, ``Content-Type`` can be set to
+                   ``"application/json"``.
+                -  ``Content-Length``: This is computed by Cloud Tasks. This value is
+                   output only. It cannot be changed.
+
+                The headers below cannot be set or overridden:
+
+                -  ``Host``
+                -  ``X-Google-*``
+                -  ``X-AppEngine-*``
+
+                In addition, Cloud Tasks sets some headers when the task is dispatched,
+                such as headers containing information about the task; see `request
+                headers <https://cloud.google.com/appengine/docs/python/taskqueue/push/creating-handlers#reading_request_headers>`__.
+                These headers are set only when the task is dispatched, so they are not
+                visible when the task is returned in a Cloud Tasks response.
+
+                Although there is no specific limit for the maximum number of headers or
+                the size, there is a limit on the maximum size of the ``Task``. For more
+                information, see the ``CreateTask`` documentation.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -842,16 +1053,7 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Resume a queue.
-
-        This method resumes a queue after it has been ``PAUSED`` or
-        ``DISABLED``. The state of a queue is stored in the queue's ``state``;
-        after calling this method it will be set to ``RUNNING``.
-
-        WARNING: Resuming many high-QPS queues at the same time can lead to
-        target overloading. If you are resuming high-QPS queues, follow the
-        500/50/5 pattern described in `Managing Cloud Tasks Scaling
-        Risks <https://cloud.google.com/tasks/docs/manage-cloud-task-scaling>`__.
+        javanano_as_lite
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -863,8 +1065,12 @@ class CloudTasksClient(object):
             >>> response = client.resume_queue(name)
 
         Args:
-            name (str): Required. The queue name. For example:
-                ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
+            name (str): Payload.
+
+                The payload will be sent as the HTTP message body. A message body, and
+                thus a payload, is allowed only if the HTTP method is POST or PUT. It is
+                an error to set a data payload on a task with an incompatible
+                ``HttpMethod``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -922,14 +1128,11 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Gets the access control policy for a ``Queue``. Returns an empty policy
-        if the resource exists and does not have a policy set.
+        The pull message contains data that can be used by the caller of
+        ``LeaseTasks`` to process the task.
 
-        Authorization requires the following `Google
-        IAM <https://cloud.google.com/iam>`__ permission on the specified
-        resource parent:
-
-        -  ``cloudtasks.queues.getIamPolicy``
+        This proto can only be used for tasks in a queue which has
+        ``pull_target`` set.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -944,8 +1147,12 @@ class CloudTasksClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy is being requested.
                 See the operation documentation for the appropriate value for this field.
-            options_ (Union[dict, ~google.cloud.tasks_v2beta2.types.GetPolicyOptions]): OPTIONAL: A ``GetPolicyOptions`` object for specifying options to
-                ``GetIamPolicy``. This field is only used by Cloud IAM.
+            options_ (Union[dict, ~google.cloud.tasks_v2beta2.types.GetPolicyOptions]): Signed fractions of a second at nanosecond resolution of the span of
+                time. Durations less than one second are represented with a 0
+                ``seconds`` field and a positive or negative ``nanos`` field. For
+                durations of one second or more, a non-zero value for the ``nanos``
+                field must be of the same sign as the ``seconds`` field. Must be from
+                -999,999,999 to +999,999,999 inclusive.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.GetPolicyOptions`
@@ -1008,17 +1215,7 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Sets the access control policy for a ``Queue``. Replaces any existing
-        policy.
-
-        Note: The Cloud Console does not check queue-level IAM permissions yet.
-        Project-level permissions are required to use the Cloud Console.
-
-        Authorization requires the following `Google
-        IAM <https://cloud.google.com/iam>`__ permission on the specified
-        resource parent:
-
-        -  ``cloudtasks.queues.setIamPolicy``
+        Response message for listing tasks using ``ListTasks``.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1036,10 +1233,17 @@ class CloudTasksClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy is being specified.
                 See the operation documentation for the appropriate value for this field.
-            policy (Union[dict, ~google.cloud.tasks_v2beta2.types.Policy]): REQUIRED: The complete policy to be applied to the ``resource``. The
-                size of the policy is limited to a few 10s of KB. An empty policy is a
-                valid policy but certain Cloud Platform services (such as Projects)
-                might reject them.
+            policy (Union[dict, ~google.cloud.tasks_v2beta2.types.Policy]): The resource type that the annotated field references.
+
+                Example:
+
+                ::
+
+                    message Subscription {
+                      string topic = 2 [(google.api.resource_reference) = {
+                        type: "pubsub.googleapis.com/Topic"
+                      }];
+                    }
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Policy`
@@ -1100,13 +1304,11 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Returns permissions that a caller has on a ``Queue``. If the resource
-        does not exist, this will return an empty set of permissions, not a
-        ``NOT_FOUND`` error.
-
-        Note: This operation is designed to be used for building
-        permission-aware UIs and command-line tools, not for authorization
-        checking. This operation may "fail open" without warning.
+        If set, all the classes from the .proto file are wrapped in a single
+        outer class with the given name. This applies to both Proto1 (equivalent
+        to the old "--one_java_file" option) and Proto2 (where a .proto always
+        translates to a single class, but you may want to explicitly choose the
+        class name).
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1124,10 +1326,19 @@ class CloudTasksClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy detail is being requested.
                 See the operation documentation for the appropriate value for this field.
-            permissions (list[str]): The set of permissions to check for the ``resource``. Permissions with
-                wildcards (such as '*' or 'storage.*') are not allowed. For more
-                information see `IAM
-                Overview <https://cloud.google.com/iam/docs/overview#permissions>`__.
+            permissions (list[str]): The resource type of a child collection that the annotated field
+                references. This is useful for annotating the ``parent`` field that
+                doesn't have a fixed resource type.
+
+                Example:
+
+                ::
+
+                    message ListLogEntriesRequest {
+                      string parent = 1 [(google.api.resource_reference) = {
+                        child_type: "logging.googleapis.com/LogEntry"
+                      };
+                    }
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -1188,14 +1399,7 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Lists the tasks in a queue.
-
-        By default, only the ``BASIC`` view is retrieved due to performance
-        considerations; ``response_view`` controls the subset of information
-        which is returned.
-
-        The tasks may be returned in any order. The ordering may change at any
-        time.
+        Request message for deleting a task using ``DeleteTask``.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1219,19 +1423,31 @@ class CloudTasksClient(object):
             ...         pass
 
         Args:
-            parent (str): Required. The queue name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
-                returned.
+            parent (str): The jstype option determines the JavaScript type used for values of
+                the field. The option is permitted only for 64 bit integral and fixed
+                types (int64, uint64, sint64, fixed64, sfixed64). A field with jstype
+                JS_STRING is represented as JavaScript string, which avoids loss of
+                precision that can happen when a large value is converted to a floating
+                point JavaScript. Specifying JS_NUMBER for the jstype causes the
+                generated JavaScript code to use the JavaScript "number" type. The
+                behavior of the default option JS_NORMAL is implementation dependent.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
-                by default because some data, such as payloads, might be desirable to
-                return only when needed because of its large size or because of the
-                sensitivity of data that it contains.
+                This option is an enum to permit additional types to be added, e.g.
+                goog.math.Integer.
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): App Engine Routing.
 
-                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
-                ``Task`` resource.
+                Defines routing characteristics specific to App Engine - service,
+                version, and instance.
+
+                For more information about services, versions, and instances see `An
+                Overview of App
+                Engine <https://cloud.google.com/appengine/docs/python/an-overview-of-app-engine>`__,
+                `Microservices Architecture on Google App
+                Engine <https://cloud.google.com/appengine/docs/python/microservices-on-app-engine>`__,
+                `App Engine Standard request
+                routing <https://cloud.google.com/appengine/docs/standard/python/how-requests-are-routed>`__,
+                and `App Engine Flex request
+                routing <https://cloud.google.com/appengine/docs/flexible/python/how-requests-are-routed>`__.
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -1324,17 +1540,7 @@ class CloudTasksClient(object):
         Args:
             name (str): Required. The task name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
-                returned.
-
-                By default response\_view is ``BASIC``; not all information is retrieved
-                by default because some data, such as payloads, might be desirable to
-                return only when needed because of its large size or because of the
-                sensitivity of data that it contains.
-
-                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
-                ``Task`` resource.
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): Request message for ``ResumeQueue``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -1393,12 +1599,22 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Creates a task and adds it to a queue.
+        Identifies which part of the FileDescriptorProto was defined at this
+        location.
 
-        Tasks cannot be updated after creation; there is no UpdateTask command.
+        Each element is a field number or an index. They form a path from the
+        root FileDescriptorProto to the place where the definition. For example,
+        this path: [ 4, 3, 2, 7, 1 ] refers to: file.message_type(3) // 4, 3
+        .field(7) // 2, 7 .name() // 1 This is because
+        FileDescriptorProto.message_type has field number 4: repeated
+        DescriptorProto message_type = 4; and DescriptorProto.field has field
+        number 2: repeated FieldDescriptorProto field = 2; and
+        FieldDescriptorProto.name has field number 1: optional string name = 1;
 
-        -  For ``App Engine queues``, the maximum task size is 100KB.
-        -  For ``pull queues``, the maximum task size is 1MB.
+        Thus, the above path gives the location of a field name. If we removed
+        the last element: [ 4, 3, 2, 7 ] this path refers to the whole field
+        declaration (from the beginning of the label to the terminating
+        semicolon).
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1413,54 +1629,72 @@ class CloudTasksClient(object):
             >>> response = client.create_task(parent, task)
 
         Args:
-            parent (str): Required. The queue name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
+            parent (str): App instance.
 
-                The queue must already exist.
-            task (Union[dict, ~google.cloud.tasks_v2beta2.types.Task]): Required. The task to add.
+                By default, the task is sent to an instance which is available when the
+                task is attempted.
 
-                Task names have the following format:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``.
-                The user can optionally specify a task ``name``. If a name is not
-                specified then the system will generate a random unique task id, which
-                will be set in the task returned in the ``response``.
-
-                If ``schedule_time`` is not set or is in the past then Cloud Tasks will
-                set it to the current time.
-
-                Task De-duplication:
-
-                Explicitly specifying a task ID enables task de-duplication. If a task's
-                ID is identical to that of an existing task or a task that was deleted
-                or completed recently then the call will fail with ``ALREADY_EXISTS``.
-                If the task's queue was created using Cloud Tasks, then another task
-                with the same name can't be created for ~1hour after the original task
-                was deleted or completed. If the task's queue was created using
-                queue.yaml or queue.xml, then another task with the same name can't be
-                created for ~9days after the original task was deleted or completed.
-
-                Because there is an extra lookup cost to identify duplicate task names,
-                these ``CreateTask`` calls have significantly increased latency. Using
-                hashed strings for the task id or for the prefix of the task id is
-                recommended. Choosing task ids that are sequential or have sequential
-                prefixes, for example using a timestamp, causes an increase in latency
-                and error rates in all task commands. The infrastructure relies on an
-                approximately uniform distribution of task ids to store and serve tasks
-                efficiently.
+                Requests can only be sent to a specific instance if `manual scaling is
+                used in App Engine
+                Standard <https://cloud.google.com/appengine/docs/python/an-overview-of-app-engine?hl=en_US#scaling_types_and_instance_classes>`__.
+                App Engine Flex does not support instances. For more information, see
+                `App Engine Standard request
+                routing <https://cloud.google.com/appengine/docs/standard/python/how-requests-are-routed>`__
+                and `App Engine Flex request
+                routing <https://cloud.google.com/appengine/docs/flexible/python/how-requests-are-routed>`__.
+            task (Union[dict, ~google.cloud.tasks_v2beta2.types.Task]): Specifies the log_type that was be enabled. ADMIN_ACTIVITY is always
+                enabled, and cannot be configured. Required
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Task`
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
-                returned.
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): Output only. The host that the task is sent to.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
-                by default because some data, such as payloads, might be desirable to
-                return only when needed because of its large size or because of the
-                sensitivity of data that it contains.
+                For more information, see `How Requests are
+                Routed <https://cloud.google.com/appengine/docs/standard/python/how-requests-are-routed>`__.
 
-                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
-                ``Task`` resource.
+                The host is constructed as:
+
+                -  ``host = [application_domain_name]``\
+                   ``| [service] + '.' + [application_domain_name]``\
+                   ``| [version] + '.' + [application_domain_name]``\
+                   ``| [version_dot_service]+ '.' + [application_domain_name]``\
+                   ``| [instance] + '.' + [application_domain_name]``\
+                   ``| [instance_dot_service] + '.' + [application_domain_name]``\
+                   ``| [instance_dot_version] + '.' + [application_domain_name]``\
+                   ``| [instance_dot_version_dot_service] + '.' + [application_domain_name]``
+
+                -  ``application_domain_name`` = The domain name of the app, for example
+                   .appspot.com, which is associated with the queue's project ID. Some
+                   tasks which were created using the App Engine SDK use a custom domain
+                   name.
+
+                -  ``service =`` ``service``
+
+                -  ``version =`` ``version``
+
+                -  ``version_dot_service =`` ``version`` ``+ '.' +`` ``service``
+
+                -  ``instance =`` ``instance``
+
+                -  ``instance_dot_service =`` ``instance`` ``+ '.' +`` ``service``
+
+                -  ``instance_dot_version =`` ``instance`` ``+ '.' +`` ``version``
+
+                -  ``instance_dot_version_dot_service =`` ``instance`` ``+ '.' +``
+                   ``version`` ``+ '.' +`` ``service``
+
+                If ``service`` is empty, then the task will be sent to the service which
+                is the default service when the task is attempted.
+
+                If ``version`` is empty, then the task will be sent to the version which
+                is the default version when the task is attempted.
+
+                If ``instance`` is empty, then the task will be sent to an instance
+                which is available when the task is attempted.
+
+                If ``service``, ``version``, or ``instance`` is invalid, then the task
+                will be sent to the default version of the default service when the task
+                is attempted.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -1535,8 +1769,8 @@ class CloudTasksClient(object):
             >>> client.delete_task(name)
 
         Args:
-            name (str): Required. The task name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
+            name (str): Required. The queue name. For example:
+                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -1594,20 +1828,7 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Leases tasks from a pull queue for ``lease_duration``.
-
-        This method is invoked by the worker to obtain a lease. The worker must
-        acknowledge the task via ``AcknowledgeTask`` after they have performed
-        the work associated with the task.
-
-        The ``payload`` is intended to store data that the worker needs to
-        perform the work associated with the task. To return the payloads in the
-        ``response``, set ``response_view`` to ``FULL``.
-
-        A maximum of 10 qps of ``LeaseTasks`` requests are allowed per queue.
-        ``RESOURCE_EXHAUSTED`` is returned when this limit is exceeded.
-        ``RESOURCE_EXHAUSTED`` is also returned when
-        ``max_tasks_dispatched_per_second`` is exceeded.
+        Request message for ``GetIamPolicy`` method.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1622,72 +1843,60 @@ class CloudTasksClient(object):
             >>> response = client.lease_tasks(parent, lease_duration)
 
         Args:
-            parent (str): Required. The queue name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
-            lease_duration (Union[dict, ~google.cloud.tasks_v2beta2.types.Duration]): Required. The duration of the lease.
+            parent (str): Optional. The relative resource name pattern associated with this
+                resource type. The DNS prefix of the full resource name shouldn't be
+                specified here.
 
-                Each task returned in the ``response`` will have its ``schedule_time``
-                set to the current time plus the ``lease_duration``. The task is leased
-                until its ``schedule_time``; thus, the task will not be returned to
-                another ``LeaseTasks`` call before its ``schedule_time``.
+                The path pattern must follow the syntax, which aligns with HTTP binding
+                syntax:
 
-                After the worker has successfully finished the work associated with the
-                task, the worker must call via ``AcknowledgeTask`` before the
-                ``schedule_time``. Otherwise the task will be returned to a later
-                ``LeaseTasks`` call so that another worker can retry it.
+                ::
 
-                The maximum lease duration is 1 week. ``lease_duration`` will be
-                truncated to the nearest second.
+                    Template = Segment { "/" Segment } ;
+                    Segment = LITERAL | Variable ;
+                    Variable = "{" LITERAL "}" ;
+
+                Examples:
+
+                ::
+
+                    - "projects/{project}/topics/{topic}"
+                    - "projects/{project}/knowledgeBases/{knowledge_base}"
+
+                The components in braces correspond to the IDs for each resource in the
+                hierarchy. It is expected that, if multiple patterns are provided, the
+                same component name (e.g. "project") refers to IDs of the same type of
+                resource.
+            lease_duration (Union[dict, ~google.cloud.tasks_v2beta2.types.Duration]): Lists the tasks in a queue.
+
+                By default, only the ``BASIC`` view is retrieved due to performance
+                considerations; ``response_view`` controls the subset of information
+                which is returned.
+
+                The tasks may be returned in any order. The ordering may change at any
+                time.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Duration`
-            max_tasks (int): The maximum number of tasks to lease.
+            max_tasks (int): The view specifies a subset of ``Task`` data.
 
-                The system will make a best effort to return as close to as
-                ``max_tasks`` as possible.
-
-                The largest that ``max_tasks`` can be is 1000.
-
-                The maximum total size of a ``lease tasks response`` is 32 MB. If the
-                sum of all task sizes requested reaches this limit, fewer tasks than
-                requested are returned.
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
-                returned.
-
-                By default response\_view is ``BASIC``; not all information is retrieved
+                When a task is returned in a response, not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): Output only. The state of the queue.
 
-                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
-                ``Task`` resource.
-            filter_ (str): ``filter`` can be used to specify a subset of tasks to lease.
+                ``state`` can only be changed by called ``PauseQueue``, ``ResumeQueue``,
+                or uploading
+                `queue.yaml/xml <https://cloud.google.com/appengine/docs/python/config/queueref>`__.
+                ``UpdateQueue`` cannot be used to change ``state``.
+            filter_ (str): The basic view omits fields which can be large or can contain
+                sensitive data.
 
-                When ``filter`` is set to ``tag=<my-tag>`` then the ``response`` will
-                contain only tasks whose ``tag`` is equal to ``<my-tag>``. ``<my-tag>``
-                must be less than 500 characters.
-
-                When ``filter`` is set to ``tag_function=oldest_tag()``, only tasks
-                which have the same tag as the task with the oldest ``schedule_time``
-                will be returned.
-
-                Grammar Syntax:
-
-                -  ``filter = "tag=" tag | "tag_function=" function``
-
-                -  ``tag = string``
-
-                -  ``function = "oldest_tag()"``
-
-                The ``oldest_tag()`` function returns tasks which have the same tag as
-                the oldest task (ordered by schedule time).
-
-                SDK compatibility: Although the SDK allows tags to be either string or
-                `bytes <https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/taskqueue/TaskOptions.html#tag-byte:A->`__,
-                only UTF-8 encoded tags can be used in Cloud Tasks. Tag which aren't
-                UTF-8 encoded can't be used in the ``filter`` and the task's ``tag``
-                will be displayed as empty in Cloud Tasks.
+                This view does not include the (``payload in AppEngineHttpRequest`` and
+                ``payload in PullMessage``). These payloads are desirable to return only
+                when needed, because they can be large and because of the sensitivity of
+                the data that you choose to store in it.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -1751,15 +1960,18 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Acknowledges a pull task.
+        Deletes a queue.
 
-        The worker, that is, the entity that ``leased`` this task must call this
-        method to indicate that the work associated with the task has finished.
+        This command will delete the queue even if it has tasks in it.
 
-        The worker must acknowledge a task within the ``lease_duration`` or the
-        lease will expire and the task will become available to be leased again.
-        After the task is acknowledged, it will not be returned by a later
-        ``LeaseTasks``, ``GetTask``, or ``ListTasks``.
+        Note: If you delete a queue, a queue with the same name can't be created
+        for 7 days.
+
+        WARNING: Using this method may have unintended side effects if you are
+        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
+        queues. Read `Overview of Queue Management and
+        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
+        using this method.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1774,12 +1986,32 @@ class CloudTasksClient(object):
             >>> client.acknowledge_task(name, schedule_time)
 
         Args:
-            name (str): Required. The task name. For example:
+            name (str): Caller-specified and required in ``CreateQueue``\ [], after which
+                the queue config type becomes output only, though fields within the
+                config are mutable.
+
+                The queue's target.
+
+                The target applies to all tasks in the queue.
+            schedule_time (Union[dict, ~google.cloud.tasks_v2beta2.types.Timestamp]): Optionally caller-specified in ``CreateTask``.
+
+                The task name.
+
+                The task name must have the following format:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
-            schedule_time (Union[dict, ~google.cloud.tasks_v2beta2.types.Timestamp]): Required. The task's current schedule time, available in the
-                ``schedule_time`` returned by ``LeaseTasks`` response or ``RenewLease``
-                response. This restriction is to ensure that your worker currently holds
-                the lease.
+
+                -  ``PROJECT_ID`` can contain letters ([A-Za-z]), numbers ([0-9]),
+                   hyphens (-), colons (:), or periods (.). For more information, see
+                   `Identifying
+                   projects <https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects>`__
+                -  ``LOCATION_ID`` is the canonical ID for the task's location. The list
+                   of available locations can be obtained by calling ``ListLocations``.
+                   For more information, see https://cloud.google.com/about/locations/.
+                -  ``QUEUE_ID`` can contain letters ([A-Za-z]), numbers ([0-9]), or
+                   hyphens (-). The maximum length is 100 characters.
+                -  ``TASK_ID`` can contain only letters ([A-Za-z]), numbers ([0-9]),
+                   hyphens (-), or underscores (_). The maximum length is 500
+                   characters.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Timestamp`
@@ -1841,11 +2073,32 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Renew the current lease of a pull task.
+        Output only. The max burst size.
 
-        The worker can use this method to extend the lease by a new duration,
-        starting from now. The new task lease will be returned in the task's
-        ``schedule_time``.
+        Max burst size limits how fast tasks in queue are processed when many
+        tasks are in the queue and the rate is high. This field allows the queue
+        to have a high rate so processing starts shortly after a task is
+        enqueued, but still limits resource usage when many tasks are enqueued
+        in a short period of time.
+
+        The `token bucket <https://wikipedia.org/wiki/Token_Bucket>`__ algorithm
+        is used to control the rate of task dispatches. Each queue has a token
+        bucket that holds tokens, up to the maximum specified by
+        ``max_burst_size``. Each time a task is dispatched, a token is removed
+        from the bucket. Tasks will be dispatched until the queue's bucket runs
+        out of tokens. The bucket will be continuously refilled with new tokens
+        based on ``max_tasks_dispatched_per_second``.
+
+        Cloud Tasks will pick the value of ``max_burst_size`` based on the value
+        of ``max_tasks_dispatched_per_second``.
+
+        For App Engine queues that were created or updated using
+        ``queue.yaml/xml``, ``max_burst_size`` is equal to
+        `bucket_size <https://cloud.google.com/appengine/docs/standard/python/config/queueref#bucket_size>`__.
+        Since ``max_burst_size`` is output only, if ``UpdateQueue`` is called on
+        a queue created by ``queue.yaml/xml``, ``max_burst_size`` will be reset
+        based on the value of ``max_tasks_dispatched_per_second``, regardless of
+        whether ``max_tasks_dispatched_per_second`` is updated.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1863,33 +2116,30 @@ class CloudTasksClient(object):
             >>> response = client.renew_lease(name, schedule_time, lease_duration)
 
         Args:
-            name (str): Required. The task name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
-            schedule_time (Union[dict, ~google.cloud.tasks_v2beta2.types.Timestamp]): Required. The task's current schedule time, available in the
-                ``schedule_time`` returned by ``LeaseTasks`` response or ``RenewLease``
-                response. This restriction is to ensure that your worker currently holds
-                the lease.
+            name (str): The maximum number of attempts for a task.
+
+                Cloud Tasks will attempt the task ``max_attempts`` times (that is, if
+                the first attempt fails, then there will be ``max_attempts - 1``
+                retries). Must be > 0.
+            schedule_time (Union[dict, ~google.cloud.tasks_v2beta2.types.Timestamp]): Output only. The time that this attempt response was received.
+
+                ``response_time`` will be truncated to the nearest microsecond.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Timestamp`
-            lease_duration (Union[dict, ~google.cloud.tasks_v2beta2.types.Duration]): Required. The desired new lease duration, starting from now.
+            lease_duration (Union[dict, ~google.cloud.tasks_v2beta2.types.Duration]): Creates a task and adds it to a queue.
 
-                The maximum lease duration is 1 week. ``lease_duration`` will be
-                truncated to the nearest second.
+                Tasks cannot be updated after creation; there is no UpdateTask command.
+
+                -  For ``App Engine queues``, the maximum task size is 100KB.
+                -  For ``pull queues``, the maximum task size is 1MB.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Duration`
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
-                returned.
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): App Engine HTTP request that is sent to the task's target. Can be
+                set only if ``app_engine_http_target`` is set on the queue.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
-                by default because some data, such as payloads, might be desirable to
-                return only when needed because of its large size or because of the
-                sensitivity of data that it contains.
-
-                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
-                ``Task`` resource.
+                An App Engine task is a task that has ``AppEngineHttpRequest`` set.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -1953,11 +2203,21 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Cancel a pull task's lease.
+        The task's tag.
 
-        The worker can use this method to cancel a task's lease by setting its
-        ``schedule_time`` to now. This will make the task available to be leased
-        to the next caller of ``LeaseTasks``.
+        Tags allow similar tasks to be processed in a batch. If you label tasks
+        with a tag, your worker can ``lease tasks`` with the same tag using
+        ``filter``. For example, if you want to aggregate the events associated
+        with a specific user once a day, you could tag tasks with the user ID.
+
+        The task's tag can only be set when the ``task is created``.
+
+        The tag must be less than 500 characters.
+
+        SDK compatibility: Although the SDK allows tags to be either string or
+        `bytes <https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/taskqueue/TaskOptions.html#tag-byte:A->`__,
+        only UTF-8 encoded tags can be used in Cloud Tasks. If a tag isn't UTF-8
+        encoded, the tag will be empty when the task is returned by Cloud Tasks.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -1972,26 +2232,42 @@ class CloudTasksClient(object):
             >>> response = client.cancel_lease(name, schedule_time)
 
         Args:
-            name (str): Required. The task name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
-            schedule_time (Union[dict, ~google.cloud.tasks_v2beta2.types.Timestamp]): Required. The task's current schedule time, available in the
-                ``schedule_time`` returned by ``LeaseTasks`` response or ``RenewLease``
-                response. This restriction is to ensure that your worker currently holds
-                the lease.
+            name (str): Protocol Buffers - Google's data interchange format Copyright 2008
+                Google Inc. All rights reserved.
+                https://developers.google.com/protocol-buffers/
+
+                Redistribution and use in source and binary forms, with or without
+                modification, are permitted provided that the following conditions are
+                met:
+
+                ::
+
+                    * Redistributions of source code must retain the above copyright
+
+                notice, this list of conditions and the following disclaimer. \*
+                Redistributions in binary form must reproduce the above copyright
+                notice, this list of conditions and the following disclaimer in the
+                documentation and/or other materials provided with the distribution. \*
+                Neither the name of Google Inc. nor the names of its contributors may be
+                used to endorse or promote products derived from this software without
+                specific prior written permission.
+
+                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+                IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+                TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+                PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+                OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+                EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+                PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+                PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+                LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+            schedule_time (Union[dict, ~google.cloud.tasks_v2beta2.types.Timestamp]): See ``HttpRule``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Timestamp`
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
-                returned.
-
-                By default response\_view is ``BASIC``; not all information is retrieved
-                by default because some data, such as payloads, might be desirable to
-                return only when needed because of its large size or because of the
-                sensitivity of data that it contains.
-
-                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
-                ``Task`` resource.
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): Response message for leasing tasks using ``LeaseTasks``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.
@@ -2051,29 +2327,12 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Forces a task to run now.
+        A token to retrieve next page of results.
 
-        When this method is called, Cloud Tasks will dispatch the task, even if
-        the task is already running, the queue has reached its ``RateLimits`` or
-        is ``PAUSED``.
+        To return the next page of results, call ``ListTasks`` with this value
+        as the ``page_token``.
 
-        This command is meant to be used for manual debugging. For example,
-        ``RunTask`` can be used to retry a failed task after a fix has been made
-        or to manually force a task to be dispatched now.
-
-        The dispatched task is returned. That is, the task that is returned
-        contains the ``status`` after the task is dispatched but before the task
-        is received by its target.
-
-        If Cloud Tasks receives a successful response from the task's target,
-        then the task will be deleted; otherwise the task's ``schedule_time``
-        will be reset to the time that ``RunTask`` was called plus the retry
-        delay specified in the queue's ``RetryConfig``.
-
-        ``RunTask`` returns ``NOT_FOUND`` when it is called on a task that has
-        already succeeded or permanently failed.
-
-        ``RunTask`` cannot be called on a ``pull task``.
+        If the next_page_token is empty, there are no more results.
 
         Example:
             >>> from google.cloud import tasks_v2beta2
@@ -2085,19 +2344,18 @@ class CloudTasksClient(object):
             >>> response = client.run_task(name)
 
         Args:
-            name (str): Required. The task name. For example:
-                ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
-                returned.
+            name (str): The time when the task is scheduled to be attempted.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
-                by default because some data, such as payloads, might be desirable to
-                return only when needed because of its large size or because of the
-                sensitivity of data that it contains.
+                For App Engine queues, this is when the task will be attempted or
+                retried.
 
-                Authorization for ``FULL`` requires ``cloudtasks.tasks.fullView``
-                `Google IAM <https://cloud.google.com/iam/>`___ permission on the
-                ``Task`` resource.
+                For pull queues, this is the time when the task is available to be
+                leased; if a task is currently leased, this is the time when the current
+                lease expires, that is, the time that the task was leased plus the
+                ``lease_duration``.
+
+                ``schedule_time`` will be truncated to the nearest microsecond.
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): Request message for acknowledging a task using ``AcknowledgeTask``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry client library requests. If ``None`` is specified,
                 requests will be retried using a default configuration.

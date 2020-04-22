@@ -137,17 +137,44 @@ class CloudTasksGrpcTransport(object):
     def create_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.create_queue`.
 
-        Creates a queue.
+        A Location identifies a piece of source code in a .proto file which
+        corresponds to a particular definition. This information is intended to
+        be useful to IDEs, code indexers, documentation generators, and similar
+        tools.
 
-        Queues created with this method allow tasks to live for a maximum of 31
-        days. After a task is 31 days old, the task will be deleted regardless
-        of whether it was dispatched or not.
+        For example, say we have a file like: message Foo { optional string foo
+        = 1; } Let's look at just the field definition: optional string foo = 1;
+        ^ ^^ ^^ ^ ^^^ a bc de f ghi We have the following locations: span path
+        represents [a,i) [ 4, 0, 2, 0 ] The whole field definition. [a,b) [ 4,
+        0, 2, 0, 4 ] The label (optional). [c,d) [ 4, 0, 2, 0, 5 ] The type
+        (string). [e,f) [ 4, 0, 2, 0, 1 ] The name (foo). [g,h) [ 4, 0, 2, 0, 3
+        ] The number (1).
 
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        Notes:
+
+        -  A location may refer to a repeated field itself (i.e. not to any
+           particular index within it). This is used whenever a set of elements
+           are logically enclosed in a single code segment. For example, an
+           entire extend block (possibly containing multiple extension
+           definitions) will have an outer location whose path refers to the
+           "extensions" repeated field without an index.
+        -  Multiple locations may have the same path. This happens when a single
+           logical declaration is spread out across multiple places. The most
+           obvious example is the "extend" block again -- there may be multiple
+           extend blocks in the same scope, each of which will have the same
+           path.
+        -  A location's span is not always a subset of its parent's span. For
+           example, the "extendee" of an extension declaration appears at the
+           beginning of the "extend" block and is shared by all extensions
+           within the block.
+        -  Just because a location's span is a subset of some other location's
+           span does not mean that it is a descendant. For example, a "group"
+           defines both a type and a field in a single declaration. Thus, the
+           locations corresponding to the type and field and their components
+           will overlap.
+        -  Code which tries to interpret locations should probably be designed
+           to ignore those that it doesn't understand, as more types of
+           locations could be recorded in the future.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -160,20 +187,14 @@ class CloudTasksGrpcTransport(object):
     def update_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.update_queue`.
 
-        Updates a queue.
+        A token identifying the page of results to return.
 
-        This method creates the queue if it does not exist and updates the queue
-        if it does exist.
+        To request the first page results, page_token must be empty. To request
+        the next page of results, page_token must be the value of
+        ``next_page_token`` returned from the previous call to ``ListTasks``
+        method.
 
-        Queues created with this method allow tasks to live for a maximum of 31
-        days. After a task is 31 days old, the task will be deleted regardless
-        of whether it was dispatched or not.
-
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        The page token is valid for only 2 hours.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -186,18 +207,95 @@ class CloudTasksGrpcTransport(object):
     def delete_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.delete_queue`.
 
-        Deletes a queue.
+        ``Any`` contains an arbitrary serialized protocol buffer message
+        along with a URL that describes the type of the serialized message.
 
-        This command will delete the queue even if it has tasks in it.
+        Protobuf library provides support to pack/unpack Any values in the form
+        of utility functions or additional generated methods of the Any type.
 
-        Note: If you delete a queue, a queue with the same name can't be created
-        for 7 days.
+        Example 1: Pack and unpack a message in C++.
 
-        WARNING: Using this method may have unintended side effects if you are
-        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
-        queues. Read `Overview of Queue Management and
-        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
-        using this method.
+        ::
+
+            Foo foo = ...;
+            Any any;
+            any.PackFrom(foo);
+            ...
+            if (any.UnpackTo(&foo)) {
+              ...
+            }
+
+        Example 2: Pack and unpack a message in Java.
+
+        ::
+
+            Foo foo = ...;
+            Any any = Any.pack(foo);
+            ...
+            if (any.is(Foo.class)) {
+              foo = any.unpack(Foo.class);
+            }
+
+        Example 3: Pack and unpack a message in Python.
+
+        ::
+
+            foo = Foo(...)
+            any = Any()
+            any.Pack(foo)
+            ...
+            if any.Is(Foo.DESCRIPTOR):
+              any.Unpack(foo)
+              ...
+
+        Example 4: Pack and unpack a message in Go
+
+        ::
+
+             foo := &pb.Foo{...}
+             any, err := ptypes.MarshalAny(foo)
+             ...
+             foo := &pb.Foo{}
+             if err := ptypes.UnmarshalAny(any, foo); err != nil {
+               ...
+             }
+
+        The pack methods provided by protobuf library will by default use
+        'type.googleapis.com/full.type.name' as the type URL and the unpack
+        methods only use the fully qualified type name after the last '/' in the
+        type URL, for example "foo.bar.com/x/y.z" will yield type name "y.z".
+
+        # JSON
+
+        The JSON representation of an ``Any`` value uses the regular
+        representation of the deserialized, embedded message, with an additional
+        field ``@type`` which contains the type URL. Example:
+
+        ::
+
+            package google.profile;
+            message Person {
+              string first_name = 1;
+              string last_name = 2;
+            }
+
+            {
+              "@type": "type.googleapis.com/google.profile.Person",
+              "firstName": <string>,
+              "lastName": <string>
+            }
+
+        If the embedded message type is well-known and has a custom JSON
+        representation, that representation will be embedded adding a field
+        ``value`` which holds the custom JSON in addition to the ``@type``
+        field. Example (for message ``google.protobuf.Duration``):
+
+        ::
+
+            {
+              "@type": "type.googleapis.com/google.protobuf.Duration",
+              "value": "1.212s"
+            }
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -228,11 +326,32 @@ class CloudTasksGrpcTransport(object):
     def pause_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.pause_queue`.
 
-        Pauses the queue.
+        A URL/resource name that uniquely identifies the type of the
+        serialized protocol buffer message. This string must contain at least
+        one "/" character. The last segment of the URL's path must represent the
+        fully qualified name of the type (as in
+        ``path/google.protobuf.Duration``). The name should be in a canonical
+        form (e.g., leading "." is not accepted).
 
-        If a queue is paused then the system will stop dispatching tasks until
-        the queue is resumed via ``ResumeQueue``. Tasks can still be added when
-        the queue is paused. A queue is paused if its ``state`` is ``PAUSED``.
+        In practice, teams usually precompile into the binary all types that
+        they expect it to use in the context of Any. However, for URLs which use
+        the scheme ``http``, ``https``, or no scheme, one can optionally set up
+        a type server that maps type URLs to message definitions as follows:
+
+        -  If no scheme is provided, ``https`` is assumed.
+        -  An HTTP GET on the URL must yield a ``google.protobuf.Type`` value in
+           binary format, or produce an error.
+        -  Applications are allowed to cache lookup results based on the URL, or
+           have them precompiled into a binary to avoid any lookup. Therefore,
+           binary compatibility needs to be preserved on changes to types. (Use
+           versioned type names to manage breaking changes.)
+
+        Note: this functionality is not currently available in the official
+        protobuf release, and it is not used for type URLs beginning with
+        type.googleapis.com.
+
+        Schemes other than ``http``, ``https`` (or the empty scheme) might be
+        used with implementation specific semantics.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -245,16 +364,7 @@ class CloudTasksGrpcTransport(object):
     def resume_queue(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.resume_queue`.
 
-        Resume a queue.
-
-        This method resumes a queue after it has been ``PAUSED`` or
-        ``DISABLED``. The state of a queue is stored in the queue's ``state``;
-        after calling this method it will be set to ``RUNNING``.
-
-        WARNING: Resuming many high-QPS queues at the same time can lead to
-        target overloading. If you are resuming high-QPS queues, follow the
-        500/50/5 pattern described in `Managing Cloud Tasks Scaling
-        Risks <https://cloud.google.com/tasks/docs/manage-cloud-task-scaling>`__.
+        javanano_as_lite
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -267,14 +377,11 @@ class CloudTasksGrpcTransport(object):
     def get_iam_policy(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.get_iam_policy`.
 
-        Gets the access control policy for a ``Queue``. Returns an empty policy
-        if the resource exists and does not have a policy set.
+        The pull message contains data that can be used by the caller of
+        ``LeaseTasks`` to process the task.
 
-        Authorization requires the following `Google
-        IAM <https://cloud.google.com/iam>`__ permission on the specified
-        resource parent:
-
-        -  ``cloudtasks.queues.getIamPolicy``
+        This proto can only be used for tasks in a queue which has
+        ``pull_target`` set.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -287,17 +394,7 @@ class CloudTasksGrpcTransport(object):
     def set_iam_policy(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.set_iam_policy`.
 
-        Sets the access control policy for a ``Queue``. Replaces any existing
-        policy.
-
-        Note: The Cloud Console does not check queue-level IAM permissions yet.
-        Project-level permissions are required to use the Cloud Console.
-
-        Authorization requires the following `Google
-        IAM <https://cloud.google.com/iam>`__ permission on the specified
-        resource parent:
-
-        -  ``cloudtasks.queues.setIamPolicy``
+        Response message for listing tasks using ``ListTasks``.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -310,13 +407,11 @@ class CloudTasksGrpcTransport(object):
     def test_iam_permissions(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.test_iam_permissions`.
 
-        Returns permissions that a caller has on a ``Queue``. If the resource
-        does not exist, this will return an empty set of permissions, not a
-        ``NOT_FOUND`` error.
-
-        Note: This operation is designed to be used for building
-        permission-aware UIs and command-line tools, not for authorization
-        checking. This operation may "fail open" without warning.
+        If set, all the classes from the .proto file are wrapped in a single
+        outer class with the given name. This applies to both Proto1 (equivalent
+        to the old "--one_java_file" option) and Proto2 (where a .proto always
+        translates to a single class, but you may want to explicitly choose the
+        class name).
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -329,14 +424,7 @@ class CloudTasksGrpcTransport(object):
     def list_tasks(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.list_tasks`.
 
-        Lists the tasks in a queue.
-
-        By default, only the ``BASIC`` view is retrieved due to performance
-        considerations; ``response_view`` controls the subset of information
-        which is returned.
-
-        The tasks may be returned in any order. The ordering may change at any
-        time.
+        Request message for deleting a task using ``DeleteTask``.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -362,12 +450,22 @@ class CloudTasksGrpcTransport(object):
     def create_task(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.create_task`.
 
-        Creates a task and adds it to a queue.
+        Identifies which part of the FileDescriptorProto was defined at this
+        location.
 
-        Tasks cannot be updated after creation; there is no UpdateTask command.
+        Each element is a field number or an index. They form a path from the
+        root FileDescriptorProto to the place where the definition. For example,
+        this path: [ 4, 3, 2, 7, 1 ] refers to: file.message_type(3) // 4, 3
+        .field(7) // 2, 7 .name() // 1 This is because
+        FileDescriptorProto.message_type has field number 4: repeated
+        DescriptorProto message_type = 4; and DescriptorProto.field has field
+        number 2: repeated FieldDescriptorProto field = 2; and
+        FieldDescriptorProto.name has field number 1: optional string name = 1;
 
-        -  For ``App Engine queues``, the maximum task size is 100KB.
-        -  For ``pull queues``, the maximum task size is 1MB.
+        Thus, the above path gives the location of a field name. If we removed
+        the last element: [ 4, 3, 2, 7 ] this path refers to the whole field
+        declaration (from the beginning of the label to the terminating
+        semicolon).
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -397,20 +495,7 @@ class CloudTasksGrpcTransport(object):
     def lease_tasks(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.lease_tasks`.
 
-        Leases tasks from a pull queue for ``lease_duration``.
-
-        This method is invoked by the worker to obtain a lease. The worker must
-        acknowledge the task via ``AcknowledgeTask`` after they have performed
-        the work associated with the task.
-
-        The ``payload`` is intended to store data that the worker needs to
-        perform the work associated with the task. To return the payloads in the
-        ``response``, set ``response_view`` to ``FULL``.
-
-        A maximum of 10 qps of ``LeaseTasks`` requests are allowed per queue.
-        ``RESOURCE_EXHAUSTED`` is returned when this limit is exceeded.
-        ``RESOURCE_EXHAUSTED`` is also returned when
-        ``max_tasks_dispatched_per_second`` is exceeded.
+        Request message for ``GetIamPolicy`` method.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -423,15 +508,18 @@ class CloudTasksGrpcTransport(object):
     def acknowledge_task(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.acknowledge_task`.
 
-        Acknowledges a pull task.
+        Deletes a queue.
 
-        The worker, that is, the entity that ``leased`` this task must call this
-        method to indicate that the work associated with the task has finished.
+        This command will delete the queue even if it has tasks in it.
 
-        The worker must acknowledge a task within the ``lease_duration`` or the
-        lease will expire and the task will become available to be leased again.
-        After the task is acknowledged, it will not be returned by a later
-        ``LeaseTasks``, ``GetTask``, or ``ListTasks``.
+        Note: If you delete a queue, a queue with the same name can't be created
+        for 7 days.
+
+        WARNING: Using this method may have unintended side effects if you are
+        using an App Engine ``queue.yaml`` or ``queue.xml`` file to manage your
+        queues. Read `Overview of Queue Management and
+        queue.yaml <https://cloud.google.com/tasks/docs/queue-yaml>`__ before
+        using this method.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -444,11 +532,32 @@ class CloudTasksGrpcTransport(object):
     def renew_lease(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.renew_lease`.
 
-        Renew the current lease of a pull task.
+        Output only. The max burst size.
 
-        The worker can use this method to extend the lease by a new duration,
-        starting from now. The new task lease will be returned in the task's
-        ``schedule_time``.
+        Max burst size limits how fast tasks in queue are processed when many
+        tasks are in the queue and the rate is high. This field allows the queue
+        to have a high rate so processing starts shortly after a task is
+        enqueued, but still limits resource usage when many tasks are enqueued
+        in a short period of time.
+
+        The `token bucket <https://wikipedia.org/wiki/Token_Bucket>`__ algorithm
+        is used to control the rate of task dispatches. Each queue has a token
+        bucket that holds tokens, up to the maximum specified by
+        ``max_burst_size``. Each time a task is dispatched, a token is removed
+        from the bucket. Tasks will be dispatched until the queue's bucket runs
+        out of tokens. The bucket will be continuously refilled with new tokens
+        based on ``max_tasks_dispatched_per_second``.
+
+        Cloud Tasks will pick the value of ``max_burst_size`` based on the value
+        of ``max_tasks_dispatched_per_second``.
+
+        For App Engine queues that were created or updated using
+        ``queue.yaml/xml``, ``max_burst_size`` is equal to
+        `bucket_size <https://cloud.google.com/appengine/docs/standard/python/config/queueref#bucket_size>`__.
+        Since ``max_burst_size`` is output only, if ``UpdateQueue`` is called on
+        a queue created by ``queue.yaml/xml``, ``max_burst_size`` will be reset
+        based on the value of ``max_tasks_dispatched_per_second``, regardless of
+        whether ``max_tasks_dispatched_per_second`` is updated.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -461,11 +570,21 @@ class CloudTasksGrpcTransport(object):
     def cancel_lease(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.cancel_lease`.
 
-        Cancel a pull task's lease.
+        The task's tag.
 
-        The worker can use this method to cancel a task's lease by setting its
-        ``schedule_time`` to now. This will make the task available to be leased
-        to the next caller of ``LeaseTasks``.
+        Tags allow similar tasks to be processed in a batch. If you label tasks
+        with a tag, your worker can ``lease tasks`` with the same tag using
+        ``filter``. For example, if you want to aggregate the events associated
+        with a specific user once a day, you could tag tasks with the user ID.
+
+        The task's tag can only be set when the ``task is created``.
+
+        The tag must be less than 500 characters.
+
+        SDK compatibility: Although the SDK allows tags to be either string or
+        `bytes <https://cloud.google.com/appengine/docs/standard/java/javadoc/com/google/appengine/api/taskqueue/TaskOptions.html#tag-byte:A->`__,
+        only UTF-8 encoded tags can be used in Cloud Tasks. If a tag isn't UTF-8
+        encoded, the tag will be empty when the task is returned by Cloud Tasks.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -478,29 +597,12 @@ class CloudTasksGrpcTransport(object):
     def run_task(self):
         """Return the gRPC stub for :meth:`CloudTasksClient.run_task`.
 
-        Forces a task to run now.
+        A token to retrieve next page of results.
 
-        When this method is called, Cloud Tasks will dispatch the task, even if
-        the task is already running, the queue has reached its ``RateLimits`` or
-        is ``PAUSED``.
+        To return the next page of results, call ``ListTasks`` with this value
+        as the ``page_token``.
 
-        This command is meant to be used for manual debugging. For example,
-        ``RunTask`` can be used to retry a failed task after a fix has been made
-        or to manually force a task to be dispatched now.
-
-        The dispatched task is returned. That is, the task that is returned
-        contains the ``status`` after the task is dispatched but before the task
-        is received by its target.
-
-        If Cloud Tasks receives a successful response from the task's target,
-        then the task will be deleted; otherwise the task's ``schedule_time``
-        will be reset to the time that ``RunTask`` was called plus the retry
-        delay specified in the queue's ``RetryConfig``.
-
-        ``RunTask`` returns ``NOT_FOUND`` when it is called on a task that has
-        already succeeded or permanently failed.
-
-        ``RunTask`` cannot be called on a ``pull task``.
+        If the next_page_token is empty, there are no more results.
 
         Returns:
             Callable: A callable which accepts the appropriate
