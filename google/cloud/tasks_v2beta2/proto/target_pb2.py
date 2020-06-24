@@ -21,6 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     package="google.cloud.tasks.v2beta2",
     syntax="proto3",
     serialized_options=b"\n\036com.google.cloud.tasks.v2beta2B\013TargetProtoP\001Z?google.golang.org/genproto/googleapis/cloud/tasks/v2beta2;tasks",
+    create_key=_descriptor._internal_create_key,
     serialized_pb=b'\n-google/cloud/tasks_v2beta2/proto/target.proto\x12\x1agoogle.cloud.tasks.v2beta2\x1a\x1cgoogle/api/annotations.proto"\x0c\n\nPullTarget"+\n\x0bPullMessage\x12\x0f\n\x07payload\x18\x01 \x01(\x0c\x12\x0b\n\x03tag\x18\x02 \x01(\t"h\n\x13\x41ppEngineHttpTarget\x12Q\n\x1b\x61pp_engine_routing_override\x18\x01 \x01(\x0b\x32,.google.cloud.tasks.v2beta2.AppEngineRouting"\xc4\x02\n\x14\x41ppEngineHttpRequest\x12;\n\x0bhttp_method\x18\x01 \x01(\x0e\x32&.google.cloud.tasks.v2beta2.HttpMethod\x12H\n\x12\x61pp_engine_routing\x18\x02 \x01(\x0b\x32,.google.cloud.tasks.v2beta2.AppEngineRouting\x12\x14\n\x0crelative_url\x18\x03 \x01(\t\x12N\n\x07headers\x18\x04 \x03(\x0b\x32=.google.cloud.tasks.v2beta2.AppEngineHttpRequest.HeadersEntry\x12\x0f\n\x07payload\x18\x05 \x01(\x0c\x1a.\n\x0cHeadersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"T\n\x10\x41ppEngineRouting\x12\x0f\n\x07service\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x10\n\x08instance\x18\x03 \x01(\t\x12\x0c\n\x04host\x18\x04 \x01(\t*[\n\nHttpMethod\x12\x1b\n\x17HTTP_METHOD_UNSPECIFIED\x10\x00\x12\x08\n\x04POST\x10\x01\x12\x07\n\x03GET\x10\x02\x12\x08\n\x04HEAD\x10\x03\x12\x07\n\x03PUT\x10\x04\x12\n\n\x06\x44\x45LETE\x10\x05\x42p\n\x1e\x63om.google.cloud.tasks.v2beta2B\x0bTargetProtoP\x01Z?google.golang.org/genproto/googleapis/cloud/tasks/v2beta2;tasksb\x06proto3',
     dependencies=[google_dot_api_dot_annotations__pb2.DESCRIPTOR],
 )
@@ -30,6 +31,7 @@ _HTTPMETHOD = _descriptor.EnumDescriptor(
     full_name="google.cloud.tasks.v2beta2.HttpMethod",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="HTTP_METHOD_UNSPECIFIED",
@@ -37,21 +39,47 @@ _HTTPMETHOD = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="POST", index=1, number=1, serialized_options=None, type=None
+            name="POST",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="GET", index=2, number=2, serialized_options=None, type=None
+            name="GET",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="HEAD", index=3, number=3, serialized_options=None, type=None
+            name="HEAD",
+            index=3,
+            number=3,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="PUT", index=4, number=4, serialized_options=None, type=None
+            name="PUT",
+            index=4,
+            number=4,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="DELETE", index=5, number=5, serialized_options=None, type=None
+            name="DELETE",
+            index=5,
+            number=5,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -76,6 +104,7 @@ _PULLTARGET = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[],
     extensions=[],
     nested_types=[],
@@ -96,6 +125,7 @@ _PULLMESSAGE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="payload",
@@ -114,6 +144,7 @@ _PULLMESSAGE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="tag",
@@ -132,6 +163,7 @@ _PULLMESSAGE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -153,6 +185,7 @@ _APPENGINEHTTPTARGET = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="app_engine_routing_override",
@@ -171,6 +204,7 @@ _APPENGINEHTTPTARGET = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         )
     ],
     extensions=[],
@@ -192,6 +226,7 @@ _APPENGINEHTTPREQUEST_HEADERSENTRY = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="key",
@@ -210,6 +245,7 @@ _APPENGINEHTTPREQUEST_HEADERSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="value",
@@ -228,6 +264,7 @@ _APPENGINEHTTPREQUEST_HEADERSENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -248,6 +285,7 @@ _APPENGINEHTTPREQUEST = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="http_method",
@@ -266,6 +304,7 @@ _APPENGINEHTTPREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="app_engine_routing",
@@ -284,6 +323,7 @@ _APPENGINEHTTPREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="relative_url",
@@ -302,6 +342,7 @@ _APPENGINEHTTPREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="headers",
@@ -320,6 +361,7 @@ _APPENGINEHTTPREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="payload",
@@ -338,6 +380,7 @@ _APPENGINEHTTPREQUEST = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -359,6 +402,7 @@ _APPENGINEROUTING = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="service",
@@ -377,6 +421,7 @@ _APPENGINEROUTING = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="version",
@@ -395,6 +440,7 @@ _APPENGINEROUTING = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="instance",
@@ -413,6 +459,7 @@ _APPENGINEROUTING = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="host",
@@ -431,6 +478,7 @@ _APPENGINEROUTING = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],

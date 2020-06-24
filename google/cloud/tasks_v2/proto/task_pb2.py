@@ -27,6 +27,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     package="google.cloud.tasks.v2",
     syntax="proto3",
     serialized_options=b"\n\031com.google.cloud.tasks.v2B\tTaskProtoP\001Z:google.golang.org/genproto/googleapis/cloud/tasks/v2;tasks",
+    create_key=_descriptor._internal_create_key,
     serialized_pb=b'\n&google/cloud/tasks_v2/proto/task.proto\x12\x15google.cloud.tasks.v2\x1a\x19google/api/resource.proto\x1a(google/cloud/tasks_v2/proto/target.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto\x1a\x1cgoogle/api/annotations.proto"\xb4\x05\n\x04Task\x12\x0c\n\x04name\x18\x01 \x01(\t\x12N\n\x17\x61pp_engine_http_request\x18\x02 \x01(\x0b\x32+.google.cloud.tasks.v2.AppEngineHttpRequestH\x00\x12:\n\x0chttp_request\x18\x03 \x01(\x0b\x32".google.cloud.tasks.v2.HttpRequestH\x00\x12\x31\n\rschedule_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12/\n\x0b\x63reate_time\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x34\n\x11\x64ispatch_deadline\x18\x06 \x01(\x0b\x32\x19.google.protobuf.Duration\x12\x16\n\x0e\x64ispatch_count\x18\x07 \x01(\x05\x12\x16\n\x0eresponse_count\x18\x08 \x01(\x05\x12\x35\n\rfirst_attempt\x18\t \x01(\x0b\x32\x1e.google.cloud.tasks.v2.Attempt\x12\x34\n\x0clast_attempt\x18\n \x01(\x0b\x32\x1e.google.cloud.tasks.v2.Attempt\x12.\n\x04view\x18\x0b \x01(\x0e\x32 .google.cloud.tasks.v2.Task.View"1\n\x04View\x12\x14\n\x10VIEW_UNSPECIFIED\x10\x00\x12\t\n\x05\x42\x41SIC\x10\x01\x12\x08\n\x04\x46ULL\x10\x02:h\xea\x41\x65\n\x1e\x63loudtasks.googleapis.com/Task\x12\x43projects/{project}/locations/{location}/queues/{queue}/tasks/{task}B\x0e\n\x0cmessage_type"\xcf\x01\n\x07\x41ttempt\x12\x31\n\rschedule_time\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x31\n\rdispatch_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x31\n\rresponse_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x0fresponse_status\x18\x04 \x01(\x0b\x32\x12.google.rpc.StatusBd\n\x19\x63om.google.cloud.tasks.v2B\tTaskProtoP\x01Z:google.golang.org/genproto/googleapis/cloud/tasks/v2;tasksb\x06proto3',
     dependencies=[
         google_dot_api_dot_resource__pb2.DESCRIPTOR,
@@ -44,6 +45,7 @@ _TASK_VIEW = _descriptor.EnumDescriptor(
     full_name="google.cloud.tasks.v2.Task.View",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="VIEW_UNSPECIFIED",
@@ -51,12 +53,23 @@ _TASK_VIEW = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="BASIC", index=1, number=1, serialized_options=None, type=None
+            name="BASIC",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="FULL", index=2, number=2, serialized_options=None, type=None
+            name="FULL",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -73,6 +86,7 @@ _TASK = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="name",
@@ -91,6 +105,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="app_engine_http_request",
@@ -109,6 +124,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="http_request",
@@ -127,6 +143,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="schedule_time",
@@ -145,6 +162,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="create_time",
@@ -163,6 +181,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="dispatch_deadline",
@@ -181,6 +200,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="dispatch_count",
@@ -199,6 +219,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="response_count",
@@ -217,6 +238,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="first_attempt",
@@ -235,6 +257,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_attempt",
@@ -253,6 +276,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="view",
@@ -271,6 +295,7 @@ _TASK = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -286,6 +311,7 @@ _TASK = _descriptor.Descriptor(
             full_name="google.cloud.tasks.v2.Task.message_type",
             index=0,
             containing_type=None,
+            create_key=_descriptor._internal_create_key,
             fields=[],
         )
     ],
@@ -300,6 +326,7 @@ _ATTEMPT = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="schedule_time",
@@ -318,6 +345,7 @@ _ATTEMPT = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="dispatch_time",
@@ -336,6 +364,7 @@ _ATTEMPT = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="response_time",
@@ -354,6 +383,7 @@ _ATTEMPT = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="response_status",
@@ -372,6 +402,7 @@ _ATTEMPT = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
