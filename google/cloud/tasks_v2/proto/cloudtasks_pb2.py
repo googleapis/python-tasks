@@ -940,8 +940,6 @@ ListQueuesRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [ListQueues][google.cloud.tasks.v2.CloudTasks.ListQueues].
-  
-  
   Attributes:
       parent:
           Required. The location name. For example:
@@ -986,8 +984,6 @@ ListQueuesResponse = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Response message for
   [ListQueues][google.cloud.tasks.v2.CloudTasks.ListQueues].
-  
-  
   Attributes:
       queues:
           The list of queues.
@@ -1013,8 +1009,6 @@ GetQueueRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [GetQueue][google.cloud.tasks.v2.CloudTasks.GetQueue].
-  
-  
   Attributes:
       name:
           Required. The resource name of the queue. For example:
@@ -1033,8 +1027,6 @@ CreateQueueRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [CreateQueue][google.cloud.tasks.v2.CloudTasks.CreateQueue].
-  
-  
   Attributes:
       parent:
           Required. The location name in which the queue will be
@@ -1061,8 +1053,6 @@ UpdateQueueRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [UpdateQueue][google.cloud.tasks.v2.CloudTasks.UpdateQueue].
-  
-  
   Attributes:
       queue:
           Required. The queue to create or update.  The queue’s
@@ -1088,8 +1078,6 @@ DeleteQueueRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [DeleteQueue][google.cloud.tasks.v2.CloudTasks.DeleteQueue].
-  
-  
   Attributes:
       name:
           Required. The queue name. For example:
@@ -1108,8 +1096,6 @@ PurgeQueueRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [PurgeQueue][google.cloud.tasks.v2.CloudTasks.PurgeQueue].
-  
-  
   Attributes:
       name:
           Required. The queue name. For example:
@@ -1128,8 +1114,6 @@ PauseQueueRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [PauseQueue][google.cloud.tasks.v2.CloudTasks.PauseQueue].
-  
-  
   Attributes:
       name:
           Required. The queue name. For example:
@@ -1148,8 +1132,6 @@ ResumeQueueRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [ResumeQueue][google.cloud.tasks.v2.CloudTasks.ResumeQueue].
-  
-  
   Attributes:
       name:
           Required. The queue name. For example:
@@ -1168,8 +1150,6 @@ ListTasksRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for listing tasks using
   [ListTasks][google.cloud.tasks.v2.CloudTasks.ListTasks].
-  
-  
   Attributes:
       parent:
           Required. The queue name. For example:
@@ -1216,8 +1196,6 @@ ListTasksResponse = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Response message for listing tasks using
   [ListTasks][google.cloud.tasks.v2.CloudTasks.ListTasks].
-  
-  
   Attributes:
       tasks:
           The list of tasks.
@@ -1242,8 +1220,6 @@ GetTaskRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for getting a task using
   [GetTask][google.cloud.tasks.v2.CloudTasks.GetTask].
-  
-  
   Attributes:
       name:
           Required. The task name. For example: ``projects/PROJECT_ID/lo
@@ -1275,8 +1251,6 @@ CreateTaskRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for
   [CreateTask][google.cloud.tasks.v2.CloudTasks.CreateTask].
-  
-  
   Attributes:
       parent:
           Required. The queue name. For example:
@@ -1339,8 +1313,6 @@ DeleteTaskRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for deleting a task using
   [DeleteTask][google.cloud.tasks.v2.CloudTasks.DeleteTask].
-  
-  
   Attributes:
       name:
           Required. The task name. For example: ``projects/PROJECT_ID/lo
@@ -1359,8 +1331,6 @@ RunTaskRequest = _reflection.GeneratedProtocolMessageType(
         "__module__": "google.cloud.tasks_v2.proto.cloudtasks_pb2",
         "__doc__": """Request message for forcing a task to run now using
   [RunTask][google.cloud.tasks.v2.CloudTasks.RunTask].
-  
-  
   Attributes:
       name:
           Required. The task name. For example: ``projects/PROJECT_ID/lo
