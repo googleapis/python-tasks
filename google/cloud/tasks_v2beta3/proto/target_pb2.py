@@ -1149,7 +1149,8 @@ OidcToken = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _OIDCTOKEN,
         "__module__": "google.cloud.tasks_v2beta3.proto.target_pb2",
-        "__doc__": """Contains information needed for generating an `OpenID Connect
+        "__doc__": """Contains information needed for generating an `OpenID
+  Connect
   token <https://developers.google.com/identity/protocols/OpenIDConnect>`_.
   This type of authorization can be used for many scenarios, including
   calling Cloud Run, or endpoints where you intend to validate the token
