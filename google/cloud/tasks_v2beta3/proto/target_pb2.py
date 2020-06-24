@@ -997,14 +997,14 @@ AppEngineHttpRequest = _reflection.GeneratedProtocolMessageType(
           The HTTP method to use for the request. The default is POST.
           The app’s request handler for the task’s target URL must be
           able to handle HTTP requests with this http_method, otherwise
-          the task attempt will fail with error code 405 (Method Not
+          the task attempt fails with error code 405 (Method Not
           Allowed). See `Writing a push task request handler <https://cl
           oud.google.com/appengine/docs/java/taskqueue/push/creating-
-          handlers#writing_a_push_task_request_handler>`_ and the
-          documentation for the request handlers in the language your
-          app is written in e.g. `Python Request Handler <https://cloud.
-          google.com/appengine/docs/python/tools/webapp/requesthandlercl
-          ass>`_.
+          handlers#writing_a_push_task_request_handler>`_ and the App
+          Engine documentation for your runtime on `How Requests are
+          Handled
+          <https://cloud.google.com/appengine/docs/standard/python3/how-
+          requests-are-handled>`_.
       app_engine_routing:
           Task-level setting for App Engine routing.  If set, [app_engin
           e_routing_override][google.cloud.tasks.v2beta3.AppEngineHttpQu

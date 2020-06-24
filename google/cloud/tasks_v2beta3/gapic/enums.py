@@ -82,6 +82,20 @@ class Queue(object):
         PAUSED = 2
         DISABLED = 3
 
+    class Type(enum.IntEnum):
+        """
+        The type of the queue.
+
+        Attributes:
+          TYPE_UNSPECIFIED (int): Default value.
+          PULL (int): A pull queue.
+          PUSH (int): A push queue.
+        """
+
+        TYPE_UNSPECIFIED = 0
+        PULL = 1
+        PUSH = 2
+
 
 class Task(object):
     class View(enum.IntEnum):

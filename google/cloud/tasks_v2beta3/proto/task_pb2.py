@@ -520,7 +520,7 @@ Task = _reflection.GeneratedProtocolMessageType(
           failure. Cloud Tasks will retry the task according to the
           [RetryConfig][google.cloud.tasks.v2beta3.RetryConfig].  Note
           that when the request is cancelled, Cloud Tasks will stop
-          listing for the response, but whether the worker stops
+          listening for the response, but whether the worker stops
           processing depends on the worker. For example, if the worker
           is stuck, it may not react to cancelled requests.  The default
           and maximum values depend on the type of request:  -  For

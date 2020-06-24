@@ -12,6 +12,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
 from google.api import resource_pb2 as google_dot_api_dot_resource__pb2
 from google.cloud.tasks_v2beta3.proto import (
     target_pb2 as google_dot_cloud_dot_tasks__v2beta3_dot_proto_dot_target__pb2,
@@ -27,8 +28,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n\036com.google.cloud.tasks.v2beta3B\nQueueProtoP\001Z?google.golang.org/genproto/googleapis/cloud/tasks/v2beta3;tasks",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n,google/cloud/tasks_v2beta3/proto/queue.proto\x12\x1agoogle.cloud.tasks.v2beta3\x1a\x19google/api/resource.proto\x1a-google/cloud/tasks_v2beta3/proto/target.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto"\xd7\x04\n\x05Queue\x12\x0c\n\x04name\x18\x01 \x01(\t\x12O\n\x15\x61pp_engine_http_queue\x18\x03 \x01(\x0b\x32..google.cloud.tasks.v2beta3.AppEngineHttpQueueH\x00\x12;\n\x0brate_limits\x18\x04 \x01(\x0b\x32&.google.cloud.tasks.v2beta3.RateLimits\x12=\n\x0cretry_config\x18\x05 \x01(\x0b\x32\'.google.cloud.tasks.v2beta3.RetryConfig\x12\x36\n\x05state\x18\x06 \x01(\x0e\x32\'.google.cloud.tasks.v2beta3.Queue.State\x12.\n\npurge_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12X\n\x1astackdriver_logging_config\x18\n \x01(\x0b\x32\x34.google.cloud.tasks.v2beta3.StackdriverLoggingConfig"E\n\x05State\x12\x15\n\x11STATE_UNSPECIFIED\x10\x00\x12\x0b\n\x07RUNNING\x10\x01\x12\n\n\x06PAUSED\x10\x02\x12\x0c\n\x08\x44ISABLED\x10\x03:\\\xea\x41Y\n\x1f\x63loudtasks.googleapis.com/Queue\x12\x36projects/{project}/locations/{location}/queues/{queue}B\x0c\n\nqueue_type"j\n\nRateLimits\x12!\n\x19max_dispatches_per_second\x18\x01 \x01(\x01\x12\x16\n\x0emax_burst_size\x18\x02 \x01(\x05\x12!\n\x19max_concurrent_dispatches\x18\x03 \x01(\x05"\xd1\x01\n\x0bRetryConfig\x12\x14\n\x0cmax_attempts\x18\x01 \x01(\x05\x12\x35\n\x12max_retry_duration\x18\x02 \x01(\x0b\x32\x19.google.protobuf.Duration\x12.\n\x0bmin_backoff\x18\x03 \x01(\x0b\x32\x19.google.protobuf.Duration\x12.\n\x0bmax_backoff\x18\x04 \x01(\x0b\x32\x19.google.protobuf.Duration\x12\x15\n\rmax_doublings\x18\x05 \x01(\x05"2\n\x18StackdriverLoggingConfig\x12\x16\n\x0esampling_ratio\x18\x01 \x01(\x01\x42o\n\x1e\x63om.google.cloud.tasks.v2beta3B\nQueueProtoP\x01Z?google.golang.org/genproto/googleapis/cloud/tasks/v2beta3;tasksb\x06proto3',
+    serialized_pb=b'\n,google/cloud/tasks_v2beta3/proto/queue.proto\x12\x1agoogle.cloud.tasks.v2beta3\x1a\x1fgoogle/api/field_behavior.proto\x1a\x19google/api/resource.proto\x1a-google/cloud/tasks_v2beta3/proto/target.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1cgoogle/api/annotations.proto"\xc4\x05\n\x05Queue\x12\x0c\n\x04name\x18\x01 \x01(\t\x12O\n\x15\x61pp_engine_http_queue\x18\x03 \x01(\x0b\x32..google.cloud.tasks.v2beta3.AppEngineHttpQueueH\x00\x12;\n\x0brate_limits\x18\x04 \x01(\x0b\x32&.google.cloud.tasks.v2beta3.RateLimits\x12=\n\x0cretry_config\x18\x05 \x01(\x0b\x32\'.google.cloud.tasks.v2beta3.RetryConfig\x12\x36\n\x05state\x18\x06 \x01(\x0e\x32\'.google.cloud.tasks.v2beta3.Queue.State\x12.\n\npurge_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12X\n\x1astackdriver_logging_config\x18\n \x01(\x0b\x32\x34.google.cloud.tasks.v2beta3.StackdriverLoggingConfig\x12\x39\n\x04type\x18\x0b \x01(\x0e\x32&.google.cloud.tasks.v2beta3.Queue.TypeB\x03\xe0\x41\x05"E\n\x05State\x12\x15\n\x11STATE_UNSPECIFIED\x10\x00\x12\x0b\n\x07RUNNING\x10\x01\x12\n\n\x06PAUSED\x10\x02\x12\x0c\n\x08\x44ISABLED\x10\x03"0\n\x04Type\x12\x14\n\x10TYPE_UNSPECIFIED\x10\x00\x12\x08\n\x04PULL\x10\x01\x12\x08\n\x04PUSH\x10\x02:\\\xea\x41Y\n\x1f\x63loudtasks.googleapis.com/Queue\x12\x36projects/{project}/locations/{location}/queues/{queue}B\x0c\n\nqueue_type"j\n\nRateLimits\x12!\n\x19max_dispatches_per_second\x18\x01 \x01(\x01\x12\x16\n\x0emax_burst_size\x18\x02 \x01(\x05\x12!\n\x19max_concurrent_dispatches\x18\x03 \x01(\x05"\xd1\x01\n\x0bRetryConfig\x12\x14\n\x0cmax_attempts\x18\x01 \x01(\x05\x12\x35\n\x12max_retry_duration\x18\x02 \x01(\x0b\x32\x19.google.protobuf.Duration\x12.\n\x0bmin_backoff\x18\x03 \x01(\x0b\x32\x19.google.protobuf.Duration\x12.\n\x0bmax_backoff\x18\x04 \x01(\x0b\x32\x19.google.protobuf.Duration\x12\x15\n\rmax_doublings\x18\x05 \x01(\x05"2\n\x18StackdriverLoggingConfig\x12\x16\n\x0esampling_ratio\x18\x01 \x01(\x01\x42o\n\x1e\x63om.google.cloud.tasks.v2beta3B\nQueueProtoP\x01Z?google.golang.org/genproto/googleapis/cloud/tasks/v2beta3;tasksb\x06proto3',
     dependencies=[
+        google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,
         google_dot_api_dot_resource__pb2.DESCRIPTOR,
         google_dot_cloud_dot_tasks__v2beta3_dot_proto_dot_target__pb2.DESCRIPTOR,
         google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,
@@ -80,10 +82,49 @@ _QUEUE_STATE = _descriptor.EnumDescriptor(
     ],
     containing_type=None,
     serialized_options=None,
-    serialized_start=668,
-    serialized_end=737,
+    serialized_start=760,
+    serialized_end=829,
 )
 _sym_db.RegisterEnumDescriptor(_QUEUE_STATE)
+
+_QUEUE_TYPE = _descriptor.EnumDescriptor(
+    name="Type",
+    full_name="google.cloud.tasks.v2beta3.Queue.Type",
+    filename=None,
+    file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
+    values=[
+        _descriptor.EnumValueDescriptor(
+            name="TYPE_UNSPECIFIED",
+            index=0,
+            number=0,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.EnumValueDescriptor(
+            name="PULL",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.EnumValueDescriptor(
+            name="PUSH",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    containing_type=None,
+    serialized_options=None,
+    serialized_start=831,
+    serialized_end=879,
+)
+_sym_db.RegisterEnumDescriptor(_QUEUE_TYPE)
 
 
 _QUEUE = _descriptor.Descriptor(
@@ -227,10 +268,29 @@ _QUEUE = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="type",
+            full_name="google.cloud.tasks.v2beta3.Queue.type",
+            index=7,
+            number=11,
+            type=14,
+            cpp_type=8,
+            label=1,
+            has_default_value=False,
+            default_value=0,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=b"\340A\005",
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
-    enum_types=[_QUEUE_STATE],
+    enum_types=[_QUEUE_STATE, _QUEUE_TYPE],
     serialized_options=b"\352AY\n\037cloudtasks.googleapis.com/Queue\0226projects/{project}/locations/{location}/queues/{queue}",
     is_extendable=False,
     syntax="proto3",
@@ -245,8 +305,8 @@ _QUEUE = _descriptor.Descriptor(
             fields=[],
         )
     ],
-    serialized_start=246,
-    serialized_end=845,
+    serialized_start=279,
+    serialized_end=987,
 )
 
 
@@ -324,8 +384,8 @@ _RATELIMITS = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=847,
-    serialized_end=953,
+    serialized_start=989,
+    serialized_end=1095,
 )
 
 
@@ -441,8 +501,8 @@ _RETRYCONFIG = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=956,
-    serialized_end=1165,
+    serialized_start=1098,
+    serialized_end=1307,
 )
 
 
@@ -482,8 +542,8 @@ _STACKDRIVERLOGGINGCONFIG = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=1167,
-    serialized_end=1217,
+    serialized_start=1309,
+    serialized_end=1359,
 )
 
 _QUEUE.fields_by_name[
@@ -500,7 +560,9 @@ _QUEUE.fields_by_name[
 _QUEUE.fields_by_name[
     "stackdriver_logging_config"
 ].message_type = _STACKDRIVERLOGGINGCONFIG
+_QUEUE.fields_by_name["type"].enum_type = _QUEUE_TYPE
 _QUEUE_STATE.containing_type = _QUEUE
+_QUEUE_TYPE.containing_type = _QUEUE
 _QUEUE.oneofs_by_name["queue_type"].fields.append(
     _QUEUE.fields_by_name["app_engine_http_queue"]
 )
@@ -617,6 +679,11 @@ Queue = _reflection.GeneratedProtocolMessageType(
           Configuration options for writing logs to `Stackdriver Logging
           <https://cloud.google.com/logging/docs/>`_. If this field is
           unset, then no logs are written.
+      type:
+          Immutable. The type of a queue (push or pull).  ``Queue.type``
+          is an immutable property of the queue that is set at the queue
+          creation time. When left unspecified, the default value of
+          ``PUSH`` is selected.
   """,
         # @@protoc_insertion_point(class_scope:google.cloud.tasks.v2beta3.Queue)
     },
@@ -754,24 +821,24 @@ RetryConfig = _reflection.GeneratedProtocolMessageType(
           A task’s retry interval starts at [min_backoff][google.cloud.t
           asks.v2beta3.RetryConfig.min_backoff], then doubles
           ``max_doublings`` times, then increases linearly, and finally
-          retries retries at intervals of [max_backoff][google.cloud.tas
-          ks.v2beta3.RetryConfig.max_backoff] up to [max_attempts][googl
-          e.cloud.tasks.v2beta3.RetryConfig.max_attempts] times.  For
-          example, if [min_backoff][google.cloud.tasks.v2beta3.RetryConf
-          ig.min_backoff] is 10s, [max_backoff][google.cloud.tasks.v2bet
-          a3.RetryConfig.max_backoff] is 300s, and ``max_doublings`` is
-          3, then the a task will first be retried in 10s. The retry
-          interval will double three times, and then increase linearly
-          by 2^3 \* 10s. Finally, the task will retry at intervals of [m
-          ax_backoff][google.cloud.tasks.v2beta3.RetryConfig.max_backoff
-          ] until the task has been attempted [max_attempts][google.clou
-          d.tasks.v2beta3.RetryConfig.max_attempts] times. Thus, the
-          requests will retry at 10s, 20s, 40s, 80s, 160s, 240s, 300s,
-          300s, ….  If unspecified when the queue is created, Cloud
-          Tasks will pick the default.  This field has the same meaning
-          as `max_doublings in queue.yaml/xml <https://cloud.google.com/
-          appengine/docs/standard/python/config/queueref#retry_parameter
-          s>`_.
+          retries at intervals of [max_backoff][google.cloud.tasks.v2bet
+          a3.RetryConfig.max_backoff] up to [max_attempts][google.cloud.
+          tasks.v2beta3.RetryConfig.max_attempts] times.  For example,
+          if [min_backoff][google.cloud.tasks.v2beta3.RetryConfig.min_ba
+          ckoff] is 10s, [max_backoff][google.cloud.tasks.v2beta3.RetryC
+          onfig.max_backoff] is 300s, and ``max_doublings`` is 3, then
+          the a task will first be retried in 10s. The retry interval
+          will double three times, and then increase linearly by 2^3 \*
+          10s. Finally, the task will retry at intervals of [max_backoff
+          ][google.cloud.tasks.v2beta3.RetryConfig.max_backoff] until
+          the task has been attempted [max_attempts][google.cloud.tasks.
+          v2beta3.RetryConfig.max_attempts] times. Thus, the requests
+          will retry at 10s, 20s, 40s, 80s, 160s, 240s, 300s, 300s, ….
+          If unspecified when the queue is created, Cloud Tasks will
+          pick the default.  This field has the same meaning as
+          `max_doublings in queue.yaml/xml <https://cloud.google.com/app
+          engine/docs/standard/python/config/queueref#retry_parameters>`
+          __.
   """,
         # @@protoc_insertion_point(class_scope:google.cloud.tasks.v2beta3.RetryConfig)
     },
@@ -801,5 +868,6 @@ _sym_db.RegisterMessage(StackdriverLoggingConfig)
 
 
 DESCRIPTOR._options = None
+_QUEUE.fields_by_name["type"]._options = None
 _QUEUE._options = None
 # @@protoc_insertion_point(module_scope)
