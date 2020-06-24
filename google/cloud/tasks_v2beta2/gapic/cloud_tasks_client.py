@@ -270,10 +270,10 @@ class CloudTasksClient(object):
                 described in `Stackdriver's Advanced Logs
                 Filters <https://cloud.google.com/logging/docs/view/advanced_filters>`__.
 
-                Sample filter "app\_engine\_http\_target: \*".
+                Sample filter "app_engine_http_target: \*".
 
-                Note that using filters might cause fewer queues than the
-                requested\_page size to be returned.
+                Note that using filters might cause fewer queues than the requested_page
+                size to be returned.
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -922,8 +922,8 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Gets the access control policy for a ``Queue``. Returns an empty policy
-        if the resource exists and does not have a policy set.
+        Gets the access control policy for a ``Queue``. Returns an empty
+        policy if the resource exists and does not have a policy set.
 
         Authorization requires the following `Google
         IAM <https://cloud.google.com/iam>`__ permission on the specified
@@ -1008,8 +1008,8 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Sets the access control policy for a ``Queue``. Replaces any existing
-        policy.
+        Sets the access control policy for a ``Queue``. Replaces any
+        existing policy.
 
         Note: The Cloud Console does not check queue-level IAM permissions yet.
         Project-level permissions are required to use the Cloud Console.
@@ -1100,9 +1100,9 @@ class CloudTasksClient(object):
         metadata=None,
     ):
         """
-        Returns permissions that a caller has on a ``Queue``. If the resource
-        does not exist, this will return an empty set of permissions, not a
-        ``NOT_FOUND`` error.
+        Returns permissions that a caller has on a ``Queue``. If the
+        resource does not exist, this will return an empty set of permissions,
+        not a ``NOT_FOUND`` error.
 
         Note: This operation is designed to be used for building
         permission-aware UIs and command-line tools, not for authorization
@@ -1124,8 +1124,8 @@ class CloudTasksClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy detail is being requested.
                 See the operation documentation for the appropriate value for this field.
-            permissions (list[str]): The set of permissions to check for the ``resource``. Permissions with
-                wildcards (such as '*' or 'storage.*') are not allowed. For more
+            permissions (list[str]): The set of permissions to check for the ``resource``. Permissions
+                with wildcards (such as '*' or 'storage.*') are not allowed. For more
                 information see `IAM
                 Overview <https://cloud.google.com/iam/docs/overview#permissions>`__.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
@@ -1221,10 +1221,10 @@ class CloudTasksClient(object):
         Args:
             parent (str): Required. The queue name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response_view specifies which subset of the ``Task`` will be
                 returned.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
+                By default response_view is ``BASIC``; not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
@@ -1324,10 +1324,10 @@ class CloudTasksClient(object):
         Args:
             name (str): Required. The task name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response_view specifies which subset of the ``Task`` will be
                 returned.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
+                By default response_view is ``BASIC``; not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
@@ -1450,10 +1450,10 @@ class CloudTasksClient(object):
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Task`
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response_view specifies which subset of the ``Task`` will be
                 returned.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
+                By default response_view is ``BASIC``; not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
@@ -1651,10 +1651,10 @@ class CloudTasksClient(object):
                 The maximum total size of a ``lease tasks response`` is 32 MB. If the
                 sum of all task sizes requested reaches this limit, fewer tasks than
                 requested are returned.
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response_view specifies which subset of the ``Task`` will be
                 returned.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
+                By default response_view is ``BASIC``; not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
@@ -1879,10 +1879,10 @@ class CloudTasksClient(object):
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Duration`
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response_view specifies which subset of the ``Task`` will be
                 returned.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
+                By default response_view is ``BASIC``; not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
@@ -1981,10 +1981,10 @@ class CloudTasksClient(object):
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.tasks_v2beta2.types.Timestamp`
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response_view specifies which subset of the ``Task`` will be
                 returned.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
+                By default response_view is ``BASIC``; not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
@@ -2087,10 +2087,10 @@ class CloudTasksClient(object):
         Args:
             name (str): Required. The task name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
-            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response\_view specifies which subset of the ``Task`` will be
+            response_view (~google.cloud.tasks_v2beta2.enums.Task.View): The response_view specifies which subset of the ``Task`` will be
                 returned.
 
-                By default response\_view is ``BASIC``; not all information is retrieved
+                By default response_view is ``BASIC``; not all information is retrieved
                 by default because some data, such as payloads, might be desirable to
                 return only when needed because of its large size or because of the
                 sensitivity of data that it contains.
