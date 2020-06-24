@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     serialized_options=b"\n\036com.google.cloud.tasks.v2beta3B\013TargetProtoP\001Z?google.golang.org/genproto/googleapis/cloud/tasks/v2beta3;tasks",
     create_key=_descriptor._internal_create_key,
     serialized_pb=b'\n-google/cloud/tasks_v2beta3/proto/target.proto\x12\x1agoogle.cloud.tasks.v2beta3\x1a\x1cgoogle/api/annotations.proto"\xf0\x02\n\x0bHttpRequest\x12\x0b\n\x03url\x18\x01 \x01(\t\x12;\n\x0bhttp_method\x18\x02 \x01(\x0e\x32&.google.cloud.tasks.v2beta3.HttpMethod\x12\x45\n\x07headers\x18\x03 \x03(\x0b\x32\x34.google.cloud.tasks.v2beta3.HttpRequest.HeadersEntry\x12\x0c\n\x04\x62ody\x18\x04 \x01(\x0c\x12=\n\x0boauth_token\x18\x05 \x01(\x0b\x32&.google.cloud.tasks.v2beta3.OAuthTokenH\x00\x12;\n\noidc_token\x18\x06 \x01(\x0b\x32%.google.cloud.tasks.v2beta3.OidcTokenH\x00\x1a.\n\x0cHeadersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x16\n\x14\x61uthorization_header"g\n\x12\x41ppEngineHttpQueue\x12Q\n\x1b\x61pp_engine_routing_override\x18\x01 \x01(\x0b\x32,.google.cloud.tasks.v2beta3.AppEngineRouting"\xc1\x02\n\x14\x41ppEngineHttpRequest\x12;\n\x0bhttp_method\x18\x01 \x01(\x0e\x32&.google.cloud.tasks.v2beta3.HttpMethod\x12H\n\x12\x61pp_engine_routing\x18\x02 \x01(\x0b\x32,.google.cloud.tasks.v2beta3.AppEngineRouting\x12\x14\n\x0crelative_uri\x18\x03 \x01(\t\x12N\n\x07headers\x18\x04 \x03(\x0b\x32=.google.cloud.tasks.v2beta3.AppEngineHttpRequest.HeadersEntry\x12\x0c\n\x04\x62ody\x18\x05 \x01(\x0c\x1a.\n\x0cHeadersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01"T\n\x10\x41ppEngineRouting\x12\x0f\n\x07service\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x10\n\x08instance\x18\x03 \x01(\t\x12\x0c\n\x04host\x18\x04 \x01(\t":\n\nOAuthToken\x12\x1d\n\x15service_account_email\x18\x01 \x01(\t\x12\r\n\x05scope\x18\x02 \x01(\t"<\n\tOidcToken\x12\x1d\n\x15service_account_email\x18\x01 \x01(\t\x12\x10\n\x08\x61udience\x18\x02 \x01(\t*s\n\nHttpMethod\x12\x1b\n\x17HTTP_METHOD_UNSPECIFIED\x10\x00\x12\x08\n\x04POST\x10\x01\x12\x07\n\x03GET\x10\x02\x12\x08\n\x04HEAD\x10\x03\x12\x07\n\x03PUT\x10\x04\x12\n\n\x06\x44\x45LETE\x10\x05\x12\t\n\x05PATCH\x10\x06\x12\x0b\n\x07OPTIONS\x10\x07\x42p\n\x1e\x63om.google.cloud.tasks.v2beta3B\x0bTargetProtoP\x01Z?google.golang.org/genproto/googleapis/cloud/tasks/v2beta3;tasksb\x06proto3',
-    dependencies=[google_dot_api_dot_annotations__pb2.DESCRIPTOR],
+    dependencies=[google_dot_api_dot_annotations__pb2.DESCRIPTOR,],
 )
 
 _HTTPMETHOD = _descriptor.EnumDescriptor(
@@ -299,7 +299,7 @@ _HTTPREQUEST = _descriptor.Descriptor(
         ),
     ],
     extensions=[],
-    nested_types=[_HTTPREQUEST_HEADERSENTRY],
+    nested_types=[_HTTPREQUEST_HEADERSENTRY,],
     enum_types=[],
     serialized_options=None,
     is_extendable=False,
@@ -313,7 +313,7 @@ _HTTPREQUEST = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=108,
     serialized_end=476,
@@ -346,7 +346,7 @@ _APPENGINEHTTPQUEUE = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -525,7 +525,7 @@ _APPENGINEHTTPREQUEST = _descriptor.Descriptor(
         ),
     ],
     extensions=[],
-    nested_types=[_APPENGINEHTTPREQUEST_HEADERSENTRY],
+    nested_types=[_APPENGINEHTTPREQUEST_HEADERSENTRY,],
     enum_types=[],
     serialized_options=None,
     is_extendable=False,

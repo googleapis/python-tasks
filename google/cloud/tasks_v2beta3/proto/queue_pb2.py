@@ -290,7 +290,7 @@ _QUEUE = _descriptor.Descriptor(
     ],
     extensions=[],
     nested_types=[],
-    enum_types=[_QUEUE_STATE, _QUEUE_TYPE],
+    enum_types=[_QUEUE_STATE, _QUEUE_TYPE,],
     serialized_options=b"\352AY\n\037cloudtasks.googleapis.com/Queue\0226projects/{project}/locations/{location}/queues/{queue}",
     is_extendable=False,
     syntax="proto3",
@@ -303,7 +303,7 @@ _QUEUE = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=279,
     serialized_end=987,
@@ -532,7 +532,7 @@ _STACKDRIVERLOGGINGCONFIG = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],

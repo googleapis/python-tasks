@@ -230,7 +230,7 @@ _QUEUE = _descriptor.Descriptor(
     ],
     extensions=[],
     nested_types=[],
-    enum_types=[_QUEUE_STATE],
+    enum_types=[_QUEUE_STATE,],
     serialized_options=b"\352AY\n\037cloudtasks.googleapis.com/Queue\0226projects/{project}/locations/{location}/queues/{queue}",
     is_extendable=False,
     syntax="proto3",
@@ -243,7 +243,7 @@ _QUEUE = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=246,
     serialized_end=821,
@@ -467,7 +467,7 @@ _RETRYCONFIG = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=933,
     serialized_end=1190,

@@ -234,7 +234,7 @@ _GETQUEUEREQUEST = _descriptor.Descriptor(
             serialized_options=b"\340A\002\372A!\n\037cloudtasks.googleapis.com/Queue",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -395,7 +395,7 @@ _DELETEQUEUEREQUEST = _descriptor.Descriptor(
             serialized_options=b"\340A\002\372A!\n\037cloudtasks.googleapis.com/Queue",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -436,7 +436,7 @@ _PURGEQUEUEREQUEST = _descriptor.Descriptor(
             serialized_options=b"\340A\002\372A!\n\037cloudtasks.googleapis.com/Queue",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -477,7 +477,7 @@ _PAUSEQUEUEREQUEST = _descriptor.Descriptor(
             serialized_options=b"\340A\002\372A!\n\037cloudtasks.googleapis.com/Queue",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -518,7 +518,7 @@ _RESUMEQUEUEREQUEST = _descriptor.Descriptor(
             serialized_options=b"\340A\002\372A!\n\037cloudtasks.googleapis.com/Queue",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -856,7 +856,7 @@ _DELETETASKREQUEST = _descriptor.Descriptor(
             serialized_options=b"\340A\002\372A \n\036cloudtasks.googleapis.com/Task",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],

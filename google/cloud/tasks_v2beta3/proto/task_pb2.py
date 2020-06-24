@@ -300,7 +300,7 @@ _TASK = _descriptor.Descriptor(
     ],
     extensions=[],
     nested_types=[],
-    enum_types=[_TASK_VIEW],
+    enum_types=[_TASK_VIEW,],
     serialized_options=b"\352Ae\n\036cloudtasks.googleapis.com/Task\022Cprojects/{project}/locations/{location}/queues/{queue}/tasks/{task}",
     is_extendable=False,
     syntax="proto3",
@@ -313,7 +313,7 @@ _TASK = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=270,
     serialized_end=987,

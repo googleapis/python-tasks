@@ -47,7 +47,7 @@ from google.protobuf import field_mask_pb2
 from google.protobuf import timestamp_pb2
 
 
-_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-tasks").version
+_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-tasks",).version
 
 
 class CloudTasksClient(object):
@@ -200,12 +200,12 @@ class CloudTasksClient(object):
                 self.transport = transport
         else:
             self.transport = cloud_tasks_grpc_transport.CloudTasksGrpcTransport(
-                address=api_endpoint, channel=channel, credentials=credentials
+                address=api_endpoint, channel=channel, credentials=credentials,
             )
 
         if client_info is None:
             client_info = google.api_core.gapic_v1.client_info.ClientInfo(
-                gapic_version=_GAPIC_LIBRARY_VERSION
+                gapic_version=_GAPIC_LIBRARY_VERSION,
             )
         else:
             client_info.gapic_version = _GAPIC_LIBRARY_VERSION
@@ -216,7 +216,7 @@ class CloudTasksClient(object):
         # (Ordinarily, these are the defaults specified in the `*_config.py`
         # file next to this one.)
         self._method_configs = google.api_core.gapic_v1.config.parse_method_configs(
-            client_config["interfaces"][self._INTERFACE_NAME]
+            client_config["interfaces"][self._INTERFACE_NAME],
         )
 
         # Save a dictionary of cached API call functions.
@@ -313,7 +313,7 @@ class CloudTasksClient(object):
             )
 
         request = cloudtasks_pb2.ListQueuesRequest(
-            parent=parent, filter=filter_, page_size=page_size
+            parent=parent, filter=filter_, page_size=page_size,
         )
         if metadata is None:
             metadata = []
@@ -395,7 +395,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.GetQueueRequest(name=name)
+        request = cloudtasks_pb2.GetQueueRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -488,7 +488,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.CreateQueueRequest(parent=parent, queue=queue)
+        request = cloudtasks_pb2.CreateQueueRequest(parent=parent, queue=queue,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -588,7 +588,7 @@ class CloudTasksClient(object):
             )
 
         request = cloudtasks_pb2.UpdateQueueRequest(
-            queue=queue, update_mask=update_mask
+            queue=queue, update_mask=update_mask,
         )
         if metadata is None:
             metadata = []
@@ -667,7 +667,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.DeleteQueueRequest(name=name)
+        request = cloudtasks_pb2.DeleteQueueRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -742,7 +742,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.PurgeQueueRequest(name=name)
+        request = cloudtasks_pb2.PurgeQueueRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -816,7 +816,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.PauseQueueRequest(name=name)
+        request = cloudtasks_pb2.PauseQueueRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -895,7 +895,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.ResumeQueueRequest(name=name)
+        request = cloudtasks_pb2.ResumeQueueRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -980,7 +980,7 @@ class CloudTasksClient(object):
             )
 
         request = iam_policy_pb2.GetIamPolicyRequest(
-            resource=resource, options=options_
+            resource=resource, options=options_,
         )
         if metadata is None:
             metadata = []
@@ -1073,7 +1073,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = iam_policy_pb2.SetIamPolicyRequest(resource=resource, policy=policy)
+        request = iam_policy_pb2.SetIamPolicyRequest(resource=resource, policy=policy,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1159,7 +1159,7 @@ class CloudTasksClient(object):
             )
 
         request = iam_policy_pb2.TestIamPermissionsRequest(
-            resource=resource, permissions=permissions
+            resource=resource, permissions=permissions,
         )
         if metadata is None:
             metadata = []
@@ -1271,7 +1271,7 @@ class CloudTasksClient(object):
             )
 
         request = cloudtasks_pb2.ListTasksRequest(
-            parent=parent, response_view=response_view, page_size=page_size
+            parent=parent, response_view=response_view, page_size=page_size,
         )
         if metadata is None:
             metadata = []
@@ -1365,7 +1365,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.GetTaskRequest(name=name, response_view=response_view)
+        request = cloudtasks_pb2.GetTaskRequest(name=name, response_view=response_view,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1492,7 +1492,7 @@ class CloudTasksClient(object):
             )
 
         request = cloudtasks_pb2.CreateTaskRequest(
-            parent=parent, task=task, response_view=response_view
+            parent=parent, task=task, response_view=response_view,
         )
         if metadata is None:
             metadata = []
@@ -1564,7 +1564,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.DeleteTaskRequest(name=name)
+        request = cloudtasks_pb2.DeleteTaskRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1811,7 +1811,7 @@ class CloudTasksClient(object):
             )
 
         request = cloudtasks_pb2.AcknowledgeTaskRequest(
-            name=name, schedule_time=schedule_time
+            name=name, schedule_time=schedule_time,
         )
         if metadata is None:
             metadata = []
@@ -2023,7 +2023,7 @@ class CloudTasksClient(object):
             )
 
         request = cloudtasks_pb2.CancelLeaseRequest(
-            name=name, schedule_time=schedule_time, response_view=response_view
+            name=name, schedule_time=schedule_time, response_view=response_view,
         )
         if metadata is None:
             metadata = []
@@ -2128,7 +2128,7 @@ class CloudTasksClient(object):
                 client_info=self._client_info,
             )
 
-        request = cloudtasks_pb2.RunTaskRequest(name=name, response_view=response_view)
+        request = cloudtasks_pb2.RunTaskRequest(name=name, response_view=response_view,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
