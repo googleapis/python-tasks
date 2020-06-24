@@ -829,6 +829,7 @@ HttpRequest = _reflection.GeneratedProtocolMessageType(
   if large numbers of tasks suddenly become available to dispatch (due
   to spikes in create task rates, the queue being unpaused, or many
   tasks that are scheduled at the same time).
+  
   Attributes:
       url:
           Required. The full url path that the request will be sent to.
@@ -914,6 +915,7 @@ AppEngineHttpQueue = _reflection.GeneratedProtocolMessageType(
   <https://cloud.google.com/appengine/docs/admin-api/access-control>`_
   Google IAM permission for the project and the following scope:
   ``https://www.googleapis.com/auth/cloud-platform``
+  
   Attributes:
       app_engine_routing_override:
           Overrides for the [task-level app_engine_routing][google.cloud
@@ -989,6 +991,7 @@ AppEngineHttpRequest = _reflection.GeneratedProtocolMessageType(
   types of task targets, a ``429`` (Too Many Requests) response from an
   app handler does not cause traffic congestion control to throttle the
   queue.
+  
   Attributes:
       http_method:
           The HTTP method to use for the request. The default is POST.
@@ -1080,6 +1083,7 @@ AppEngineRouting = _reflection.GeneratedProtocolMessageType(
   are-routed>`_, and `App Engine Flex request routing
   <https://cloud.google.com/appengine/docs/flexible/python/how-requests-
   are-routed>`_.
+  
   Attributes:
       service:
           App service.  By default, the task is sent to the service
@@ -1156,6 +1160,7 @@ OAuthToken = _reflection.GeneratedProtocolMessageType(
   <https://developers.google.com/identity/protocols/OAuth2>`_. This
   type of authorization should generally only be used when calling
   Google APIs hosted on \*.googleapis.com.
+  
   Attributes:
       service_account_email:
           \ `Service account email
@@ -1184,6 +1189,7 @@ OidcToken = _reflection.GeneratedProtocolMessageType(
   This type of authorization can be used for many scenarios, including
   calling Cloud Run, or endpoints where you intend to validate the token
   yourself.
+  
   Attributes:
       service_account_email:
           \ `Service account email

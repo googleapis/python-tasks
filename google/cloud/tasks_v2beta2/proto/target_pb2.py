@@ -535,6 +535,7 @@ PullMessage = _reflection.GeneratedProtocolMessageType(
   process the task.  This proto can only be used for tasks in a queue
   which has [pull_target][google.cloud.tasks.v2beta2.Queue.pull_target]
   set.
+  
   Attributes:
       payload:
           A data payload consumed by the worker to execute the task.
@@ -579,6 +580,7 @@ AppEngineHttpTarget = _reflection.GeneratedProtocolMessageType(
   <https://cloud.google.com/appengine/docs/admin-api/access-control>`_
   Google IAM permission for the project and the following scope:
   ``https://www.googleapis.com/auth/cloud-platform``
+  
   Attributes:
       app_engine_routing_override:
           Overrides for the [task-level app_engine_routing][google.cloud
@@ -656,6 +658,7 @@ AppEngineHttpRequest = _reflection.GeneratedProtocolMessageType(
   types of task targets, a ``429`` (Too Many Requests) response from an
   app handler does not cause traffic congestion control to throttle the
   queue.
+  
   Attributes:
       http_method:
           The HTTP method to use for the request. The default is POST.
@@ -748,6 +751,7 @@ AppEngineRouting = _reflection.GeneratedProtocolMessageType(
   are-routed>`_, and `App Engine Flex request routing
   <https://cloud.google.com/appengine/docs/flexible/python/how-requests-
   are-routed>`_.
+  
   Attributes:
       service:
           App service.  By default, the task is sent to the service
