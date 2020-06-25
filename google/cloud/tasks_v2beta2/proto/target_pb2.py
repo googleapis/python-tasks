@@ -577,7 +577,7 @@ AppEngineHttpTarget = _reflection.GeneratedProtocolMessageType(
   constructed.  Using
   [AppEngineHttpTarget][google.cloud.tasks.v2beta2.AppEngineHttpTarget]
   requires ```appengine.applications.get``
-  <https://cloud.google.com/appengine/docs/admin-api/access-control>`_
+  <https://cloud.google.com/appengine/docs/admin-api/access-control>`\_
   Google IAM permission for the project and the following scope:
   ``https://www.googleapis.com/auth/cloud-platform``
   
@@ -616,7 +616,7 @@ AppEngineHttpRequest = _reflection.GeneratedProtocolMessageType(
   oogle.cloud.tasks.v2beta2.Queue.app_engine_http_target] set.  Using [A
   ppEngineHttpRequest][google.cloud.tasks.v2beta2.AppEngineHttpRequest]
   requires ```appengine.applications.get``
-  <https://cloud.google.com/appengine/docs/admin-api/access-control>`_
+  <https://cloud.google.com/appengine/docs/admin-api/access-control>`\_
   Google IAM permission for the project and the following scope:
   ``https://www.googleapis.com/auth/cloud-platform``  The task will be
   delivered to the App Engine app which belongs to the same project as

@@ -669,7 +669,7 @@ RateLimits = _reflection.GeneratedProtocolMessageType(
           s_dispatched_per_second].  For App Engine queues that were
           created or updated using ``queue.yaml/xml``,
           ``max_burst_size`` is equal to `bucket_size <https://cloud.goo
-          gle.com/appengine/docs/standard/python/config/queueref#bucket_
+          gle.com/appengine/docs/standard/python/config/queueref#bucket\_
           size>`_. Since ``max_burst_size`` is output only, if [UpdateQ
           ueue][google.cloud.tasks.v2beta2.CloudTasks.UpdateQueue] is
           called on a queue created by ``queue.yaml/xml``,

@@ -878,7 +878,7 @@ HttpRequest = _reflection.GeneratedProtocolMessageType(
           eaders] field will be overridden.
       oauth_token:
           If specified, an `OAuth token
-          <https://developers.google.com/identity/protocols/OAuth2>`_
+          <https://developers.google.com/identity/protocols/OAuth2>`\_
           will be generated and attached as an ``Authorization`` header
           in the HTTP request.  This type of authorization should
           generally only be used when calling Google APIs hosted on
@@ -912,7 +912,7 @@ AppEngineHttpQueue = _reflection.GeneratedProtocolMessageType(
   constructed.  Using
   [AppEngineHttpQueue][google.cloud.tasks.v2beta3.AppEngineHttpQueue]
   requires ```appengine.applications.get``
-  <https://cloud.google.com/appengine/docs/admin-api/access-control>`_
+  <https://cloud.google.com/appengine/docs/admin-api/access-control>`\_
   Google IAM permission for the project and the following scope:
   ``https://www.googleapis.com/auth/cloud-platform``
   
@@ -949,7 +949,7 @@ AppEngineHttpRequest = _reflection.GeneratedProtocolMessageType(
   sent to an App Engine app when the task is dispatched.  Using [AppEngi
   neHttpRequest][google.cloud.tasks.v2beta3.AppEngineHttpRequest]
   requires ```appengine.applications.get``
-  <https://cloud.google.com/appengine/docs/admin-api/access-control>`_
+  <https://cloud.google.com/appengine/docs/admin-api/access-control>`\_
   Google IAM permission for the project and the following scope:
   ``https://www.googleapis.com/auth/cloud-platform``  The task will be
   delivered to the App Engine app which belongs to the same project as

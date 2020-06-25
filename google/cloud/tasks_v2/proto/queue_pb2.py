@@ -546,7 +546,7 @@ Queue = _reflection.GeneratedProtocolMessageType(
           all [App Engine
           tasks][google.cloud.tasks.v2.AppEngineHttpRequest] in the
           queue, no matter what the setting is for the [task-level app_e
-          ngine_routing][google.cloud.tasks.v2.AppEngineHttpRequest.app_
+          ngine_routing][google.cloud.tasks.v2.AppEngineHttpRequest.app\_
           engine_routing].
       rate_limits:
           Rate limits for task dispatches.
@@ -659,7 +659,7 @@ RateLimits = _reflection.GeneratedProtocolMessageType(
           called on a queue created by ``queue.yaml/xml``,
           ``max_burst_size`` will be reset based on the value of [max_di
           spatches_per_second][google.cloud.tasks.v2.RateLimits.max_disp
-          atches_per_second], regardless of whether [max_dispatches_per_
+          atches_per_second], regardless of whether [max_dispatches_per\_
           second][google.cloud.tasks.v2.RateLimits.max_dispatches_per_se
           cond] is updated.
       max_concurrent_dispatches:
