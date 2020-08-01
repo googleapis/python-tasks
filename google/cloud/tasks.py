@@ -23,7 +23,7 @@ from google.cloud.tasks_v2 import types
 
 
 __all__ = (
-    "enums",
-    "types",
-    "CloudTasksClient",
+    'enums',
+    'types',
+    'CloudTasksClient',
 )

@@ -26,12 +26,11 @@ from google.cloud.tasks_v2.gapic import enums
 
 if sys.version_info[:2] == (2, 7):
     message = (
-        "A future version of this library will drop support for Python 2.7. "
-        "More details about Python 2 support for Google Cloud Client Libraries "
-        "can be found at https://cloud.google.com/python/docs/python2-sunset/"
+        'A future version of this library will drop support for Python 2.7. '
+        'More details about Python 2 support for Google Cloud Client Libraries '
+        'can be found at https://cloud.google.com/python/docs/python2-sunset/'
     )
     warnings.warn(message, DeprecationWarning)
-
 
 class CloudTasksClient(cloud_tasks_client.CloudTasksClient):
     __doc__ = cloud_tasks_client.CloudTasksClient.__doc__
@@ -39,7 +38,7 @@ class CloudTasksClient(cloud_tasks_client.CloudTasksClient):
 
 
 __all__ = (
-    "enums",
-    "types",
-    "CloudTasksClient",
+    'enums',
+    'types',
+    'CloudTasksClient',
 )
