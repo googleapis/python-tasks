@@ -2,9 +2,15 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from google.cloud.tasks_v2beta2.proto import cloudtasks_pb2 as google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2
-from google.cloud.tasks_v2beta2.proto import queue_pb2 as google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2
-from google.cloud.tasks_v2beta2.proto import task_pb2 as google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2
+from google.cloud.tasks_v2beta2.proto import (
+    cloudtasks_pb2 as google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2,
+)
+from google.cloud.tasks_v2beta2.proto import (
+    queue_pb2 as google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2,
+)
+from google.cloud.tasks_v2beta2.proto import (
+    task_pb2 as google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2,
+)
 from google.iam.v1 import iam_policy_pb2 as google_dot_iam_dot_v1_dot_iam__policy__pb2
 from google.iam.v1 import policy_pb2 as google_dot_iam_dot_v1_dot_policy__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
@@ -22,105 +28,105 @@ class CloudTasksStub(object):
             channel: A grpc.Channel.
         """
         self.ListQueues = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/ListQueues',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesResponse.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/ListQueues",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesResponse.FromString,
+        )
         self.GetQueue = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/GetQueue',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetQueueRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/GetQueue",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetQueueRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
+        )
         self.CreateQueue = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/CreateQueue',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateQueueRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/CreateQueue",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateQueueRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
+        )
         self.UpdateQueue = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/UpdateQueue',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.UpdateQueueRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/UpdateQueue",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.UpdateQueueRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
+        )
         self.DeleteQueue = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/DeleteQueue',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteQueueRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/DeleteQueue",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteQueueRequest.SerializeToString,
+            response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
         self.PurgeQueue = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/PurgeQueue',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PurgeQueueRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/PurgeQueue",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PurgeQueueRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
+        )
         self.PauseQueue = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/PauseQueue',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PauseQueueRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/PauseQueue",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PauseQueueRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
+        )
         self.ResumeQueue = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/ResumeQueue',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ResumeQueueRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/ResumeQueue",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ResumeQueueRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
+        )
         self.GetIamPolicy = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/GetIamPolicy',
-                request_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.GetIamPolicyRequest.SerializeToString,
-                response_deserializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/GetIamPolicy",
+            request_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.GetIamPolicyRequest.SerializeToString,
+            response_deserializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.FromString,
+        )
         self.SetIamPolicy = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/SetIamPolicy',
-                request_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.SetIamPolicyRequest.SerializeToString,
-                response_deserializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/SetIamPolicy",
+            request_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.SetIamPolicyRequest.SerializeToString,
+            response_deserializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.FromString,
+        )
         self.TestIamPermissions = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/TestIamPermissions',
-                request_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsRequest.SerializeToString,
-                response_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsResponse.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/TestIamPermissions",
+            request_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsRequest.SerializeToString,
+            response_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsResponse.FromString,
+        )
         self.ListTasks = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/ListTasks',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksResponse.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/ListTasks",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksResponse.FromString,
+        )
         self.GetTask = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/GetTask',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetTaskRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/GetTask",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetTaskRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
+        )
         self.CreateTask = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/CreateTask',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateTaskRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/CreateTask",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateTaskRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
+        )
         self.DeleteTask = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/DeleteTask',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteTaskRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/DeleteTask",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteTaskRequest.SerializeToString,
+            response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
         self.LeaseTasks = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/LeaseTasks',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksResponse.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/LeaseTasks",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksResponse.FromString,
+        )
         self.AcknowledgeTask = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/AcknowledgeTask',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.AcknowledgeTaskRequest.SerializeToString,
-                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/AcknowledgeTask",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.AcknowledgeTaskRequest.SerializeToString,
+            response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+        )
         self.RenewLease = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/RenewLease',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RenewLeaseRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/RenewLease",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RenewLeaseRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
+        )
         self.CancelLease = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/CancelLease',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CancelLeaseRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/CancelLease",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CancelLeaseRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
+        )
         self.RunTask = channel.unary_unary(
-                '/google.cloud.tasks.v2beta2.CloudTasks/RunTask',
-                request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RunTaskRequest.SerializeToString,
-                response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-                )
+            "/google.cloud.tasks.v2beta2.CloudTasks/RunTask",
+            request_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RunTaskRequest.SerializeToString,
+            response_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
+        )
 
 
 class CloudTasksServicer(object):
@@ -134,15 +140,15 @@ class CloudTasksServicer(object):
         Queues are returned in lexicographical order.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetQueue(self, request, context):
         """Gets a queue.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CreateQueue(self, request, context):
         """Creates a queue.
@@ -159,8 +165,8 @@ class CloudTasksServicer(object):
         this method.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def UpdateQueue(self, request, context):
         """Updates a queue.
@@ -180,8 +186,8 @@ class CloudTasksServicer(object):
         this method.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def DeleteQueue(self, request, context):
         """Deletes a queue.
@@ -199,8 +205,8 @@ class CloudTasksServicer(object):
         this method.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def PurgeQueue(self, request, context):
         """Purges a queue by deleting all of its tasks.
@@ -211,8 +217,8 @@ class CloudTasksServicer(object):
         might be dispatched before the purge takes effect. A purge is irreversible.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def PauseQueue(self, request, context):
         """Pauses the queue.
@@ -224,8 +230,8 @@ class CloudTasksServicer(object):
         [state][google.cloud.tasks.v2beta2.Queue.state] is [PAUSED][google.cloud.tasks.v2beta2.Queue.State.PAUSED].
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ResumeQueue(self, request, context):
         """Resume a queue.
@@ -243,8 +249,8 @@ class CloudTasksServicer(object):
         Risks](https://cloud.google.com/tasks/docs/manage-cloud-task-scaling).
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetIamPolicy(self, request, context):
         """Gets the access control policy for a [Queue][google.cloud.tasks.v2beta2.Queue].
@@ -258,8 +264,8 @@ class CloudTasksServicer(object):
         * `cloudtasks.queues.getIamPolicy`
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def SetIamPolicy(self, request, context):
         """Sets the access control policy for a [Queue][google.cloud.tasks.v2beta2.Queue]. Replaces any existing
@@ -275,8 +281,8 @@ class CloudTasksServicer(object):
         * `cloudtasks.queues.setIamPolicy`
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def TestIamPermissions(self, request, context):
         """Returns permissions that a caller has on a [Queue][google.cloud.tasks.v2beta2.Queue].
@@ -288,8 +294,8 @@ class CloudTasksServicer(object):
         may "fail open" without warning.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def ListTasks(self, request, context):
         """Lists the tasks in a queue.
@@ -303,15 +309,15 @@ class CloudTasksServicer(object):
         time.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def GetTask(self, request, context):
         """Gets a task.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CreateTask(self, request, context):
         """Creates a task and adds it to a queue.
@@ -323,8 +329,8 @@ class CloudTasksServicer(object):
         * For [pull queues][google.cloud.tasks.v2beta2.PullTarget], the maximum task size is 1MB.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def DeleteTask(self, request, context):
         """Deletes a task.
@@ -334,8 +340,8 @@ class CloudTasksServicer(object):
         failed.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def LeaseTasks(self, request, context):
         """Leases tasks from a pull queue for
@@ -362,8 +368,8 @@ class CloudTasksServicer(object):
         is exceeded.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def AcknowledgeTask(self, request, context):
         """Acknowledges a pull task.
@@ -381,8 +387,8 @@ class CloudTasksServicer(object):
         [ListTasks][google.cloud.tasks.v2beta2.CloudTasks.ListTasks].
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def RenewLease(self, request, context):
         """Renew the current lease of a pull task.
@@ -392,8 +398,8 @@ class CloudTasksServicer(object):
         returned in the task's [schedule_time][google.cloud.tasks.v2beta2.Task.schedule_time].
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def CancelLease(self, request, context):
         """Cancel a pull task's lease.
@@ -404,8 +410,8 @@ class CloudTasksServicer(object):
         [LeaseTasks][google.cloud.tasks.v2beta2.CloudTasks.LeaseTasks].
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
     def RunTask(self, request, context):
         """Forces a task to run now.
@@ -437,440 +443,661 @@ class CloudTasksServicer(object):
         [pull task][google.cloud.tasks.v2beta2.PullMessage].
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_CloudTasksServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ListQueues': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListQueues,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesResponse.SerializeToString,
-            ),
-            'GetQueue': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetQueue,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetQueueRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
-            ),
-            'CreateQueue': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateQueue,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateQueueRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
-            ),
-            'UpdateQueue': grpc.unary_unary_rpc_method_handler(
-                    servicer.UpdateQueue,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.UpdateQueueRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
-            ),
-            'DeleteQueue': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteQueue,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteQueueRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-            'PurgeQueue': grpc.unary_unary_rpc_method_handler(
-                    servicer.PurgeQueue,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PurgeQueueRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
-            ),
-            'PauseQueue': grpc.unary_unary_rpc_method_handler(
-                    servicer.PauseQueue,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PauseQueueRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
-            ),
-            'ResumeQueue': grpc.unary_unary_rpc_method_handler(
-                    servicer.ResumeQueue,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ResumeQueueRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
-            ),
-            'GetIamPolicy': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetIamPolicy,
-                    request_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.GetIamPolicyRequest.FromString,
-                    response_serializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.SerializeToString,
-            ),
-            'SetIamPolicy': grpc.unary_unary_rpc_method_handler(
-                    servicer.SetIamPolicy,
-                    request_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.SetIamPolicyRequest.FromString,
-                    response_serializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.SerializeToString,
-            ),
-            'TestIamPermissions': grpc.unary_unary_rpc_method_handler(
-                    servicer.TestIamPermissions,
-                    request_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsRequest.FromString,
-                    response_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsResponse.SerializeToString,
-            ),
-            'ListTasks': grpc.unary_unary_rpc_method_handler(
-                    servicer.ListTasks,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksResponse.SerializeToString,
-            ),
-            'GetTask': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetTask,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetTaskRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
-            ),
-            'CreateTask': grpc.unary_unary_rpc_method_handler(
-                    servicer.CreateTask,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateTaskRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
-            ),
-            'DeleteTask': grpc.unary_unary_rpc_method_handler(
-                    servicer.DeleteTask,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteTaskRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-            'LeaseTasks': grpc.unary_unary_rpc_method_handler(
-                    servicer.LeaseTasks,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksResponse.SerializeToString,
-            ),
-            'AcknowledgeTask': grpc.unary_unary_rpc_method_handler(
-                    servicer.AcknowledgeTask,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.AcknowledgeTaskRequest.FromString,
-                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
-            ),
-            'RenewLease': grpc.unary_unary_rpc_method_handler(
-                    servicer.RenewLease,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RenewLeaseRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
-            ),
-            'CancelLease': grpc.unary_unary_rpc_method_handler(
-                    servicer.CancelLease,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CancelLeaseRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
-            ),
-            'RunTask': grpc.unary_unary_rpc_method_handler(
-                    servicer.RunTask,
-                    request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RunTaskRequest.FromString,
-                    response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
-            ),
+        "ListQueues": grpc.unary_unary_rpc_method_handler(
+            servicer.ListQueues,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesResponse.SerializeToString,
+        ),
+        "GetQueue": grpc.unary_unary_rpc_method_handler(
+            servicer.GetQueue,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetQueueRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
+        ),
+        "CreateQueue": grpc.unary_unary_rpc_method_handler(
+            servicer.CreateQueue,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateQueueRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
+        ),
+        "UpdateQueue": grpc.unary_unary_rpc_method_handler(
+            servicer.UpdateQueue,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.UpdateQueueRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
+        ),
+        "DeleteQueue": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteQueue,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteQueueRequest.FromString,
+            response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+        ),
+        "PurgeQueue": grpc.unary_unary_rpc_method_handler(
+            servicer.PurgeQueue,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PurgeQueueRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
+        ),
+        "PauseQueue": grpc.unary_unary_rpc_method_handler(
+            servicer.PauseQueue,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PauseQueueRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
+        ),
+        "ResumeQueue": grpc.unary_unary_rpc_method_handler(
+            servicer.ResumeQueue,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ResumeQueueRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.SerializeToString,
+        ),
+        "GetIamPolicy": grpc.unary_unary_rpc_method_handler(
+            servicer.GetIamPolicy,
+            request_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.GetIamPolicyRequest.FromString,
+            response_serializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.SerializeToString,
+        ),
+        "SetIamPolicy": grpc.unary_unary_rpc_method_handler(
+            servicer.SetIamPolicy,
+            request_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.SetIamPolicyRequest.FromString,
+            response_serializer=google_dot_iam_dot_v1_dot_policy__pb2.Policy.SerializeToString,
+        ),
+        "TestIamPermissions": grpc.unary_unary_rpc_method_handler(
+            servicer.TestIamPermissions,
+            request_deserializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsRequest.FromString,
+            response_serializer=google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsResponse.SerializeToString,
+        ),
+        "ListTasks": grpc.unary_unary_rpc_method_handler(
+            servicer.ListTasks,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksResponse.SerializeToString,
+        ),
+        "GetTask": grpc.unary_unary_rpc_method_handler(
+            servicer.GetTask,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetTaskRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
+        ),
+        "CreateTask": grpc.unary_unary_rpc_method_handler(
+            servicer.CreateTask,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateTaskRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
+        ),
+        "DeleteTask": grpc.unary_unary_rpc_method_handler(
+            servicer.DeleteTask,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteTaskRequest.FromString,
+            response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+        ),
+        "LeaseTasks": grpc.unary_unary_rpc_method_handler(
+            servicer.LeaseTasks,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksResponse.SerializeToString,
+        ),
+        "AcknowledgeTask": grpc.unary_unary_rpc_method_handler(
+            servicer.AcknowledgeTask,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.AcknowledgeTaskRequest.FromString,
+            response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+        ),
+        "RenewLease": grpc.unary_unary_rpc_method_handler(
+            servicer.RenewLease,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RenewLeaseRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
+        ),
+        "CancelLease": grpc.unary_unary_rpc_method_handler(
+            servicer.CancelLease,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CancelLeaseRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
+        ),
+        "RunTask": grpc.unary_unary_rpc_method_handler(
+            servicer.RunTask,
+            request_deserializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RunTaskRequest.FromString,
+            response_serializer=google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'google.cloud.tasks.v2beta2.CloudTasks', rpc_method_handlers)
+        "google.cloud.tasks.v2beta2.CloudTasks", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class CloudTasks(object):
     """Cloud Tasks allows developers to manage the execution of background
     work in their applications.
     """
 
     @staticmethod
-    def ListQueues(request,
+    def ListQueues(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/ListQueues',
+            "/google.cloud.tasks.v2beta2.CloudTasks/ListQueues",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListQueuesResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetQueue(request,
+    def GetQueue(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/GetQueue',
+            "/google.cloud.tasks.v2beta2.CloudTasks/GetQueue",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetQueueRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CreateQueue(request,
+    def CreateQueue(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/CreateQueue',
+            "/google.cloud.tasks.v2beta2.CloudTasks/CreateQueue",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateQueueRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def UpdateQueue(request,
+    def UpdateQueue(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/UpdateQueue',
+            "/google.cloud.tasks.v2beta2.CloudTasks/UpdateQueue",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.UpdateQueueRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def DeleteQueue(request,
+    def DeleteQueue(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/DeleteQueue',
+            "/google.cloud.tasks.v2beta2.CloudTasks/DeleteQueue",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteQueueRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def PurgeQueue(request,
+    def PurgeQueue(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/PurgeQueue',
+            "/google.cloud.tasks.v2beta2.CloudTasks/PurgeQueue",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PurgeQueueRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def PauseQueue(request,
+    def PauseQueue(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/PauseQueue',
+            "/google.cloud.tasks.v2beta2.CloudTasks/PauseQueue",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.PauseQueueRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ResumeQueue(request,
+    def ResumeQueue(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/ResumeQueue',
+            "/google.cloud.tasks.v2beta2.CloudTasks/ResumeQueue",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ResumeQueueRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_queue__pb2.Queue.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetIamPolicy(request,
+    def GetIamPolicy(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/GetIamPolicy',
+            "/google.cloud.tasks.v2beta2.CloudTasks/GetIamPolicy",
             google_dot_iam_dot_v1_dot_iam__policy__pb2.GetIamPolicyRequest.SerializeToString,
             google_dot_iam_dot_v1_dot_policy__pb2.Policy.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def SetIamPolicy(request,
+    def SetIamPolicy(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/SetIamPolicy',
+            "/google.cloud.tasks.v2beta2.CloudTasks/SetIamPolicy",
             google_dot_iam_dot_v1_dot_iam__policy__pb2.SetIamPolicyRequest.SerializeToString,
             google_dot_iam_dot_v1_dot_policy__pb2.Policy.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def TestIamPermissions(request,
+    def TestIamPermissions(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/TestIamPermissions',
+            "/google.cloud.tasks.v2beta2.CloudTasks/TestIamPermissions",
             google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsRequest.SerializeToString,
             google_dot_iam_dot_v1_dot_iam__policy__pb2.TestIamPermissionsResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def ListTasks(request,
+    def ListTasks(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/ListTasks',
+            "/google.cloud.tasks.v2beta2.CloudTasks/ListTasks",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.ListTasksResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def GetTask(request,
+    def GetTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/GetTask',
+            "/google.cloud.tasks.v2beta2.CloudTasks/GetTask",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.GetTaskRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CreateTask(request,
+    def CreateTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/CreateTask',
+            "/google.cloud.tasks.v2beta2.CloudTasks/CreateTask",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CreateTaskRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def DeleteTask(request,
+    def DeleteTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/DeleteTask',
+            "/google.cloud.tasks.v2beta2.CloudTasks/DeleteTask",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.DeleteTaskRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def LeaseTasks(request,
+    def LeaseTasks(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/LeaseTasks',
+            "/google.cloud.tasks.v2beta2.CloudTasks/LeaseTasks",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.LeaseTasksResponse.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def AcknowledgeTask(request,
+    def AcknowledgeTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/AcknowledgeTask',
+            "/google.cloud.tasks.v2beta2.CloudTasks/AcknowledgeTask",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.AcknowledgeTaskRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def RenewLease(request,
+    def RenewLease(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/RenewLease',
+            "/google.cloud.tasks.v2beta2.CloudTasks/RenewLease",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RenewLeaseRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def CancelLease(request,
+    def CancelLease(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/CancelLease',
+            "/google.cloud.tasks.v2beta2.CloudTasks/CancelLease",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.CancelLeaseRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
 
     @staticmethod
-    def RunTask(request,
+    def RunTask(
+        request,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.unary_unary(
+            request,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/google.cloud.tasks.v2beta2.CloudTasks/RunTask',
+            "/google.cloud.tasks.v2beta2.CloudTasks/RunTask",
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_cloudtasks__pb2.RunTaskRequest.SerializeToString,
             google_dot_cloud_dot_tasks__v2beta2_dot_proto_dot_task__pb2.Task.FromString,
-            options, channel_credentials,
-            call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
