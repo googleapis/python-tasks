@@ -122,7 +122,7 @@ s.move(templated_files)
 # ----------------------------------------------------------------------------
 # Samples templates
 # ----------------------------------------------------------------------------
-python.py_samples()
+python.py_samples(skip_readmes=True)
 
 # TODO(busunkim): Use latest sphinx after microgenerator transition
 s.replace("noxfile.py", """['"]sphinx['"]""", '"sphinx<3.0.0"')
