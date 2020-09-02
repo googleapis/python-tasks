@@ -46,7 +46,7 @@ from google.cloud import tasks_v2
 
 client = tasks_v2.CloudTasksClient()
 
-build = client.get_queue(request = {'name': "queue_name"})
+build = client.get_queue(request={'name': "queue_name"})
 ```
 
 ### More Details
