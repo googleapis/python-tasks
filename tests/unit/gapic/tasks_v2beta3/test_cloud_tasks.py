@@ -4210,6 +4210,31 @@ def test_cloud_tasks_grpc_asyncio_transport_channel_mtls_with_adc(
         assert transport.grpc_channel == mock_grpc_channel
 
 
+def test_queue_path():
+    project = "squid"
+    location = "clam"
+    queue = "whelk"
+
+    expected = "projects/{project}/locations/{location}/queues/{queue}".format(
+        project=project, location=location, queue=queue,
+    )
+    actual = CloudTasksClient.queue_path(project, location, queue)
+    assert expected == actual
+
+
+def test_parse_queue_path():
+    expected = {
+        "project": "octopus",
+        "location": "oyster",
+        "queue": "nudibranch",
+    }
+    path = CloudTasksClient.queue_path(**expected)
+
+    # Check that the path construction is reversible.
+    actual = CloudTasksClient.parse_queue_path(path)
+    assert expected == actual
+
+
 def test_task_path():
     project = "squid"
     location = "clam"
@@ -4234,31 +4259,6 @@ def test_parse_task_path():
 
     # Check that the path construction is reversible.
     actual = CloudTasksClient.parse_task_path(path)
-    assert expected == actual
-
-
-def test_queue_path():
-    project = "squid"
-    location = "clam"
-    queue = "whelk"
-
-    expected = "projects/{project}/locations/{location}/queues/{queue}".format(
-        project=project, location=location, queue=queue,
-    )
-    actual = CloudTasksClient.queue_path(project, location, queue)
-    assert expected == actual
-
-
-def test_parse_queue_path():
-    expected = {
-        "project": "octopus",
-        "location": "oyster",
-        "queue": "nudibranch",
-    }
-    path = CloudTasksClient.queue_path(**expected)
-
-    # Check that the path construction is reversible.
-    actual = CloudTasksClient.parse_queue_path(path)
     assert expected == actual
 
 

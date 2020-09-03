@@ -56,9 +56,9 @@ class CloudTasksAsyncClient:
     DEFAULT_ENDPOINT = CloudTasksClient.DEFAULT_ENDPOINT
     DEFAULT_MTLS_ENDPOINT = CloudTasksClient.DEFAULT_MTLS_ENDPOINT
 
-    task_path = staticmethod(CloudTasksClient.task_path)
-
     queue_path = staticmethod(CloudTasksClient.queue_path)
+
+    task_path = staticmethod(CloudTasksClient.task_path)
 
     from_service_account_file = CloudTasksClient.from_service_account_file
     from_service_account_json = from_service_account_file
@@ -176,7 +176,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
@@ -265,7 +265,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
@@ -560,7 +560,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
@@ -968,7 +968,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
@@ -1227,7 +1227,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
@@ -1319,7 +1319,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
@@ -1403,7 +1403,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
@@ -1604,7 +1604,7 @@ class CloudTasksAsyncClient:
                 maximum=10.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
             ),
             default_timeout=10.0,
