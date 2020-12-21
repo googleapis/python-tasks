@@ -14,8 +14,6 @@
 
 from __future__ import print_function
 
-import datetime
-
 
 def create_http_task(
     project,
@@ -29,7 +27,6 @@ def create_http_task(
     """Create a task for a given queue with an arbitrary payload."""
 
     from google.cloud import tasks_v2
-    from google.protobuf import timestamp_pb2
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
