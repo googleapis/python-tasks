@@ -24,8 +24,6 @@ def create_http_task(
     url,
     service_account_email,
     payload=None,
-    in_seconds=None,
-    task_name=None,
 ):
     # [START cloud_tasks_create_http_task_with_token]
     """Create a task for a given queue with an arbitrary payload."""
@@ -62,21 +60,6 @@ def create_http_task(
 
         # Add the payload to the request.
         task["http_request"]["body"] = converted_payload
-
-    if in_seconds is not None:
-        # Convert "seconds from now" into an rfc3339 datetime string.
-        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
-
-        # Create Timestamp protobuf.
-        timestamp = timestamp_pb2.Timestamp()
-        timestamp.FromDatetime(d)
-
-        # Add the timestamp to the tasks.
-        task["schedule_time"] = timestamp
-
-    if task_name is not None:
-        # Add the name to tasks.
-        task["name"] = task_name
 
     # Use the client to build and send the task.
     response = client.create_task(request={"parent": parent, "task": task})
