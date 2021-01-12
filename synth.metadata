@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-tasks.git",
-        "sha": "6a5bfaf63b46567897c36907772b10ea4b0dff43"
+        "sha": "b2dcb446a118853682e20aa408b77825662e2624"
       }
     },
     {
@@ -198,6 +198,7 @@
     "scripts/readme-gen/templates/install_deps.tmpl.rst",
     "scripts/readme-gen/templates/install_portaudio.tmpl.rst",
     "setup.cfg",
+    "tasks-v2-py.tar.gz",
     "testing/.gitignore",
     "tests/unit/gapic/tasks_v2/__init__.py",
     "tests/unit/gapic/tasks_v2/test_cloud_tasks.py",
