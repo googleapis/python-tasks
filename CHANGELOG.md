@@ -4,6 +4,14 @@
 
 [1]: https://pypi.org/project/google-cloud-tasks/#history
 
+### [2.1.1](https://www.github.com/googleapis/python-tasks/compare/v2.1.0...v2.1.1) (2021-01-30)
+
+
+### Bug Fixes
+
+* remove client recv msg limit fix: add enums to `types/__init__.py` ([#56](https://www.github.com/googleapis/python-tasks/issues/56)) ([6a5bfaf](https://www.github.com/googleapis/python-tasks/commit/6a5bfaf63b46567897c36907772b10ea4b0dff43))
+* Update sample comments ([#58](https://www.github.com/googleapis/python-tasks/issues/58)) ([3eb30b3](https://www.github.com/googleapis/python-tasks/commit/3eb30b349b9092a2a2fb08116855139418ebd371))
+
 ## [2.1.0](https://www.github.com/googleapis/python-tasks/compare/v2.0.0...v2.1.0) (2020-12-07)
 
 
