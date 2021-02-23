@@ -11,8 +11,8 @@
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "5e3dacee19405529b841b53797df799c2383536c",
-        "internalRef": "355923884"
+        "sha": "a5c1c14c4562a5ef25715792983bb3a69f3d75da",
+        "internalRef": "356545742"
       }
     },
     {
@@ -203,6 +203,7 @@
     "scripts/readme-gen/templates/install_deps.tmpl.rst",
     "scripts/readme-gen/templates/install_portaudio.tmpl.rst",
     "setup.cfg",
+    "tasks-v2beta2-py.tar.gz",
     "testing/.gitignore",
     "tests/unit/gapic/tasks_v2/__init__.py",
     "tests/unit/gapic/tasks_v2/test_cloud_tasks.py",
