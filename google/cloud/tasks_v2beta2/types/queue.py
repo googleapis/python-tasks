@@ -59,17 +59,17 @@ class Queue(proto.Message):
             -  ``QUEUE_ID`` can contain letters ([A-Za-z]), numbers
                ([0-9]), or hyphens (-). The maximum length is 100
                characters.
-        app_engine_http_target (~.target.AppEngineHttpTarget):
+        app_engine_http_target (google.cloud.tasks_v2beta2.types.AppEngineHttpTarget):
             App Engine HTTP target.
 
             An App Engine queue is a queue that has an
             [AppEngineHttpTarget][google.cloud.tasks.v2beta2.AppEngineHttpTarget].
-        pull_target (~.target.PullTarget):
+        pull_target (google.cloud.tasks_v2beta2.types.PullTarget):
             Pull target.
 
             A pull queue is a queue that has a
             [PullTarget][google.cloud.tasks.v2beta2.PullTarget].
-        rate_limits (~.queue.RateLimits):
+        rate_limits (google.cloud.tasks_v2beta2.types.RateLimits):
             Rate limits for task dispatches.
 
             [rate_limits][google.cloud.tasks.v2beta2.Queue.rate_limits]
@@ -88,7 +88,7 @@ class Queue(proto.Message):
                [retry_config][google.cloud.tasks.v2beta2.Queue.retry_config]
                controls task retries (the second attempt, third attempt,
                etc).
-        retry_config (~.queue.RetryConfig):
+        retry_config (google.cloud.tasks_v2beta2.types.RetryConfig):
             Settings that determine the retry behavior.
 
             -  For tasks created using Cloud Tasks: the queue-level
@@ -101,7 +101,7 @@ class Queue(proto.Message):
                the task and were created by the App Engine SDK. See `App
                Engine
                documentation <https://cloud.google.com/appengine/docs/standard/python/taskqueue/push/retrying-tasks>`__.
-        state (~.queue.Queue.State):
+        state (google.cloud.tasks_v2beta2.types.Queue.State):
             Output only. The state of the queue.
 
             ``state`` can only be changed by called
@@ -111,7 +111,7 @@ class Queue(proto.Message):
             `queue.yaml/xml <https://cloud.google.com/appengine/docs/python/config/queueref>`__.
             [UpdateQueue][google.cloud.tasks.v2beta2.CloudTasks.UpdateQueue]
             cannot be used to change ``state``.
-        purge_time (~.timestamp.Timestamp):
+        purge_time (google.protobuf.timestamp_pb2.Timestamp):
             Output only. The last time this queue was purged.
 
             All tasks that were
@@ -266,7 +266,7 @@ class RetryConfig(proto.Message):
         unlimited_attempts (bool):
             If true, then the number of attempts is
             unlimited.
-        max_retry_duration (~.duration.Duration):
+        max_retry_duration (google.protobuf.duration_pb2.Duration):
             If positive, ``max_retry_duration`` specifies the time limit
             for retrying a failed task, measured from when the task was
             first attempted. Once ``max_retry_duration`` time has passed
@@ -288,7 +288,7 @@ class RetryConfig(proto.Message):
 
             This field has the same meaning as `task_age_limit in
             queue.yaml/xml <https://cloud.google.com/appengine/docs/standard/python/config/queueref#retry_parameters>`__.
-        min_backoff (~.duration.Duration):
+        min_backoff (google.protobuf.duration_pb2.Duration):
             A task will be
             [scheduled][google.cloud.tasks.v2beta2.Task.schedule_time]
             for retry between
@@ -309,7 +309,7 @@ class RetryConfig(proto.Message):
 
             This field has the same meaning as `min_backoff_seconds in
             queue.yaml/xml <https://cloud.google.com/appengine/docs/standard/python/config/queueref#retry_parameters>`__.
-        max_backoff (~.duration.Duration):
+        max_backoff (google.protobuf.duration_pb2.Duration):
             A task will be
             [scheduled][google.cloud.tasks.v2beta2.Task.schedule_time]
             for retry between

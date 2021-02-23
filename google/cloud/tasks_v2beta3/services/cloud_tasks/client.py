@@ -121,6 +121,22 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
     )
 
     @classmethod
+    def from_service_account_info(cls, info: dict, *args, **kwargs):
+        """Creates an instance of this client using the provided credentials info.
+
+        Args:
+            info (dict): The service account private key info.
+            args: Additional arguments to pass to the constructor.
+            kwargs: Additional arguments to pass to the constructor.
+
+        Returns:
+            CloudTasksClient: The constructed client.
+        """
+        credentials = service_account.Credentials.from_service_account_info(info)
+        kwargs["credentials"] = credentials
+        return cls(*args, **kwargs)
+
+    @classmethod
     def from_service_account_file(cls, filename: str, *args, **kwargs):
         """Creates an instance of this client using the provided credentials
         file.
@@ -132,7 +148,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
             kwargs: Additional arguments to pass to the constructor.
 
         Returns:
-            {@api.name}: The constructed client.
+            CloudTasksClient: The constructed client.
         """
         credentials = service_account.Credentials.from_service_account_file(filename)
         kwargs["credentials"] = credentials
@@ -256,10 +272,10 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 credentials identify the application to the service; if none
                 are specified, the client will attempt to ascertain the
                 credentials from the environment.
-            transport (Union[str, ~.CloudTasksTransport]): The
+            transport (Union[str, CloudTasksTransport]): The
                 transport to use. If set to None, a transport is chosen
                 automatically.
-            client_options (client_options_lib.ClientOptions): Custom options for the
+            client_options (google.api_core.client_options.ClientOptions): Custom options for the
                 client. It won't take effect if a ``transport`` instance is provided.
                 (1) The ``api_endpoint`` property can be used to override the
                 default endpoint provided by the client. GOOGLE_API_USE_MTLS_ENDPOINT
@@ -370,12 +386,13 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         Queues are returned in lexicographical order.
 
         Args:
-            request (:class:`~.cloudtasks.ListQueuesRequest`):
+            request (google.cloud.tasks_v2beta3.types.ListQueuesRequest):
                 The request object. Request message for
                 [ListQueues][google.cloud.tasks.v2beta3.CloudTasks.ListQueues].
-            parent (:class:`str`):
+            parent (str):
                 Required. The location name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID``
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -387,7 +404,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.pagers.ListQueuesPager:
+            google.cloud.tasks_v2beta3.services.cloud_tasks.pagers.ListQueuesPager:
                 Response message for
                 [ListQueues][google.cloud.tasks.v2beta3.CloudTasks.ListQueues].
 
@@ -452,12 +469,13 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         r"""Gets a queue.
 
         Args:
-            request (:class:`~.cloudtasks.GetQueueRequest`):
+            request (google.cloud.tasks_v2beta3.types.GetQueueRequest):
                 The request object. Request message for
                 [GetQueue][google.cloud.tasks.v2beta3.CloudTasks.GetQueue].
-            name (:class:`str`):
+            name (str):
                 Required. The resource name of the queue. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -469,7 +487,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.queue.Queue:
+            google.cloud.tasks_v2beta3.types.Queue:
                 A queue is a container of related
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
@@ -540,10 +558,10 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         before using this method.
 
         Args:
-            request (:class:`~.cloudtasks.CreateQueueRequest`):
+            request (google.cloud.tasks_v2beta3.types.CreateQueueRequest):
                 The request object. Request message for
                 [CreateQueue][google.cloud.tasks.v2beta3.CloudTasks.CreateQueue].
-            parent (:class:`str`):
+            parent (str):
                 Required. The location name in which the queue will be
                 created. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID``
@@ -551,14 +569,16 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 The list of allowed locations can be obtained by calling
                 Cloud Tasks' implementation of
                 [ListLocations][google.cloud.location.Locations.ListLocations].
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            queue (:class:`~.gct_queue.Queue`):
+            queue (google.cloud.tasks_v2beta3.types.Queue):
                 Required. The queue to create.
 
                 [Queue's name][google.cloud.tasks.v2beta3.Queue.name]
                 cannot be the same as an existing queue.
+
                 This corresponds to the ``queue`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -570,7 +590,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.gct_queue.Queue:
+            google.cloud.tasks_v2beta3.types.Queue:
                 A queue is a container of related
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
@@ -646,10 +666,10 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         before using this method.
 
         Args:
-            request (:class:`~.cloudtasks.UpdateQueueRequest`):
+            request (google.cloud.tasks_v2beta3.types.UpdateQueueRequest):
                 The request object. Request message for
                 [UpdateQueue][google.cloud.tasks.v2beta3.CloudTasks.UpdateQueue].
-            queue (:class:`~.gct_queue.Queue`):
+            queue (google.cloud.tasks_v2beta3.types.Queue):
                 Required. The queue to create or update.
 
                 The queue's
@@ -661,14 +681,16 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 ignored. The queue's
                 [name][google.cloud.tasks.v2beta3.Queue.name] cannot be
                 changed.
+
                 This corresponds to the ``queue`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            update_mask (:class:`~.field_mask.FieldMask`):
+            update_mask (google.protobuf.field_mask_pb2.FieldMask):
                 A mask used to specify which fields
                 of the queue are being updated.
                 If empty, then all fields will be
                 updated.
+
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -680,7 +702,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.gct_queue.Queue:
+            google.cloud.tasks_v2beta3.types.Queue:
                 A queue is a container of related
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
@@ -755,12 +777,13 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         before using this method.
 
         Args:
-            request (:class:`~.cloudtasks.DeleteQueueRequest`):
+            request (google.cloud.tasks_v2beta3.types.DeleteQueueRequest):
                 The request object. Request message for
                 [DeleteQueue][google.cloud.tasks.v2beta3.CloudTasks.DeleteQueue].
-            name (:class:`str`):
+            name (str):
                 Required. The queue name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -826,12 +849,13 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         effect. A purge is irreversible.
 
         Args:
-            request (:class:`~.cloudtasks.PurgeQueueRequest`):
+            request (google.cloud.tasks_v2beta3.types.PurgeQueueRequest):
                 The request object. Request message for
                 [PurgeQueue][google.cloud.tasks.v2beta3.CloudTasks.PurgeQueue].
-            name (:class:`str`):
+            name (str):
                 Required. The queue name. For example:
                 ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -843,7 +867,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.queue.Queue:
+            google.cloud.tasks_v2beta3.types.Queue:
                 A queue is a container of related
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
@@ -910,12 +934,13 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         [PAUSED][google.cloud.tasks.v2beta3.Queue.State.PAUSED].
 
         Args:
-            request (:class:`~.cloudtasks.PauseQueueRequest`):
+            request (google.cloud.tasks_v2beta3.types.PauseQueueRequest):
                 The request object. Request message for
                 [PauseQueue][google.cloud.tasks.v2beta3.CloudTasks.PauseQueue].
-            name (:class:`str`):
+            name (str):
                 Required. The queue name. For example:
                 ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -927,7 +952,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.queue.Queue:
+            google.cloud.tasks_v2beta3.types.Queue:
                 A queue is a container of related
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
@@ -1001,12 +1026,13 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         Risks <https://cloud.google.com/tasks/docs/manage-cloud-task-scaling>`__.
 
         Args:
-            request (:class:`~.cloudtasks.ResumeQueueRequest`):
+            request (google.cloud.tasks_v2beta3.types.ResumeQueueRequest):
                 The request object. Request message for
                 [ResumeQueue][google.cloud.tasks.v2beta3.CloudTasks.ResumeQueue].
-            name (:class:`str`):
+            name (str):
                 Required. The queue name. For example:
                 ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1018,7 +1044,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.queue.Queue:
+            google.cloud.tasks_v2beta3.types.Queue:
                 A queue is a container of related
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
@@ -1086,14 +1112,15 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         -  ``cloudtasks.queues.getIamPolicy``
 
         Args:
-            request (:class:`~.iam_policy.GetIamPolicyRequest`):
+            request (google.iam.v1.iam_policy_pb2.GetIamPolicyRequest):
                 The request object. Request message for `GetIamPolicy`
                 method.
-            resource (:class:`str`):
+            resource (str):
                 REQUIRED: The resource for which the
                 policy is being requested. See the
                 operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1105,72 +1132,62 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.policy.Policy:
-                Defines an Identity and Access Management (IAM) policy.
-                It is used to specify access control policies for Cloud
-                Platform resources.
+            google.iam.v1.policy_pb2.Policy:
+                Defines an Identity and Access Management (IAM) policy. It is used to
+                   specify access control policies for Cloud Platform
+                   resources.
 
-                A ``Policy`` is a collection of ``bindings``. A
-                ``binding`` binds one or more ``members`` to a single
-                ``role``. Members can be user accounts, service
-                accounts, Google groups, and domains (such as G Suite).
-                A ``role`` is a named list of permissions (defined by
-                IAM or configured by users). A ``binding`` can
-                optionally specify a ``condition``, which is a logic
-                expression that further constrains the role binding
-                based on attributes about the request and/or target
-                resource.
+                   A Policy is a collection of bindings. A binding binds
+                   one or more members to a single role. Members can be
+                   user accounts, service accounts, Google groups, and
+                   domains (such as G Suite). A role is a named list of
+                   permissions (defined by IAM or configured by users).
+                   A binding can optionally specify a condition, which
+                   is a logic expression that further constrains the
+                   role binding based on attributes about the request
+                   and/or target resource.
 
-                **JSON Example**
+                   **JSON Example**
 
-                ::
+                      {
+                         "bindings": [
+                            {
+                               "role":
+                               "roles/resourcemanager.organizationAdmin",
+                               "members": [ "user:mike@example.com",
+                               "group:admins@example.com",
+                               "domain:google.com",
+                               "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+                               ]
 
-                    {
-                      "bindings": [
-                        {
-                          "role": "roles/resourcemanager.organizationAdmin",
-                          "members": [
-                            "user:mike@example.com",
-                            "group:admins@example.com",
-                            "domain:google.com",
-                            "serviceAccount:my-project-id@appspot.gserviceaccount.com"
-                          ]
-                        },
-                        {
-                          "role": "roles/resourcemanager.organizationViewer",
-                          "members": ["user:eve@example.com"],
-                          "condition": {
-                            "title": "expirable access",
-                            "description": "Does not grant access after Sep 2020",
-                            "expression": "request.time <
-                            timestamp('2020-10-01T00:00:00.000Z')",
-                          }
-                        }
-                      ]
-                    }
+                            }, { "role":
+                            "roles/resourcemanager.organizationViewer",
+                            "members": ["user:eve@example.com"],
+                            "condition": { "title": "expirable access",
+                            "description": "Does not grant access after
+                            Sep 2020", "expression": "request.time <
+                            timestamp('2020-10-01T00:00:00.000Z')", } }
 
-                **YAML Example**
+                         ]
 
-                ::
+                      }
 
-                    bindings:
-                    - members:
-                      - user:mike@example.com
-                      - group:admins@example.com
-                      - domain:google.com
-                      - serviceAccount:my-project-id@appspot.gserviceaccount.com
-                      role: roles/resourcemanager.organizationAdmin
-                    - members:
-                      - user:eve@example.com
-                      role: roles/resourcemanager.organizationViewer
-                      condition:
-                        title: expirable access
-                        description: Does not grant access after Sep 2020
-                        expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+                   **YAML Example**
 
-                For a description of IAM and its features, see the `IAM
-                developer's
-                guide <https://cloud.google.com/iam/docs>`__.
+                      bindings: - members: - user:\ mike@example.com -
+                      group:\ admins@example.com - domain:google.com -
+                      serviceAccount:\ my-project-id@appspot.gserviceaccount.com
+                      role: roles/resourcemanager.organizationAdmin -
+                      members: - user:\ eve@example.com role:
+                      roles/resourcemanager.organizationViewer
+                      condition: title: expirable access description:
+                      Does not grant access after Sep 2020 expression:
+                      request.time <
+                      timestamp('2020-10-01T00:00:00.000Z')
+
+                   For a description of IAM and its features, see the
+                   [IAM developer's
+                   guide](\ https://cloud.google.com/iam/docs).
 
         """
         # Create or coerce a protobuf request object.
@@ -1231,14 +1248,15 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         -  ``cloudtasks.queues.setIamPolicy``
 
         Args:
-            request (:class:`~.iam_policy.SetIamPolicyRequest`):
+            request (google.iam.v1.iam_policy_pb2.SetIamPolicyRequest):
                 The request object. Request message for `SetIamPolicy`
                 method.
-            resource (:class:`str`):
+            resource (str):
                 REQUIRED: The resource for which the
                 policy is being specified. See the
                 operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1250,72 +1268,62 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.policy.Policy:
-                Defines an Identity and Access Management (IAM) policy.
-                It is used to specify access control policies for Cloud
-                Platform resources.
+            google.iam.v1.policy_pb2.Policy:
+                Defines an Identity and Access Management (IAM) policy. It is used to
+                   specify access control policies for Cloud Platform
+                   resources.
 
-                A ``Policy`` is a collection of ``bindings``. A
-                ``binding`` binds one or more ``members`` to a single
-                ``role``. Members can be user accounts, service
-                accounts, Google groups, and domains (such as G Suite).
-                A ``role`` is a named list of permissions (defined by
-                IAM or configured by users). A ``binding`` can
-                optionally specify a ``condition``, which is a logic
-                expression that further constrains the role binding
-                based on attributes about the request and/or target
-                resource.
+                   A Policy is a collection of bindings. A binding binds
+                   one or more members to a single role. Members can be
+                   user accounts, service accounts, Google groups, and
+                   domains (such as G Suite). A role is a named list of
+                   permissions (defined by IAM or configured by users).
+                   A binding can optionally specify a condition, which
+                   is a logic expression that further constrains the
+                   role binding based on attributes about the request
+                   and/or target resource.
 
-                **JSON Example**
+                   **JSON Example**
 
-                ::
+                      {
+                         "bindings": [
+                            {
+                               "role":
+                               "roles/resourcemanager.organizationAdmin",
+                               "members": [ "user:mike@example.com",
+                               "group:admins@example.com",
+                               "domain:google.com",
+                               "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+                               ]
 
-                    {
-                      "bindings": [
-                        {
-                          "role": "roles/resourcemanager.organizationAdmin",
-                          "members": [
-                            "user:mike@example.com",
-                            "group:admins@example.com",
-                            "domain:google.com",
-                            "serviceAccount:my-project-id@appspot.gserviceaccount.com"
-                          ]
-                        },
-                        {
-                          "role": "roles/resourcemanager.organizationViewer",
-                          "members": ["user:eve@example.com"],
-                          "condition": {
-                            "title": "expirable access",
-                            "description": "Does not grant access after Sep 2020",
-                            "expression": "request.time <
-                            timestamp('2020-10-01T00:00:00.000Z')",
-                          }
-                        }
-                      ]
-                    }
+                            }, { "role":
+                            "roles/resourcemanager.organizationViewer",
+                            "members": ["user:eve@example.com"],
+                            "condition": { "title": "expirable access",
+                            "description": "Does not grant access after
+                            Sep 2020", "expression": "request.time <
+                            timestamp('2020-10-01T00:00:00.000Z')", } }
 
-                **YAML Example**
+                         ]
 
-                ::
+                      }
 
-                    bindings:
-                    - members:
-                      - user:mike@example.com
-                      - group:admins@example.com
-                      - domain:google.com
-                      - serviceAccount:my-project-id@appspot.gserviceaccount.com
-                      role: roles/resourcemanager.organizationAdmin
-                    - members:
-                      - user:eve@example.com
-                      role: roles/resourcemanager.organizationViewer
-                      condition:
-                        title: expirable access
-                        description: Does not grant access after Sep 2020
-                        expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+                   **YAML Example**
 
-                For a description of IAM and its features, see the `IAM
-                developer's
-                guide <https://cloud.google.com/iam/docs>`__.
+                      bindings: - members: - user:\ mike@example.com -
+                      group:\ admins@example.com - domain:google.com -
+                      serviceAccount:\ my-project-id@appspot.gserviceaccount.com
+                      role: roles/resourcemanager.organizationAdmin -
+                      members: - user:\ eve@example.com role:
+                      roles/resourcemanager.organizationViewer
+                      condition: title: expirable access description:
+                      Does not grant access after Sep 2020 expression:
+                      request.time <
+                      timestamp('2020-10-01T00:00:00.000Z')
+
+                   For a description of IAM and its features, see the
+                   [IAM developer's
+                   guide](\ https://cloud.google.com/iam/docs).
 
         """
         # Create or coerce a protobuf request object.
@@ -1373,22 +1381,24 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         warning.
 
         Args:
-            request (:class:`~.iam_policy.TestIamPermissionsRequest`):
+            request (google.iam.v1.iam_policy_pb2.TestIamPermissionsRequest):
                 The request object. Request message for
                 `TestIamPermissions` method.
-            resource (:class:`str`):
+            resource (str):
                 REQUIRED: The resource for which the
                 policy detail is being requested. See
                 the operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            permissions (:class:`Sequence[str]`):
+            permissions (Sequence[str]):
                 The set of permissions to check for the ``resource``.
                 Permissions with wildcards (such as '*' or 'storage.*')
                 are not allowed. For more information see `IAM
                 Overview <https://cloud.google.com/iam/docs/overview#permissions>`__.
+
                 This corresponds to the ``permissions`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1400,8 +1410,8 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.iam_policy.TestIamPermissionsResponse:
-                Response message for ``TestIamPermissions`` method.
+            google.iam.v1.iam_policy_pb2.TestIamPermissionsResponse:
+                Response message for TestIamPermissions method.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
@@ -1460,13 +1470,14 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         at any time.
 
         Args:
-            request (:class:`~.cloudtasks.ListTasksRequest`):
+            request (google.cloud.tasks_v2beta3.types.ListTasksRequest):
                 The request object. Request message for listing tasks
                 using
                 [ListTasks][google.cloud.tasks.v2beta3.CloudTasks.ListTasks].
-            parent (:class:`str`):
+            parent (str):
                 Required. The queue name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1478,7 +1489,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.pagers.ListTasksPager:
+            google.cloud.tasks_v2beta3.services.cloud_tasks.pagers.ListTasksPager:
                 Response message for listing tasks using
                 [ListTasks][google.cloud.tasks.v2beta3.CloudTasks.ListTasks].
 
@@ -1543,13 +1554,14 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         r"""Gets a task.
 
         Args:
-            request (:class:`~.cloudtasks.GetTaskRequest`):
+            request (google.cloud.tasks_v2beta3.types.GetTaskRequest):
                 The request object. Request message for getting a task
                 using
                 [GetTask][google.cloud.tasks.v2beta3.CloudTasks.GetTask].
-            name (:class:`str`):
+            name (str):
                 Required. The task name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1561,7 +1573,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.task.Task:
+            google.cloud.tasks_v2beta3.types.Task:
                 A unit of scheduled work.
         """
         # Create or coerce a protobuf request object.
@@ -1621,18 +1633,19 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         -  The maximum task size is 100KB.
 
         Args:
-            request (:class:`~.cloudtasks.CreateTaskRequest`):
+            request (google.cloud.tasks_v2beta3.types.CreateTaskRequest):
                 The request object. Request message for
                 [CreateTask][google.cloud.tasks.v2beta3.CloudTasks.CreateTask].
-            parent (:class:`str`):
+            parent (str):
                 Required. The queue name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
 
                 The queue must already exist.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            task (:class:`~.gct_task.Task`):
+            task (google.cloud.tasks_v2beta3.types.Task):
                 Required. The task to add.
 
                 Task names have the following format:
@@ -1674,6 +1687,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 task commands. The infrastructure relies on an
                 approximately uniform distribution of task ids to store
                 and serve tasks efficiently.
+
                 This corresponds to the ``task`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1685,7 +1699,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.gct_task.Task:
+            google.cloud.tasks_v2beta3.types.Task:
                 A unit of scheduled work.
         """
         # Create or coerce a protobuf request object.
@@ -1744,13 +1758,14 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         or permanently failed.
 
         Args:
-            request (:class:`~.cloudtasks.DeleteTaskRequest`):
+            request (google.cloud.tasks_v2beta3.types.DeleteTaskRequest):
                 The request object. Request message for deleting a task
                 using
                 [DeleteTask][google.cloud.tasks.v2beta3.CloudTasks.DeleteTask].
-            name (:class:`str`):
+            name (str):
                 Required. The task name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1838,13 +1853,14 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         task that has already succeeded or permanently failed.
 
         Args:
-            request (:class:`~.cloudtasks.RunTaskRequest`):
+            request (google.cloud.tasks_v2beta3.types.RunTaskRequest):
                 The request object. Request message for forcing a task
                 to run now using
                 [RunTask][google.cloud.tasks.v2beta3.CloudTasks.RunTask].
-            name (:class:`str`):
+            name (str):
                 Required. The task name. For example:
                 ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1856,7 +1872,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.task.Task:
+            google.cloud.tasks_v2beta3.types.Task:
                 A unit of scheduled work.
         """
         # Create or coerce a protobuf request object.
