@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-tasks.git",
-        "sha": "6a5bfaf63b46567897c36907772b10ea4b0dff43"
+        "sha": "96e5c363a1502f523582e528ef72ea7076011d82"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "dd372aa22ded7a8ba6f0e03a80e06358a3fa0907",
-        "internalRef": "347055288"
+        "sha": "20712b8fe95001b312f62c6c5f33e3e3ec92cfaf",
+        "internalRef": "354996675"
       }
     },
     {
@@ -60,6 +60,7 @@
     }
   ],
   "generatedFiles": [
+    ".coveragerc",
     ".flake8",
     ".github/CONTRIBUTING.md",
     ".github/ISSUE_TEMPLATE/bug_report.md",
@@ -113,10 +114,13 @@
     "docs/_templates/layout.html",
     "docs/conf.py",
     "docs/multiprocessing.rst",
+    "docs/tasks_v2/cloud_tasks.rst",
     "docs/tasks_v2/services.rst",
     "docs/tasks_v2/types.rst",
+    "docs/tasks_v2beta2/cloud_tasks.rst",
     "docs/tasks_v2beta2/services.rst",
     "docs/tasks_v2beta2/types.rst",
+    "docs/tasks_v2beta3/cloud_tasks.rst",
     "docs/tasks_v2beta3/services.rst",
     "docs/tasks_v2beta3/types.rst",
     "google/cloud/tasks/__init__.py",
@@ -143,6 +147,7 @@
     "google/cloud/tasks_v2/types/task.py",
     "google/cloud/tasks_v2beta2/__init__.py",
     "google/cloud/tasks_v2beta2/proto/cloudtasks.proto",
+    "google/cloud/tasks_v2beta2/proto/old_target.proto",
     "google/cloud/tasks_v2beta2/proto/queue.proto",
     "google/cloud/tasks_v2beta2/proto/target.proto",
     "google/cloud/tasks_v2beta2/proto/task.proto",
