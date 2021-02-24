@@ -4,29 +4,29 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-tasks.git",
-        "sha": "6a5bfaf63b46567897c36907772b10ea4b0dff43"
+        "sha": "a5d3e8a969ee47eb79872c50b0644f9e3d37def1"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "dd372aa22ded7a8ba6f0e03a80e06358a3fa0907",
-        "internalRef": "347055288"
+        "sha": "eabec5a21219401bad79e1cc7d900c1658aee5fd",
+        "internalRef": "359130387"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "373861061648b5fe5e0ac4f8a38b32d639ee93e4"
+        "sha": "79ab0b44a2cc7d803d07c107f9faf07729fc4012"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "373861061648b5fe5e0ac4f8a38b32d639ee93e4"
+        "sha": "79ab0b44a2cc7d803d07c107f9faf07729fc4012"
       }
     }
   ],
@@ -60,12 +60,14 @@
     }
   ],
   "generatedFiles": [
+    ".coveragerc",
     ".flake8",
     ".github/CONTRIBUTING.md",
     ".github/ISSUE_TEMPLATE/bug_report.md",
     ".github/ISSUE_TEMPLATE/feature_request.md",
     ".github/ISSUE_TEMPLATE/support_request.md",
     ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/header-checker-lint.yml",
     ".github/release-please.yml",
     ".github/snippet-bot.yml",
     ".gitignore",
@@ -113,10 +115,13 @@
     "docs/_templates/layout.html",
     "docs/conf.py",
     "docs/multiprocessing.rst",
+    "docs/tasks_v2/cloud_tasks.rst",
     "docs/tasks_v2/services.rst",
     "docs/tasks_v2/types.rst",
+    "docs/tasks_v2beta2/cloud_tasks.rst",
     "docs/tasks_v2beta2/services.rst",
     "docs/tasks_v2beta2/types.rst",
+    "docs/tasks_v2beta3/cloud_tasks.rst",
     "docs/tasks_v2beta3/services.rst",
     "docs/tasks_v2beta3/types.rst",
     "google/cloud/tasks/__init__.py",
@@ -143,6 +148,7 @@
     "google/cloud/tasks_v2/types/task.py",
     "google/cloud/tasks_v2beta2/__init__.py",
     "google/cloud/tasks_v2beta2/proto/cloudtasks.proto",
+    "google/cloud/tasks_v2beta2/proto/old_target.proto",
     "google/cloud/tasks_v2beta2/proto/queue.proto",
     "google/cloud/tasks_v2beta2/proto/target.proto",
     "google/cloud/tasks_v2beta2/proto/task.proto",
