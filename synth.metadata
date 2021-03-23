@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-tasks.git",
-        "sha": "e4865024dd3acf6a8f7e64712f19f5369ee30202"
+        "sha": "c653f489f453b562c7076816981d8541ba84a029"
       }
     },
     {
