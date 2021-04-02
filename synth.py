@@ -23,7 +23,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 gapic = gcp.GAPICBazel()
 common = gcp.CommonTemplates()
-excludes = ["README.rst", "setup.py", "nox*.py", "docs/index.rst"]
+excludes = ["README.rst", "setup.py", "nox*.py", "docs/index.rst", "*.tar.gz"]
 
 # ----------------------------------------------------------------------------
 # Generate tasks GAPIC layer
