@@ -47,7 +47,7 @@ class tasksCallTransformer(cst.CSTTransformer):
     'create_task': ('parent', 'task', 'response_view', ),
     'delete_queue': ('name', ),
     'delete_task': ('name', ),
-    'get_iam_policy': ('resource', 'options', ),
+    'get_iam_policy': ('resource', 'options_', ),
     'get_queue': ('name', 'read_mask', ),
     'get_task': ('name', 'response_view', ),
     'lease_tasks': ('parent', 'lease_duration', 'max_tasks', 'response_view', 'filter', ),
@@ -58,7 +58,7 @@ class tasksCallTransformer(cst.CSTTransformer):
     'renew_lease': ('name', 'schedule_time', 'lease_duration', 'response_view', ),
     'resume_queue': ('name', ),
     'run_task': ('name', 'response_view', ),
-    'set_iam_policy': ('resource', 'policy', ),
+    'set_iam_policy': ('resource', 'policy_', ),
     'test_iam_permissions': ('resource', 'permissions', ),
     'update_queue': ('queue', 'update_mask', ),
 
