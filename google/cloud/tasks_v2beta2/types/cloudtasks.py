@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,9 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 import proto  # type: ignore
-
 
 from google.cloud.tasks_v2beta2.types import queue as gct_queue
 from google.cloud.tasks_v2beta2.types import task as gct_task
@@ -99,14 +96,10 @@ class ListQueuesRequest(proto.Message):
             returned only if it was explicitly specified in the mask.
     """
 
-    parent = proto.Field(proto.STRING, number=1)
-
-    filter = proto.Field(proto.STRING, number=2)
-
-    page_size = proto.Field(proto.INT32, number=3)
-
-    page_token = proto.Field(proto.STRING, number=4)
-
+    parent = proto.Field(proto.STRING, number=1,)
+    filter = proto.Field(proto.STRING, number=2,)
+    page_size = proto.Field(proto.INT32, number=3,)
+    page_token = proto.Field(proto.STRING, number=4,)
     read_mask = proto.Field(proto.MESSAGE, number=5, message=field_mask.FieldMask,)
 
 
@@ -135,8 +128,7 @@ class ListQueuesResponse(proto.Message):
         return self
 
     queues = proto.RepeatedField(proto.MESSAGE, number=1, message=gct_queue.Queue,)
-
-    next_page_token = proto.Field(proto.STRING, number=2)
+    next_page_token = proto.Field(proto.STRING, number=2,)
 
 
 class GetQueueRequest(proto.Message):
@@ -154,8 +146,7 @@ class GetQueueRequest(proto.Message):
             returned only if it was explicitly specified in the mask.
     """
 
-    name = proto.Field(proto.STRING, number=1)
-
+    name = proto.Field(proto.STRING, number=1,)
     read_mask = proto.Field(proto.MESSAGE, number=2, message=field_mask.FieldMask,)
 
 
@@ -179,8 +170,7 @@ class CreateQueueRequest(proto.Message):
             be the same as an existing queue.
     """
 
-    parent = proto.Field(proto.STRING, number=1)
-
+    parent = proto.Field(proto.STRING, number=1,)
     queue = proto.Field(proto.MESSAGE, number=2, message=gct_queue.Queue,)
 
 
@@ -206,7 +196,6 @@ class UpdateQueueRequest(proto.Message):
     """
 
     queue = proto.Field(proto.MESSAGE, number=1, message=gct_queue.Queue,)
-
     update_mask = proto.Field(proto.MESSAGE, number=2, message=field_mask.FieldMask,)
 
 
@@ -220,7 +209,7 @@ class DeleteQueueRequest(proto.Message):
             ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID``
     """
 
-    name = proto.Field(proto.STRING, number=1)
+    name = proto.Field(proto.STRING, number=1,)
 
 
 class PurgeQueueRequest(proto.Message):
@@ -233,7 +222,7 @@ class PurgeQueueRequest(proto.Message):
             ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
     """
 
-    name = proto.Field(proto.STRING, number=1)
+    name = proto.Field(proto.STRING, number=1,)
 
 
 class PauseQueueRequest(proto.Message):
@@ -246,7 +235,7 @@ class PauseQueueRequest(proto.Message):
             ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
     """
 
-    name = proto.Field(proto.STRING, number=1)
+    name = proto.Field(proto.STRING, number=1,)
 
 
 class ResumeQueueRequest(proto.Message):
@@ -259,7 +248,7 @@ class ResumeQueueRequest(proto.Message):
             ``projects/PROJECT_ID/location/LOCATION_ID/queues/QUEUE_ID``
     """
 
-    name = proto.Field(proto.STRING, number=1)
+    name = proto.Field(proto.STRING, number=1,)
 
 
 class ListTasksRequest(proto.Message):
@@ -310,13 +299,10 @@ class ListTasksRequest(proto.Message):
             The page token is valid for only 2 hours.
     """
 
-    parent = proto.Field(proto.STRING, number=1)
-
+    parent = proto.Field(proto.STRING, number=1,)
     response_view = proto.Field(proto.ENUM, number=2, enum=gct_task.Task.View,)
-
-    page_size = proto.Field(proto.INT32, number=4)
-
-    page_token = proto.Field(proto.STRING, number=5)
+    page_size = proto.Field(proto.INT32, number=4,)
+    page_token = proto.Field(proto.STRING, number=5,)
 
 
 class ListTasksResponse(proto.Message):
@@ -342,8 +328,7 @@ class ListTasksResponse(proto.Message):
         return self
 
     tasks = proto.RepeatedField(proto.MESSAGE, number=1, message=gct_task.Task,)
-
-    next_page_token = proto.Field(proto.STRING, number=2)
+    next_page_token = proto.Field(proto.STRING, number=2,)
 
 
 class GetTaskRequest(proto.Message):
@@ -372,8 +357,7 @@ class GetTaskRequest(proto.Message):
             [Task][google.cloud.tasks.v2beta2.Task] resource.
     """
 
-    name = proto.Field(proto.STRING, number=1)
-
+    name = proto.Field(proto.STRING, number=1,)
     response_view = proto.Field(proto.ENUM, number=2, enum=gct_task.Task.View,)
 
 
@@ -446,10 +430,8 @@ class CreateTaskRequest(proto.Message):
             [Task][google.cloud.tasks.v2beta2.Task] resource.
     """
 
-    parent = proto.Field(proto.STRING, number=1)
-
+    parent = proto.Field(proto.STRING, number=1,)
     task = proto.Field(proto.MESSAGE, number=2, message=gct_task.Task,)
-
     response_view = proto.Field(proto.ENUM, number=3, enum=gct_task.Task.View,)
 
 
@@ -463,7 +445,7 @@ class DeleteTaskRequest(proto.Message):
             ``projects/PROJECT_ID/locations/LOCATION_ID/queues/QUEUE_ID/tasks/TASK_ID``
     """
 
-    name = proto.Field(proto.STRING, number=1)
+    name = proto.Field(proto.STRING, number=1,)
 
 
 class LeaseTasksRequest(proto.Message):
@@ -567,15 +549,11 @@ class LeaseTasksRequest(proto.Message):
             displayed as empty in Cloud Tasks.
     """
 
-    parent = proto.Field(proto.STRING, number=1)
-
-    max_tasks = proto.Field(proto.INT32, number=2)
-
+    parent = proto.Field(proto.STRING, number=1,)
+    max_tasks = proto.Field(proto.INT32, number=2,)
     lease_duration = proto.Field(proto.MESSAGE, number=3, message=duration.Duration,)
-
     response_view = proto.Field(proto.ENUM, number=4, enum=gct_task.Task.View,)
-
-    filter = proto.Field(proto.STRING, number=5)
+    filter = proto.Field(proto.STRING, number=5,)
 
 
 class LeaseTasksResponse(proto.Message):
@@ -609,8 +587,7 @@ class AcknowledgeTaskRequest(proto.Message):
             currently holds the lease.
     """
 
-    name = proto.Field(proto.STRING, number=1)
-
+    name = proto.Field(proto.STRING, number=1,)
     schedule_time = proto.Field(proto.MESSAGE, number=2, message=timestamp.Timestamp,)
 
 
@@ -654,12 +631,9 @@ class RenewLeaseRequest(proto.Message):
             [Task][google.cloud.tasks.v2beta2.Task] resource.
     """
 
-    name = proto.Field(proto.STRING, number=1)
-
+    name = proto.Field(proto.STRING, number=1,)
     schedule_time = proto.Field(proto.MESSAGE, number=2, message=timestamp.Timestamp,)
-
     lease_duration = proto.Field(proto.MESSAGE, number=3, message=duration.Duration,)
-
     response_view = proto.Field(proto.ENUM, number=4, enum=gct_task.Task.View,)
 
 
@@ -698,10 +672,8 @@ class CancelLeaseRequest(proto.Message):
             [Task][google.cloud.tasks.v2beta2.Task] resource.
     """
 
-    name = proto.Field(proto.STRING, number=1)
-
+    name = proto.Field(proto.STRING, number=1,)
     schedule_time = proto.Field(proto.MESSAGE, number=2, message=timestamp.Timestamp,)
-
     response_view = proto.Field(proto.ENUM, number=3, enum=gct_task.Task.View,)
 
 
@@ -731,8 +703,7 @@ class RunTaskRequest(proto.Message):
             [Task][google.cloud.tasks.v2beta2.Task] resource.
     """
 
-    name = proto.Field(proto.STRING, number=1)
-
+    name = proto.Field(proto.STRING, number=1,)
     response_view = proto.Field(proto.ENUM, number=2, enum=gct_task.Task.View,)
 
 

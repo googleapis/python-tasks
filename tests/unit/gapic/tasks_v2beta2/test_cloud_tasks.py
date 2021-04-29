@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,15 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 import os
 import mock
+import packaging.version
 
 import grpc
 from grpc.experimental import aio
 import math
 import pytest
 from proto.marshal.rules.dates import DurationRule, TimestampRule
+
 
 from google import auth
 from google.api_core import client_options
@@ -36,6 +36,12 @@ from google.cloud.tasks_v2beta2.services.cloud_tasks import CloudTasksAsyncClien
 from google.cloud.tasks_v2beta2.services.cloud_tasks import CloudTasksClient
 from google.cloud.tasks_v2beta2.services.cloud_tasks import pagers
 from google.cloud.tasks_v2beta2.services.cloud_tasks import transports
+from google.cloud.tasks_v2beta2.services.cloud_tasks.transports.base import (
+    _API_CORE_VERSION,
+)
+from google.cloud.tasks_v2beta2.services.cloud_tasks.transports.base import (
+    _GOOGLE_AUTH_VERSION,
+)
 from google.cloud.tasks_v2beta2.types import cloudtasks
 from google.cloud.tasks_v2beta2.types import queue
 from google.cloud.tasks_v2beta2.types import queue as gct_queue
@@ -43,8 +49,8 @@ from google.cloud.tasks_v2beta2.types import target
 from google.cloud.tasks_v2beta2.types import task
 from google.cloud.tasks_v2beta2.types import task as gct_task
 from google.iam.v1 import iam_policy_pb2 as iam_policy  # type: ignore
-from google.iam.v1 import options_pb2 as options  # type: ignore
-from google.iam.v1 import policy_pb2 as policy  # type: ignore
+from google.iam.v1 import options_pb2 as giv_options  # type: ignore
+from google.iam.v1 import policy_pb2 as giv_policy  # type: ignore
 from google.oauth2 import service_account
 from google.protobuf import any_pb2 as gp_any  # type: ignore
 from google.protobuf import duration_pb2 as duration  # type: ignore
@@ -52,6 +58,29 @@ from google.protobuf import field_mask_pb2 as field_mask  # type: ignore
 from google.protobuf import timestamp_pb2 as timestamp  # type: ignore
 from google.rpc import status_pb2 as status  # type: ignore
 from google.type import expr_pb2 as expr  # type: ignore
+
+
+# TODO(busunkim): Once google-api-core >= 1.26.0 is required:
+# - Delete all the api-core and auth "less than" test cases
+# - Delete these pytest markers (Make the "greater than or equal to" tests the default).
+requires_google_auth_lt_1_25_0 = pytest.mark.skipif(
+    packaging.version.parse(_GOOGLE_AUTH_VERSION) >= packaging.version.parse("1.25.0"),
+    reason="This test requires google-auth < 1.25.0",
+)
+requires_google_auth_gte_1_25_0 = pytest.mark.skipif(
+    packaging.version.parse(_GOOGLE_AUTH_VERSION) < packaging.version.parse("1.25.0"),
+    reason="This test requires google-auth >= 1.25.0",
+)
+
+requires_api_core_lt_1_26_0 = pytest.mark.skipif(
+    packaging.version.parse(_API_CORE_VERSION) >= packaging.version.parse("1.26.0"),
+    reason="This test requires google-api-core < 1.26.0",
+)
+
+requires_api_core_gte_1_26_0 = pytest.mark.skipif(
+    packaging.version.parse(_API_CORE_VERSION) < packaging.version.parse("1.26.0"),
+    reason="This test requires google-api-core >= 1.26.0",
+)
 
 
 def client_cert_source_callback():
@@ -460,19 +489,15 @@ def test_list_queues(
         call.return_value = cloudtasks.ListQueuesResponse(
             next_page_token="next_page_token_value",
         )
-
         response = client.list_queues(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ListQueuesRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, pagers.ListQueuesPager)
-
     assert response.next_page_token == "next_page_token_value"
 
 
@@ -492,7 +517,6 @@ def test_list_queues_empty_call():
         client.list_queues()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ListQueuesRequest()
 
 
@@ -514,18 +538,15 @@ async def test_list_queues_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             cloudtasks.ListQueuesResponse(next_page_token="next_page_token_value",)
         )
-
         response = await client.list_queues(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ListQueuesRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, pagers.ListQueuesAsyncPager)
-
     assert response.next_page_token == "next_page_token_value"
 
 
@@ -540,12 +561,12 @@ def test_list_queues_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.ListQueuesRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.list_queues), "__call__") as call:
         call.return_value = cloudtasks.ListQueuesResponse()
-
         client.list_queues(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -565,6 +586,7 @@ async def test_list_queues_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.ListQueuesRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -572,7 +594,6 @@ async def test_list_queues_field_headers_async():
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             cloudtasks.ListQueuesResponse()
         )
-
         await client.list_queues(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -592,7 +613,6 @@ def test_list_queues_flattened():
     with mock.patch.object(type(client.transport.list_queues), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = cloudtasks.ListQueuesResponse()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.list_queues(parent="parent_value",)
@@ -601,7 +621,6 @@ def test_list_queues_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
 
 
@@ -636,7 +655,6 @@ async def test_list_queues_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
 
 
@@ -787,21 +805,16 @@ def test_get_queue(transport: str = "grpc", request_type=cloudtasks.GetQueueRequ
                 )
             ),
         )
-
         response = client.get_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.GetQueueRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -821,7 +834,6 @@ def test_get_queue_empty_call():
         client.get_queue()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.GetQueueRequest()
 
 
@@ -843,20 +855,16 @@ async def test_get_queue_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             queue.Queue(name="name_value", state=queue.Queue.State.RUNNING,)
         )
-
         response = await client.get_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.GetQueueRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -871,12 +879,12 @@ def test_get_queue_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.GetQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_queue), "__call__") as call:
         call.return_value = queue.Queue()
-
         client.get_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -896,12 +904,12 @@ async def test_get_queue_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.GetQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_queue), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(queue.Queue())
-
         await client.get_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -921,7 +929,6 @@ def test_get_queue_flattened():
     with mock.patch.object(type(client.transport.get_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = queue.Queue()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.get_queue(name="name_value",)
@@ -930,7 +937,6 @@ def test_get_queue_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -963,7 +969,6 @@ async def test_get_queue_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -1002,21 +1007,16 @@ def test_create_queue(
                 )
             ),
         )
-
         response = client.create_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CreateQueueRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, gct_queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == gct_queue.Queue.State.RUNNING
 
 
@@ -1036,7 +1036,6 @@ def test_create_queue_empty_call():
         client.create_queue()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CreateQueueRequest()
 
 
@@ -1058,20 +1057,16 @@ async def test_create_queue_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             gct_queue.Queue(name="name_value", state=gct_queue.Queue.State.RUNNING,)
         )
-
         response = await client.create_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CreateQueueRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, gct_queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == gct_queue.Queue.State.RUNNING
 
 
@@ -1086,12 +1081,12 @@ def test_create_queue_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.CreateQueueRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.create_queue), "__call__") as call:
         call.return_value = gct_queue.Queue()
-
         client.create_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1111,12 +1106,12 @@ async def test_create_queue_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.CreateQueueRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.create_queue), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(gct_queue.Queue())
-
         await client.create_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1136,7 +1131,6 @@ def test_create_queue_flattened():
     with mock.patch.object(type(client.transport.create_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = gct_queue.Queue()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.create_queue(
@@ -1147,9 +1141,7 @@ def test_create_queue_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
-
         assert args[0].queue == gct_queue.Queue(name="name_value")
 
 
@@ -1186,9 +1178,7 @@ async def test_create_queue_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
-
         assert args[0].queue == gct_queue.Queue(name="name_value")
 
 
@@ -1229,21 +1219,16 @@ def test_update_queue(
                 )
             ),
         )
-
         response = client.update_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.UpdateQueueRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, gct_queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == gct_queue.Queue.State.RUNNING
 
 
@@ -1263,7 +1248,6 @@ def test_update_queue_empty_call():
         client.update_queue()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.UpdateQueueRequest()
 
 
@@ -1285,20 +1269,16 @@ async def test_update_queue_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             gct_queue.Queue(name="name_value", state=gct_queue.Queue.State.RUNNING,)
         )
-
         response = await client.update_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.UpdateQueueRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, gct_queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == gct_queue.Queue.State.RUNNING
 
 
@@ -1313,12 +1293,12 @@ def test_update_queue_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.UpdateQueueRequest()
+
     request.queue.name = "queue.name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.update_queue), "__call__") as call:
         call.return_value = gct_queue.Queue()
-
         client.update_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1338,12 +1318,12 @@ async def test_update_queue_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.UpdateQueueRequest()
+
     request.queue.name = "queue.name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.update_queue), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(gct_queue.Queue())
-
         await client.update_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1363,7 +1343,6 @@ def test_update_queue_flattened():
     with mock.patch.object(type(client.transport.update_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = gct_queue.Queue()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.update_queue(
@@ -1375,9 +1354,7 @@ def test_update_queue_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].queue == gct_queue.Queue(name="name_value")
-
         assert args[0].update_mask == field_mask.FieldMask(paths=["paths_value"])
 
 
@@ -1415,9 +1392,7 @@ async def test_update_queue_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].queue == gct_queue.Queue(name="name_value")
-
         assert args[0].update_mask == field_mask.FieldMask(paths=["paths_value"])
 
 
@@ -1450,13 +1425,11 @@ def test_delete_queue(
     with mock.patch.object(type(client.transport.delete_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
-
         response = client.delete_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.DeleteQueueRequest()
 
     # Establish that the response is the type that we expect.
@@ -1479,7 +1452,6 @@ def test_delete_queue_empty_call():
         client.delete_queue()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.DeleteQueueRequest()
 
 
@@ -1499,13 +1471,11 @@ async def test_delete_queue_async(
     with mock.patch.object(type(client.transport.delete_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
-
         response = await client.delete_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.DeleteQueueRequest()
 
     # Establish that the response is the type that we expect.
@@ -1523,12 +1493,12 @@ def test_delete_queue_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.DeleteQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.delete_queue), "__call__") as call:
         call.return_value = None
-
         client.delete_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1548,12 +1518,12 @@ async def test_delete_queue_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.DeleteQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.delete_queue), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
-
         await client.delete_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1573,7 +1543,6 @@ def test_delete_queue_flattened():
     with mock.patch.object(type(client.transport.delete_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.delete_queue(name="name_value",)
@@ -1582,7 +1551,6 @@ def test_delete_queue_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -1615,7 +1583,6 @@ async def test_delete_queue_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -1654,21 +1621,16 @@ def test_purge_queue(
                 )
             ),
         )
-
         response = client.purge_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.PurgeQueueRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -1688,7 +1650,6 @@ def test_purge_queue_empty_call():
         client.purge_queue()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.PurgeQueueRequest()
 
 
@@ -1710,20 +1671,16 @@ async def test_purge_queue_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             queue.Queue(name="name_value", state=queue.Queue.State.RUNNING,)
         )
-
         response = await client.purge_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.PurgeQueueRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -1738,12 +1695,12 @@ def test_purge_queue_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.PurgeQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.purge_queue), "__call__") as call:
         call.return_value = queue.Queue()
-
         client.purge_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1763,12 +1720,12 @@ async def test_purge_queue_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.PurgeQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.purge_queue), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(queue.Queue())
-
         await client.purge_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1788,7 +1745,6 @@ def test_purge_queue_flattened():
     with mock.patch.object(type(client.transport.purge_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = queue.Queue()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.purge_queue(name="name_value",)
@@ -1797,7 +1753,6 @@ def test_purge_queue_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -1830,7 +1785,6 @@ async def test_purge_queue_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -1869,21 +1823,16 @@ def test_pause_queue(
                 )
             ),
         )
-
         response = client.pause_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.PauseQueueRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -1903,7 +1852,6 @@ def test_pause_queue_empty_call():
         client.pause_queue()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.PauseQueueRequest()
 
 
@@ -1925,20 +1873,16 @@ async def test_pause_queue_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             queue.Queue(name="name_value", state=queue.Queue.State.RUNNING,)
         )
-
         response = await client.pause_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.PauseQueueRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -1953,12 +1897,12 @@ def test_pause_queue_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.PauseQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.pause_queue), "__call__") as call:
         call.return_value = queue.Queue()
-
         client.pause_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -1978,12 +1922,12 @@ async def test_pause_queue_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.PauseQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.pause_queue), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(queue.Queue())
-
         await client.pause_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2003,7 +1947,6 @@ def test_pause_queue_flattened():
     with mock.patch.object(type(client.transport.pause_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = queue.Queue()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.pause_queue(name="name_value",)
@@ -2012,7 +1955,6 @@ def test_pause_queue_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -2045,7 +1987,6 @@ async def test_pause_queue_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -2084,21 +2025,16 @@ def test_resume_queue(
                 )
             ),
         )
-
         response = client.resume_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ResumeQueueRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -2118,7 +2054,6 @@ def test_resume_queue_empty_call():
         client.resume_queue()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ResumeQueueRequest()
 
 
@@ -2140,20 +2075,16 @@ async def test_resume_queue_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             queue.Queue(name="name_value", state=queue.Queue.State.RUNNING,)
         )
-
         response = await client.resume_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ResumeQueueRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, queue.Queue)
-
     assert response.name == "name_value"
-
     assert response.state == queue.Queue.State.RUNNING
 
 
@@ -2168,12 +2099,12 @@ def test_resume_queue_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.ResumeQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.resume_queue), "__call__") as call:
         call.return_value = queue.Queue()
-
         client.resume_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2193,12 +2124,12 @@ async def test_resume_queue_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.ResumeQueueRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.resume_queue), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(queue.Queue())
-
         await client.resume_queue(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2218,7 +2149,6 @@ def test_resume_queue_flattened():
     with mock.patch.object(type(client.transport.resume_queue), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = queue.Queue()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.resume_queue(name="name_value",)
@@ -2227,7 +2157,6 @@ def test_resume_queue_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -2260,7 +2189,6 @@ async def test_resume_queue_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -2290,22 +2218,17 @@ def test_get_iam_policy(
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy(version=774, etag=b"etag_blob",)
-
+        call.return_value = giv_policy.Policy(version=774, etag=b"etag_blob",)
         response = client.get_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.GetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
-
-    assert isinstance(response, policy.Policy)
-
+    assert isinstance(response, giv_policy.Policy)
     assert response.version == 774
-
     assert response.etag == b"etag_blob"
 
 
@@ -2325,7 +2248,6 @@ def test_get_iam_policy_empty_call():
         client.get_iam_policy()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.GetIamPolicyRequest()
 
 
@@ -2345,22 +2267,18 @@ async def test_get_iam_policy_async(
     with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
-            policy.Policy(version=774, etag=b"etag_blob",)
+            giv_policy.Policy(version=774, etag=b"etag_blob",)
         )
-
         response = await client.get_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.GetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
-    assert isinstance(response, policy.Policy)
-
+    assert isinstance(response, giv_policy.Policy)
     assert response.version == 774
-
     assert response.etag == b"etag_blob"
 
 
@@ -2375,12 +2293,12 @@ def test_get_iam_policy_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = iam_policy.GetIamPolicyRequest()
+
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
-        call.return_value = policy.Policy()
-
+        call.return_value = giv_policy.Policy()
         client.get_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2400,12 +2318,12 @@ async def test_get_iam_policy_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = iam_policy.GetIamPolicyRequest()
+
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(policy.Policy())
-
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(giv_policy.Policy())
         await client.get_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2423,12 +2341,11 @@ def test_get_iam_policy_from_dict_foreign():
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy()
-
+        call.return_value = giv_policy.Policy()
         response = client.get_iam_policy(
             request={
                 "resource": "resource_value",
-                "options": options.GetPolicyOptions(requested_policy_version=2598),
+                "options_": giv_options.GetPolicyOptions(requested_policy_version=2598),
             }
         )
         call.assert_called()
@@ -2440,8 +2357,7 @@ def test_get_iam_policy_flattened():
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy()
-
+        call.return_value = giv_policy.Policy()
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.get_iam_policy(resource="resource_value",)
@@ -2450,7 +2366,6 @@ def test_get_iam_policy_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].resource == "resource_value"
 
 
@@ -2472,9 +2387,9 @@ async def test_get_iam_policy_flattened_async():
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy()
+        call.return_value = giv_policy.Policy()
 
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(policy.Policy())
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(giv_policy.Policy())
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         response = await client.get_iam_policy(resource="resource_value",)
@@ -2483,7 +2398,6 @@ async def test_get_iam_policy_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].resource == "resource_value"
 
 
@@ -2513,22 +2427,17 @@ def test_set_iam_policy(
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy(version=774, etag=b"etag_blob",)
-
+        call.return_value = giv_policy.Policy(version=774, etag=b"etag_blob",)
         response = client.set_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.SetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
-
-    assert isinstance(response, policy.Policy)
-
+    assert isinstance(response, giv_policy.Policy)
     assert response.version == 774
-
     assert response.etag == b"etag_blob"
 
 
@@ -2548,7 +2457,6 @@ def test_set_iam_policy_empty_call():
         client.set_iam_policy()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.SetIamPolicyRequest()
 
 
@@ -2568,22 +2476,18 @@ async def test_set_iam_policy_async(
     with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
-            policy.Policy(version=774, etag=b"etag_blob",)
+            giv_policy.Policy(version=774, etag=b"etag_blob",)
         )
-
         response = await client.set_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.SetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
-    assert isinstance(response, policy.Policy)
-
+    assert isinstance(response, giv_policy.Policy)
     assert response.version == 774
-
     assert response.etag == b"etag_blob"
 
 
@@ -2598,12 +2502,12 @@ def test_set_iam_policy_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = iam_policy.SetIamPolicyRequest()
+
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
-        call.return_value = policy.Policy()
-
+        call.return_value = giv_policy.Policy()
         client.set_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2623,12 +2527,12 @@ async def test_set_iam_policy_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = iam_policy.SetIamPolicyRequest()
+
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(policy.Policy())
-
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(giv_policy.Policy())
         await client.set_iam_policy(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2646,12 +2550,11 @@ def test_set_iam_policy_from_dict_foreign():
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy()
-
+        call.return_value = giv_policy.Policy()
         response = client.set_iam_policy(
             request={
                 "resource": "resource_value",
-                "policy": policy.Policy(version=774),
+                "policy_": giv_policy.Policy(version=774),
             }
         )
         call.assert_called()
@@ -2663,8 +2566,7 @@ def test_set_iam_policy_flattened():
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy()
-
+        call.return_value = giv_policy.Policy()
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.set_iam_policy(resource="resource_value",)
@@ -2673,7 +2575,6 @@ def test_set_iam_policy_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].resource == "resource_value"
 
 
@@ -2695,9 +2596,9 @@ async def test_set_iam_policy_flattened_async():
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
-        call.return_value = policy.Policy()
+        call.return_value = giv_policy.Policy()
 
-        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(policy.Policy())
+        call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(giv_policy.Policy())
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         response = await client.set_iam_policy(resource="resource_value",)
@@ -2706,7 +2607,6 @@ async def test_set_iam_policy_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].resource == "resource_value"
 
 
@@ -2741,19 +2641,15 @@ def test_test_iam_permissions(
         call.return_value = iam_policy.TestIamPermissionsResponse(
             permissions=["permissions_value"],
         )
-
         response = client.test_iam_permissions(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.TestIamPermissionsRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, iam_policy.TestIamPermissionsResponse)
-
     assert response.permissions == ["permissions_value"]
 
 
@@ -2775,7 +2671,6 @@ def test_test_iam_permissions_empty_call():
         client.test_iam_permissions()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.TestIamPermissionsRequest()
 
 
@@ -2799,18 +2694,15 @@ async def test_test_iam_permissions_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             iam_policy.TestIamPermissionsResponse(permissions=["permissions_value"],)
         )
-
         response = await client.test_iam_permissions(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == iam_policy.TestIamPermissionsRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, iam_policy.TestIamPermissionsResponse)
-
     assert response.permissions == ["permissions_value"]
 
 
@@ -2825,6 +2717,7 @@ def test_test_iam_permissions_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = iam_policy.TestIamPermissionsRequest()
+
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -2832,7 +2725,6 @@ def test_test_iam_permissions_field_headers():
         type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         call.return_value = iam_policy.TestIamPermissionsResponse()
-
         client.test_iam_permissions(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2852,6 +2744,7 @@ async def test_test_iam_permissions_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = iam_policy.TestIamPermissionsRequest()
+
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -2861,7 +2754,6 @@ async def test_test_iam_permissions_field_headers_async():
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             iam_policy.TestIamPermissionsResponse()
         )
-
         await client.test_iam_permissions(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -2882,7 +2774,6 @@ def test_test_iam_permissions_from_dict_foreign():
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = iam_policy.TestIamPermissionsResponse()
-
         response = client.test_iam_permissions(
             request={
                 "resource": "resource_value",
@@ -2901,7 +2792,6 @@ def test_test_iam_permissions_flattened():
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = iam_policy.TestIamPermissionsResponse()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.test_iam_permissions(
@@ -2912,9 +2802,7 @@ def test_test_iam_permissions_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].resource == "resource_value"
-
         assert args[0].permissions == ["permissions_value"]
 
 
@@ -2955,9 +2843,7 @@ async def test_test_iam_permissions_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].resource == "resource_value"
-
         assert args[0].permissions == ["permissions_value"]
 
 
@@ -2990,19 +2876,15 @@ def test_list_tasks(transport: str = "grpc", request_type=cloudtasks.ListTasksRe
         call.return_value = cloudtasks.ListTasksResponse(
             next_page_token="next_page_token_value",
         )
-
         response = client.list_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ListTasksRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, pagers.ListTasksPager)
-
     assert response.next_page_token == "next_page_token_value"
 
 
@@ -3022,7 +2904,6 @@ def test_list_tasks_empty_call():
         client.list_tasks()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ListTasksRequest()
 
 
@@ -3044,18 +2925,15 @@ async def test_list_tasks_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             cloudtasks.ListTasksResponse(next_page_token="next_page_token_value",)
         )
-
         response = await client.list_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.ListTasksRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, pagers.ListTasksAsyncPager)
-
     assert response.next_page_token == "next_page_token_value"
 
 
@@ -3070,12 +2948,12 @@ def test_list_tasks_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.ListTasksRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.list_tasks), "__call__") as call:
         call.return_value = cloudtasks.ListTasksResponse()
-
         client.list_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3095,6 +2973,7 @@ async def test_list_tasks_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.ListTasksRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -3102,7 +2981,6 @@ async def test_list_tasks_field_headers_async():
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             cloudtasks.ListTasksResponse()
         )
-
         await client.list_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3122,7 +3000,6 @@ def test_list_tasks_flattened():
     with mock.patch.object(type(client.transport.list_tasks), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = cloudtasks.ListTasksResponse()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.list_tasks(parent="parent_value",)
@@ -3131,7 +3008,6 @@ def test_list_tasks_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
 
 
@@ -3166,7 +3042,6 @@ async def test_list_tasks_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
 
 
@@ -3303,21 +3178,16 @@ def test_get_task(transport: str = "grpc", request_type=cloudtasks.GetTaskReques
                 http_method=target.HttpMethod.POST
             ),
         )
-
         response = client.get_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.GetTaskRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -3337,7 +3207,6 @@ def test_get_task_empty_call():
         client.get_task()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.GetTaskRequest()
 
 
@@ -3359,20 +3228,16 @@ async def test_get_task_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             task.Task(name="name_value", view=task.Task.View.BASIC,)
         )
-
         response = await client.get_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.GetTaskRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -3387,12 +3252,12 @@ def test_get_task_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.GetTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_task), "__call__") as call:
         call.return_value = task.Task()
-
         client.get_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3412,12 +3277,12 @@ async def test_get_task_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.GetTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.get_task), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(task.Task())
-
         await client.get_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3437,7 +3302,6 @@ def test_get_task_flattened():
     with mock.patch.object(type(client.transport.get_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = task.Task()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.get_task(name="name_value",)
@@ -3446,7 +3310,6 @@ def test_get_task_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -3479,7 +3342,6 @@ async def test_get_task_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -3516,21 +3378,16 @@ def test_create_task(
                 http_method=target.HttpMethod.POST
             ),
         )
-
         response = client.create_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CreateTaskRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, gct_task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == gct_task.Task.View.BASIC
 
 
@@ -3550,7 +3407,6 @@ def test_create_task_empty_call():
         client.create_task()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CreateTaskRequest()
 
 
@@ -3572,20 +3428,16 @@ async def test_create_task_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             gct_task.Task(name="name_value", view=gct_task.Task.View.BASIC,)
         )
-
         response = await client.create_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CreateTaskRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, gct_task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == gct_task.Task.View.BASIC
 
 
@@ -3600,12 +3452,12 @@ def test_create_task_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.CreateTaskRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.create_task), "__call__") as call:
         call.return_value = gct_task.Task()
-
         client.create_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3625,12 +3477,12 @@ async def test_create_task_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.CreateTaskRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.create_task), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(gct_task.Task())
-
         await client.create_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3650,7 +3502,6 @@ def test_create_task_flattened():
     with mock.patch.object(type(client.transport.create_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = gct_task.Task()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.create_task(
@@ -3661,9 +3512,7 @@ def test_create_task_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
-
         assert args[0].task == gct_task.Task(name="name_value")
 
 
@@ -3700,9 +3549,7 @@ async def test_create_task_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
-
         assert args[0].task == gct_task.Task(name="name_value")
 
 
@@ -3735,13 +3582,11 @@ def test_delete_task(
     with mock.patch.object(type(client.transport.delete_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
-
         response = client.delete_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.DeleteTaskRequest()
 
     # Establish that the response is the type that we expect.
@@ -3764,7 +3609,6 @@ def test_delete_task_empty_call():
         client.delete_task()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.DeleteTaskRequest()
 
 
@@ -3784,13 +3628,11 @@ async def test_delete_task_async(
     with mock.patch.object(type(client.transport.delete_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
-
         response = await client.delete_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.DeleteTaskRequest()
 
     # Establish that the response is the type that we expect.
@@ -3808,12 +3650,12 @@ def test_delete_task_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.DeleteTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.delete_task), "__call__") as call:
         call.return_value = None
-
         client.delete_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3833,12 +3675,12 @@ async def test_delete_task_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.DeleteTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.delete_task), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
-
         await client.delete_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -3858,7 +3700,6 @@ def test_delete_task_flattened():
     with mock.patch.object(type(client.transport.delete_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.delete_task(name="name_value",)
@@ -3867,7 +3708,6 @@ def test_delete_task_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -3900,7 +3740,6 @@ async def test_delete_task_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -3931,17 +3770,14 @@ def test_lease_tasks(
     with mock.patch.object(type(client.transport.lease_tasks), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = cloudtasks.LeaseTasksResponse()
-
         response = client.lease_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.LeaseTasksRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, cloudtasks.LeaseTasksResponse)
 
 
@@ -3961,7 +3797,6 @@ def test_lease_tasks_empty_call():
         client.lease_tasks()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.LeaseTasksRequest()
 
 
@@ -3983,13 +3818,11 @@ async def test_lease_tasks_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             cloudtasks.LeaseTasksResponse()
         )
-
         response = await client.lease_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.LeaseTasksRequest()
 
     # Establish that the response is the type that we expect.
@@ -4007,12 +3840,12 @@ def test_lease_tasks_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.LeaseTasksRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.lease_tasks), "__call__") as call:
         call.return_value = cloudtasks.LeaseTasksResponse()
-
         client.lease_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4032,6 +3865,7 @@ async def test_lease_tasks_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.LeaseTasksRequest()
+
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
@@ -4039,7 +3873,6 @@ async def test_lease_tasks_field_headers_async():
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             cloudtasks.LeaseTasksResponse()
         )
-
         await client.lease_tasks(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4059,7 +3892,6 @@ def test_lease_tasks_flattened():
     with mock.patch.object(type(client.transport.lease_tasks), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = cloudtasks.LeaseTasksResponse()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.lease_tasks(
@@ -4070,9 +3902,7 @@ def test_lease_tasks_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
-
         assert DurationRule().to_proto(args[0].lease_duration) == duration.Duration(
             seconds=751
         )
@@ -4113,9 +3943,7 @@ async def test_lease_tasks_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].parent == "parent_value"
-
         assert DurationRule().to_proto(args[0].lease_duration) == duration.Duration(
             seconds=751
         )
@@ -4150,13 +3978,11 @@ def test_acknowledge_task(
     with mock.patch.object(type(client.transport.acknowledge_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
-
         response = client.acknowledge_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.AcknowledgeTaskRequest()
 
     # Establish that the response is the type that we expect.
@@ -4179,7 +4005,6 @@ def test_acknowledge_task_empty_call():
         client.acknowledge_task()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.AcknowledgeTaskRequest()
 
 
@@ -4199,13 +4024,11 @@ async def test_acknowledge_task_async(
     with mock.patch.object(type(client.transport.acknowledge_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
-
         response = await client.acknowledge_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.AcknowledgeTaskRequest()
 
     # Establish that the response is the type that we expect.
@@ -4223,12 +4046,12 @@ def test_acknowledge_task_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.AcknowledgeTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.acknowledge_task), "__call__") as call:
         call.return_value = None
-
         client.acknowledge_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4248,12 +4071,12 @@ async def test_acknowledge_task_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.AcknowledgeTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.acknowledge_task), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
-
         await client.acknowledge_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4273,7 +4096,6 @@ def test_acknowledge_task_flattened():
     with mock.patch.object(type(client.transport.acknowledge_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.acknowledge_task(
@@ -4284,9 +4106,7 @@ def test_acknowledge_task_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
-
         assert TimestampRule().to_proto(args[0].schedule_time) == timestamp.Timestamp(
             seconds=751
         )
@@ -4325,9 +4145,7 @@ async def test_acknowledge_task_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
-
         assert TimestampRule().to_proto(args[0].schedule_time) == timestamp.Timestamp(
             seconds=751
         )
@@ -4368,21 +4186,16 @@ def test_renew_lease(
                 http_method=target.HttpMethod.POST
             ),
         )
-
         response = client.renew_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.RenewLeaseRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -4402,7 +4215,6 @@ def test_renew_lease_empty_call():
         client.renew_lease()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.RenewLeaseRequest()
 
 
@@ -4424,20 +4236,16 @@ async def test_renew_lease_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             task.Task(name="name_value", view=task.Task.View.BASIC,)
         )
-
         response = await client.renew_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.RenewLeaseRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -4452,12 +4260,12 @@ def test_renew_lease_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.RenewLeaseRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.renew_lease), "__call__") as call:
         call.return_value = task.Task()
-
         client.renew_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4477,12 +4285,12 @@ async def test_renew_lease_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.RenewLeaseRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.renew_lease), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(task.Task())
-
         await client.renew_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4502,7 +4310,6 @@ def test_renew_lease_flattened():
     with mock.patch.object(type(client.transport.renew_lease), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = task.Task()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.renew_lease(
@@ -4515,13 +4322,10 @@ def test_renew_lease_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
-
         assert TimestampRule().to_proto(args[0].schedule_time) == timestamp.Timestamp(
             seconds=751
         )
-
         assert DurationRule().to_proto(args[0].lease_duration) == duration.Duration(
             seconds=751
         )
@@ -4563,13 +4367,10 @@ async def test_renew_lease_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
-
         assert TimestampRule().to_proto(args[0].schedule_time) == timestamp.Timestamp(
             seconds=751
         )
-
         assert DurationRule().to_proto(args[0].lease_duration) == duration.Duration(
             seconds=751
         )
@@ -4611,21 +4412,16 @@ def test_cancel_lease(
                 http_method=target.HttpMethod.POST
             ),
         )
-
         response = client.cancel_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CancelLeaseRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -4645,7 +4441,6 @@ def test_cancel_lease_empty_call():
         client.cancel_lease()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CancelLeaseRequest()
 
 
@@ -4667,20 +4462,16 @@ async def test_cancel_lease_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             task.Task(name="name_value", view=task.Task.View.BASIC,)
         )
-
         response = await client.cancel_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.CancelLeaseRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -4695,12 +4486,12 @@ def test_cancel_lease_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.CancelLeaseRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.cancel_lease), "__call__") as call:
         call.return_value = task.Task()
-
         client.cancel_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4720,12 +4511,12 @@ async def test_cancel_lease_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.CancelLeaseRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.cancel_lease), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(task.Task())
-
         await client.cancel_lease(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4745,7 +4536,6 @@ def test_cancel_lease_flattened():
     with mock.patch.object(type(client.transport.cancel_lease), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = task.Task()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.cancel_lease(
@@ -4756,9 +4546,7 @@ def test_cancel_lease_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
-
         assert TimestampRule().to_proto(args[0].schedule_time) == timestamp.Timestamp(
             seconds=751
         )
@@ -4797,9 +4585,7 @@ async def test_cancel_lease_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
-
         assert TimestampRule().to_proto(args[0].schedule_time) == timestamp.Timestamp(
             seconds=751
         )
@@ -4838,21 +4624,16 @@ def test_run_task(transport: str = "grpc", request_type=cloudtasks.RunTaskReques
                 http_method=target.HttpMethod.POST
             ),
         )
-
         response = client.run_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.RunTaskRequest()
 
     # Establish that the response is the type that we expect.
-
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -4872,7 +4653,6 @@ def test_run_task_empty_call():
         client.run_task()
         call.assert_called()
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.RunTaskRequest()
 
 
@@ -4894,20 +4674,16 @@ async def test_run_task_async(
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             task.Task(name="name_value", view=task.Task.View.BASIC,)
         )
-
         response = await client.run_task(request)
 
         # Establish that the underlying gRPC stub method was called.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0] == cloudtasks.RunTaskRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, task.Task)
-
     assert response.name == "name_value"
-
     assert response.view == task.Task.View.BASIC
 
 
@@ -4922,12 +4698,12 @@ def test_run_task_field_headers():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.RunTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.run_task), "__call__") as call:
         call.return_value = task.Task()
-
         client.run_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4947,12 +4723,12 @@ async def test_run_task_field_headers_async():
     # Any value that is part of the HTTP/1.1 URI should be sent as
     # a field header. Set these to a non-empty value.
     request = cloudtasks.RunTaskRequest()
+
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.run_task), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(task.Task())
-
         await client.run_task(request)
 
         # Establish that the underlying gRPC stub method was called.
@@ -4972,7 +4748,6 @@ def test_run_task_flattened():
     with mock.patch.object(type(client.transport.run_task), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = task.Task()
-
         # Call the method with a truthy value for each flattened field,
         # using the keyword arguments to the method.
         client.run_task(name="name_value",)
@@ -4981,7 +4756,6 @@ def test_run_task_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -5014,7 +4788,6 @@ async def test_run_task_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-
         assert args[0].name == "name_value"
 
 
@@ -5150,10 +4923,32 @@ def test_cloud_tasks_base_transport():
             getattr(transport, method)(request=object())
 
 
+@requires_google_auth_gte_1_25_0
 def test_cloud_tasks_base_transport_with_credentials_file():
     # Instantiate the base transport with a credentials file
     with mock.patch.object(
-        auth, "load_credentials_from_file"
+        auth, "load_credentials_from_file", autospec=True
+    ) as load_creds, mock.patch(
+        "google.cloud.tasks_v2beta2.services.cloud_tasks.transports.CloudTasksTransport._prep_wrapped_messages"
+    ) as Transport:
+        Transport.return_value = None
+        load_creds.return_value = (credentials.AnonymousCredentials(), None)
+        transport = transports.CloudTasksTransport(
+            credentials_file="credentials.json", quota_project_id="octopus",
+        )
+        load_creds.assert_called_once_with(
+            "credentials.json",
+            scopes=None,
+            default_scopes=("https://www.googleapis.com/auth/cloud-platform",),
+            quota_project_id="octopus",
+        )
+
+
+@requires_google_auth_lt_1_25_0
+def test_cloud_tasks_base_transport_with_credentials_file_old_google_auth():
+    # Instantiate the base transport with a credentials file
+    with mock.patch.object(
+        auth, "load_credentials_from_file", autospec=True
     ) as load_creds, mock.patch(
         "google.cloud.tasks_v2beta2.services.cloud_tasks.transports.CloudTasksTransport._prep_wrapped_messages"
     ) as Transport:
@@ -5171,7 +4966,7 @@ def test_cloud_tasks_base_transport_with_credentials_file():
 
 def test_cloud_tasks_base_transport_with_adc():
     # Test the default credentials are used if credentials and credentials_file are None.
-    with mock.patch.object(auth, "default") as adc, mock.patch(
+    with mock.patch.object(auth, "default", autospec=True) as adc, mock.patch(
         "google.cloud.tasks_v2beta2.services.cloud_tasks.transports.CloudTasksTransport._prep_wrapped_messages"
     ) as Transport:
         Transport.return_value = None
@@ -5180,9 +4975,23 @@ def test_cloud_tasks_base_transport_with_adc():
         adc.assert_called_once()
 
 
+@requires_google_auth_gte_1_25_0
 def test_cloud_tasks_auth_adc():
     # If no credentials are provided, we should use ADC credentials.
-    with mock.patch.object(auth, "default") as adc:
+    with mock.patch.object(auth, "default", autospec=True) as adc:
+        adc.return_value = (credentials.AnonymousCredentials(), None)
+        CloudTasksClient()
+        adc.assert_called_once_with(
+            scopes=None,
+            default_scopes=("https://www.googleapis.com/auth/cloud-platform",),
+            quota_project_id=None,
+        )
+
+
+@requires_google_auth_lt_1_25_0
+def test_cloud_tasks_auth_adc_old_google_auth():
+    # If no credentials are provided, we should use ADC credentials.
+    with mock.patch.object(auth, "default", autospec=True) as adc:
         adc.return_value = (credentials.AnonymousCredentials(), None)
         CloudTasksClient()
         adc.assert_called_once_with(
@@ -5191,17 +5000,141 @@ def test_cloud_tasks_auth_adc():
         )
 
 
-def test_cloud_tasks_transport_auth_adc():
+@pytest.mark.parametrize(
+    "transport_class",
+    [transports.CloudTasksGrpcTransport, transports.CloudTasksGrpcAsyncIOTransport,],
+)
+@requires_google_auth_gte_1_25_0
+def test_cloud_tasks_transport_auth_adc(transport_class):
     # If credentials and host are not provided, the transport class should use
     # ADC credentials.
-    with mock.patch.object(auth, "default") as adc:
+    with mock.patch.object(auth, "default", autospec=True) as adc:
         adc.return_value = (credentials.AnonymousCredentials(), None)
-        transports.CloudTasksGrpcTransport(
-            host="squid.clam.whelk", quota_project_id="octopus"
+        transport_class(quota_project_id="octopus", scopes=["1", "2"])
+        adc.assert_called_once_with(
+            scopes=["1", "2"],
+            default_scopes=("https://www.googleapis.com/auth/cloud-platform",),
+            quota_project_id="octopus",
         )
+
+
+@pytest.mark.parametrize(
+    "transport_class",
+    [transports.CloudTasksGrpcTransport, transports.CloudTasksGrpcAsyncIOTransport,],
+)
+@requires_google_auth_lt_1_25_0
+def test_cloud_tasks_transport_auth_adc_old_google_auth(transport_class):
+    # If credentials and host are not provided, the transport class should use
+    # ADC credentials.
+    with mock.patch.object(auth, "default", autospec=True) as adc:
+        adc.return_value = (credentials.AnonymousCredentials(), None)
+        transport_class(quota_project_id="octopus")
         adc.assert_called_once_with(
             scopes=("https://www.googleapis.com/auth/cloud-platform",),
             quota_project_id="octopus",
+        )
+
+
+@pytest.mark.parametrize(
+    "transport_class,grpc_helpers",
+    [
+        (transports.CloudTasksGrpcTransport, grpc_helpers),
+        (transports.CloudTasksGrpcAsyncIOTransport, grpc_helpers_async),
+    ],
+)
+@requires_api_core_gte_1_26_0
+def test_cloud_tasks_transport_create_channel(transport_class, grpc_helpers):
+    # If credentials and host are not provided, the transport class should use
+    # ADC credentials.
+    with mock.patch.object(auth, "default", autospec=True) as adc, mock.patch.object(
+        grpc_helpers, "create_channel", autospec=True
+    ) as create_channel:
+        creds = credentials.AnonymousCredentials()
+        adc.return_value = (creds, None)
+        transport_class(quota_project_id="octopus", scopes=["1", "2"])
+
+        create_channel.assert_called_with(
+            "cloudtasks.googleapis.com:443",
+            credentials=creds,
+            credentials_file=None,
+            quota_project_id="octopus",
+            default_scopes=("https://www.googleapis.com/auth/cloud-platform",),
+            scopes=["1", "2"],
+            default_host="cloudtasks.googleapis.com",
+            ssl_credentials=None,
+            options=[
+                ("grpc.max_send_message_length", -1),
+                ("grpc.max_receive_message_length", -1),
+            ],
+        )
+
+
+@pytest.mark.parametrize(
+    "transport_class,grpc_helpers",
+    [
+        (transports.CloudTasksGrpcTransport, grpc_helpers),
+        (transports.CloudTasksGrpcAsyncIOTransport, grpc_helpers_async),
+    ],
+)
+@requires_api_core_lt_1_26_0
+def test_cloud_tasks_transport_create_channel_old_api_core(
+    transport_class, grpc_helpers
+):
+    # If credentials and host are not provided, the transport class should use
+    # ADC credentials.
+    with mock.patch.object(auth, "default", autospec=True) as adc, mock.patch.object(
+        grpc_helpers, "create_channel", autospec=True
+    ) as create_channel:
+        creds = credentials.AnonymousCredentials()
+        adc.return_value = (creds, None)
+        transport_class(quota_project_id="octopus")
+
+        create_channel.assert_called_with(
+            "cloudtasks.googleapis.com",
+            credentials=creds,
+            credentials_file=None,
+            quota_project_id="octopus",
+            scopes=("https://www.googleapis.com/auth/cloud-platform",),
+            ssl_credentials=None,
+            options=[
+                ("grpc.max_send_message_length", -1),
+                ("grpc.max_receive_message_length", -1),
+            ],
+        )
+
+
+@pytest.mark.parametrize(
+    "transport_class,grpc_helpers",
+    [
+        (transports.CloudTasksGrpcTransport, grpc_helpers),
+        (transports.CloudTasksGrpcAsyncIOTransport, grpc_helpers_async),
+    ],
+)
+@requires_api_core_lt_1_26_0
+def test_cloud_tasks_transport_create_channel_user_scopes(
+    transport_class, grpc_helpers
+):
+    # If credentials and host are not provided, the transport class should use
+    # ADC credentials.
+    with mock.patch.object(auth, "default", autospec=True) as adc, mock.patch.object(
+        grpc_helpers, "create_channel", autospec=True
+    ) as create_channel:
+        creds = credentials.AnonymousCredentials()
+        adc.return_value = (creds, None)
+
+        transport_class(quota_project_id="octopus", scopes=["1", "2"])
+
+        create_channel.assert_called_with(
+            "cloudtasks.googleapis.com",
+            credentials=creds,
+            credentials_file=None,
+            quota_project_id="octopus",
+            scopes=["1", "2"],
+            ssl_credentials=None,
+            options=[
+                ("grpc.max_send_message_length", -1),
+                ("grpc.max_receive_message_length", -1),
+            ],
         )
 
 
@@ -5387,7 +5320,6 @@ def test_queue_path():
     project = "squid"
     location = "clam"
     queue = "whelk"
-
     expected = "projects/{project}/locations/{location}/queues/{queue}".format(
         project=project, location=location, queue=queue,
     )
@@ -5413,7 +5345,6 @@ def test_task_path():
     location = "mussel"
     queue = "winkle"
     task = "nautilus"
-
     expected = "projects/{project}/locations/{location}/queues/{queue}/tasks/{task}".format(
         project=project, location=location, queue=queue, task=task,
     )
@@ -5437,7 +5368,6 @@ def test_parse_task_path():
 
 def test_common_billing_account_path():
     billing_account = "whelk"
-
     expected = "billingAccounts/{billing_account}".format(
         billing_account=billing_account,
     )
@@ -5458,7 +5388,6 @@ def test_parse_common_billing_account_path():
 
 def test_common_folder_path():
     folder = "oyster"
-
     expected = "folders/{folder}".format(folder=folder,)
     actual = CloudTasksClient.common_folder_path(folder)
     assert expected == actual
@@ -5477,7 +5406,6 @@ def test_parse_common_folder_path():
 
 def test_common_organization_path():
     organization = "cuttlefish"
-
     expected = "organizations/{organization}".format(organization=organization,)
     actual = CloudTasksClient.common_organization_path(organization)
     assert expected == actual
@@ -5496,7 +5424,6 @@ def test_parse_common_organization_path():
 
 def test_common_project_path():
     project = "winkle"
-
     expected = "projects/{project}".format(project=project,)
     actual = CloudTasksClient.common_project_path(project)
     assert expected == actual
@@ -5516,7 +5443,6 @@ def test_parse_common_project_path():
 def test_common_location_path():
     project = "scallop"
     location = "abalone"
-
     expected = "projects/{project}/locations/{location}".format(
         project=project, location=location,
     )
