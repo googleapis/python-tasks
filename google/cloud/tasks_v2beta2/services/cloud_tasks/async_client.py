@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 from collections import OrderedDict
 import functools
 import re
@@ -22,10 +20,10 @@ from typing import Dict, Sequence, Tuple, Type, Union
 import pkg_resources
 
 import google.api_core.client_options as ClientOptions  # type: ignore
-from google.api_core import exceptions  # type: ignore
+from google.api_core import exceptions as core_exceptions  # type: ignore
 from google.api_core import gapic_v1  # type: ignore
 from google.api_core import retry as retries  # type: ignore
-from google.auth import credentials  # type: ignore
+from google.auth import credentials as ga_credentials  # type: ignore
 from google.oauth2 import service_account  # type: ignore
 
 from google.cloud.tasks_v2beta2.services.cloud_tasks import pagers
@@ -35,12 +33,11 @@ from google.cloud.tasks_v2beta2.types import queue as gct_queue
 from google.cloud.tasks_v2beta2.types import target
 from google.cloud.tasks_v2beta2.types import task
 from google.cloud.tasks_v2beta2.types import task as gct_task
-from google.iam.v1 import iam_policy_pb2 as iam_policy  # type: ignore
-from google.iam.v1 import policy_pb2 as policy  # type: ignore
-from google.protobuf import duration_pb2 as duration  # type: ignore
-from google.protobuf import field_mask_pb2 as field_mask  # type: ignore
-from google.protobuf import timestamp_pb2 as timestamp  # type: ignore
-
+from google.iam.v1 import iam_policy_pb2  # type: ignore
+from google.iam.v1 import policy_pb2  # type: ignore
+from google.protobuf import duration_pb2  # type: ignore
+from google.protobuf import field_mask_pb2  # type: ignore
+from google.protobuf import timestamp_pb2  # type: ignore
 from .transports.base import CloudTasksTransport, DEFAULT_CLIENT_INFO
 from .transports.grpc_asyncio import CloudTasksGrpcAsyncIOTransport
 from .client import CloudTasksClient
@@ -60,25 +57,20 @@ class CloudTasksAsyncClient:
     parse_queue_path = staticmethod(CloudTasksClient.parse_queue_path)
     task_path = staticmethod(CloudTasksClient.task_path)
     parse_task_path = staticmethod(CloudTasksClient.parse_task_path)
-
     common_billing_account_path = staticmethod(
         CloudTasksClient.common_billing_account_path
     )
     parse_common_billing_account_path = staticmethod(
         CloudTasksClient.parse_common_billing_account_path
     )
-
     common_folder_path = staticmethod(CloudTasksClient.common_folder_path)
     parse_common_folder_path = staticmethod(CloudTasksClient.parse_common_folder_path)
-
     common_organization_path = staticmethod(CloudTasksClient.common_organization_path)
     parse_common_organization_path = staticmethod(
         CloudTasksClient.parse_common_organization_path
     )
-
     common_project_path = staticmethod(CloudTasksClient.common_project_path)
     parse_common_project_path = staticmethod(CloudTasksClient.parse_common_project_path)
-
     common_location_path = staticmethod(CloudTasksClient.common_location_path)
     parse_common_location_path = staticmethod(
         CloudTasksClient.parse_common_location_path
@@ -132,7 +124,7 @@ class CloudTasksAsyncClient:
     def __init__(
         self,
         *,
-        credentials: credentials.Credentials = None,
+        credentials: ga_credentials.Credentials = None,
         transport: Union[str, CloudTasksTransport] = "grpc_asyncio",
         client_options: ClientOptions = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
@@ -169,7 +161,6 @@ class CloudTasksAsyncClient:
             google.auth.exceptions.MutualTlsChannelError: If mutual TLS transport
                 creation failed for any reason.
         """
-
         self._client = CloudTasksClient(
             credentials=credentials,
             transport=transport,
@@ -200,7 +191,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -230,7 +220,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if parent is not None:
             request.parent = parent
 
@@ -291,7 +280,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -322,7 +310,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
@@ -402,7 +389,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``queue`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -433,7 +419,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if parent is not None:
             request.parent = parent
         if queue is not None:
@@ -464,7 +449,7 @@ class CloudTasksAsyncClient:
         request: cloudtasks.UpdateQueueRequest = None,
         *,
         queue: gct_queue.Queue = None,
-        update_mask: field_mask.FieldMask = None,
+        update_mask: field_mask_pb2.FieldMask = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
@@ -513,7 +498,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -544,7 +528,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if queue is not None:
             request.queue = queue
         if update_mask is not None:
@@ -605,7 +588,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -626,7 +608,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
@@ -685,7 +666,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -716,7 +696,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
@@ -769,7 +748,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -800,7 +778,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
@@ -860,7 +837,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -891,7 +867,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
@@ -917,13 +892,13 @@ class CloudTasksAsyncClient:
 
     async def get_iam_policy(
         self,
-        request: iam_policy.GetIamPolicyRequest = None,
+        request: iam_policy_pb2.GetIamPolicyRequest = None,
         *,
         resource: str = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
-    ) -> policy.Policy:
+    ) -> policy_pb2.Policy:
         r"""Gets the access control policy for a
         [Queue][google.cloud.tasks.v2beta2.Queue]. Returns an empty
         policy if the resource exists and does not have a policy set.
@@ -947,7 +922,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1026,10 +1000,9 @@ class CloudTasksAsyncClient:
         # The request isn't a proto-plus wrapped type,
         # so it must be constructed via keyword expansion.
         if isinstance(request, dict):
-            request = iam_policy.GetIamPolicyRequest(**request)
-
+            request = iam_policy_pb2.GetIamPolicyRequest(**request)
         elif not request:
-            request = iam_policy.GetIamPolicyRequest(resource=resource,)
+            request = iam_policy_pb2.GetIamPolicyRequest(resource=resource,)
 
         # Wrap the RPC method; this adds retry and timeout information,
         # and friendly error handling.
@@ -1062,13 +1035,13 @@ class CloudTasksAsyncClient:
 
     async def set_iam_policy(
         self,
-        request: iam_policy.SetIamPolicyRequest = None,
+        request: iam_policy_pb2.SetIamPolicyRequest = None,
         *,
         resource: str = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
-    ) -> policy.Policy:
+    ) -> policy_pb2.Policy:
         r"""Sets the access control policy for a
         [Queue][google.cloud.tasks.v2beta2.Queue]. Replaces any existing
         policy.
@@ -1096,7 +1069,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1175,10 +1147,9 @@ class CloudTasksAsyncClient:
         # The request isn't a proto-plus wrapped type,
         # so it must be constructed via keyword expansion.
         if isinstance(request, dict):
-            request = iam_policy.SetIamPolicyRequest(**request)
-
+            request = iam_policy_pb2.SetIamPolicyRequest(**request)
         elif not request:
-            request = iam_policy.SetIamPolicyRequest(resource=resource,)
+            request = iam_policy_pb2.SetIamPolicyRequest(resource=resource,)
 
         # Wrap the RPC method; this adds retry and timeout information,
         # and friendly error handling.
@@ -1202,14 +1173,14 @@ class CloudTasksAsyncClient:
 
     async def test_iam_permissions(
         self,
-        request: iam_policy.TestIamPermissionsRequest = None,
+        request: iam_policy_pb2.TestIamPermissionsRequest = None,
         *,
         resource: str = None,
         permissions: Sequence[str] = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
-    ) -> iam_policy.TestIamPermissionsResponse:
+    ) -> iam_policy_pb2.TestIamPermissionsResponse:
         r"""Returns permissions that a caller has on a
         [Queue][google.cloud.tasks.v2beta2.Queue]. If the resource does
         not exist, this will return an empty set of permissions, not a
@@ -1242,7 +1213,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``permissions`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1266,10 +1236,9 @@ class CloudTasksAsyncClient:
         # The request isn't a proto-plus wrapped type,
         # so it must be constructed via keyword expansion.
         if isinstance(request, dict):
-            request = iam_policy.TestIamPermissionsRequest(**request)
-
+            request = iam_policy_pb2.TestIamPermissionsRequest(**request)
         elif not request:
-            request = iam_policy.TestIamPermissionsRequest(
+            request = iam_policy_pb2.TestIamPermissionsRequest(
                 resource=resource, permissions=permissions,
             )
 
@@ -1334,7 +1303,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1364,7 +1332,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if parent is not None:
             request.parent = parent
 
@@ -1426,7 +1393,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1451,7 +1417,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
@@ -1564,7 +1529,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``task`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1589,7 +1553,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if parent is not None:
             request.parent = parent
         if task is not None:
@@ -1641,7 +1604,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1662,7 +1624,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
@@ -1699,7 +1660,7 @@ class CloudTasksAsyncClient:
         request: cloudtasks.LeaseTasksRequest = None,
         *,
         parent: str = None,
-        lease_duration: duration.Duration = None,
+        lease_duration: duration_pb2.Duration = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
@@ -1771,7 +1732,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``lease_duration`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1798,7 +1758,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if parent is not None:
             request.parent = parent
         if lease_duration is not None:
@@ -1829,7 +1788,7 @@ class CloudTasksAsyncClient:
         request: cloudtasks.AcknowledgeTaskRequest = None,
         *,
         name: str = None,
-        schedule_time: timestamp.Timestamp = None,
+        schedule_time: timestamp_pb2.Timestamp = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
@@ -1876,7 +1835,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``schedule_time`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -1897,7 +1855,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
         if schedule_time is not None:
@@ -1927,8 +1884,8 @@ class CloudTasksAsyncClient:
         request: cloudtasks.RenewLeaseRequest = None,
         *,
         name: str = None,
-        schedule_time: timestamp.Timestamp = None,
-        lease_duration: duration.Duration = None,
+        schedule_time: timestamp_pb2.Timestamp = None,
+        lease_duration: duration_pb2.Duration = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
@@ -1976,7 +1933,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``lease_duration`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -2001,7 +1957,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
         if schedule_time is not None:
@@ -2034,7 +1989,7 @@ class CloudTasksAsyncClient:
         request: cloudtasks.CancelLeaseRequest = None,
         *,
         name: str = None,
-        schedule_time: timestamp.Timestamp = None,
+        schedule_time: timestamp_pb2.Timestamp = None,
         retry: retries.Retry = gapic_v1.method.DEFAULT,
         timeout: float = None,
         metadata: Sequence[Tuple[str, str]] = (),
@@ -2074,7 +2029,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``schedule_time`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -2099,7 +2053,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
         if schedule_time is not None:
@@ -2180,7 +2133,6 @@ class CloudTasksAsyncClient:
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-
             retry (google.api_core.retry.Retry): Designation of what errors, if any,
                 should be retried.
             timeout (float): The timeout for this request.
@@ -2205,7 +2157,6 @@ class CloudTasksAsyncClient:
 
         # If we have keyword arguments corresponding to fields on the
         # request, apply these.
-
         if name is not None:
             request.name = name
 
