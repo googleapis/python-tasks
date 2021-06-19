@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-tasks/#history
 
+### [2.3.1](https://www.github.com/googleapis/python-tasks/compare/v2.3.0...v2.3.1) (2021-06-19)
+
+
+### Documentation
+
+* omit mention of Python 2.7 in CONTRIBUTING.rst ([#116](https://www.github.com/googleapis/python-tasks/issues/116)) ([0732ab7](https://www.github.com/googleapis/python-tasks/commit/0732ab7d726fdf564897fad009f8a5da45b5c017)), closes [#1126](https://www.github.com/googleapis/python-tasks/issues/1126)
+
 ## [2.3.0](https://www.github.com/googleapis/python-tasks/compare/v2.2.0...v2.3.0) (2021-05-28)
 
 
