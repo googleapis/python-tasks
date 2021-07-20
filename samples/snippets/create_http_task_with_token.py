@@ -35,7 +35,8 @@ def create_http_task(
     # project = 'my-project-id'
     # queue = 'my-queue'
     # location = 'us-central1'
-    # url = 'https://example.com/task_handler'
+    # url = 'https://example.com/task_handler?param=value'
+    # audience = 'https://example.com/task_handler'
     # service_account_email = 'service-account@my-project-id.iam.gserviceaccount.com';
     # payload = 'hello'
 
@@ -47,7 +48,7 @@ def create_http_task(
         "http_request": {  # Specify the type of request.
             "http_method": tasks_v2.HttpMethod.POST,
             "url": url,  # The full url path that the task will be sent to.
-            "oidc_token": {"service_account_email": service_account_email},
+            "oidc_token": {"service_account_email": service_account_email, "audience": audience},
         }
     }
 
