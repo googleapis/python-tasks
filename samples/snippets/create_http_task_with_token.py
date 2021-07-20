@@ -21,6 +21,7 @@ def create_http_task(
     location,
     url,
     service_account_email,
+    audience=None,
     payload=None,
 ):
     # [START cloud_tasks_create_http_task_with_token]
