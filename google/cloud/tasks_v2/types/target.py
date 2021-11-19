@@ -120,8 +120,8 @@ class HttpRequest(proto.Message):
                [HttpRequest.url][google.cloud.tasks.v2.HttpRequest.url].
             -  Content-Length: This will be computed by Cloud Tasks.
             -  User-Agent: This will be set to ``"Google-Cloud-Tasks"``.
-            -  X-Google-\*: Google use only.
-            -  X-AppEngine-\*: Google use only.
+            -  ``X-Google-\*``: Google use only.
+            -  ``X-AppEngine-\*``: Google use only.
 
             ``Content-Type`` won't be set by Cloud Tasks. You can
             explicitly set ``Content-Type`` to a media type when the
