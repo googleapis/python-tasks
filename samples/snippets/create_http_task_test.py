@@ -52,9 +52,9 @@ def test_create_http_task(test_queue):
         TEST_QUEUE_NAME,
         TEST_LOCATION,
         url,
-        "hello",
-        180,
-        uuid.uuid4().hex,
-        900,
+        payload="hello",
+        in_seconds=180,
+        task_name=uuid.uuid4().hex,
+        deadline=900,
     )
     assert TEST_QUEUE_NAME in result.name
