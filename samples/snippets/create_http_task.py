@@ -18,7 +18,14 @@ import argparse
 
 
 def create_http_task(
-    project, queue, location, url, payload=None, in_seconds=None, task_name=None, deadline=None
+    project,
+    queue,
+    location,
+    url,
+    payload=None,
+    in_seconds=None,
+    task_name=None,
+    deadline=None,
 ):
     # [START cloud_tasks_create_http_task]
     """Create a task for a given queue with an arbitrary payload."""
@@ -82,7 +89,7 @@ def create_http_task(
     if deadline is not None:
         # Add dispatch deadline for requests sent to the worker.
         duration = duration_pb2.Duration()
-        task['dispatch_deadline'] = duration.FromSeconds(deadline)
+        task["dispatch_deadline"] = duration.FromSeconds(deadline)
 
     # Use the client to build and send the task.
     response = client.create_task(request={"parent": parent, "task": task})
