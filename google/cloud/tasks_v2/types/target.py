@@ -77,6 +77,13 @@ class HttpRequest(proto.Message):
        queue being unpaused, or many tasks that are scheduled at the
        same time).
 
+    This message has `oneof`_ fields (mutually exclusive fields).
+    For each oneof, at most one member field can be set at the same time.
+    Setting any member of the oneof automatically clears all other
+    members.
+
+    .. _oneof: https://proto-plus-python.readthedocs.io/en/stable/fields.html#oneofs-mutually-exclusive-fields
+
     Attributes:
         url (str):
             Required. The full url path that the request will be sent
@@ -113,8 +120,8 @@ class HttpRequest(proto.Message):
                [HttpRequest.url][google.cloud.tasks.v2.HttpRequest.url].
             -  Content-Length: This will be computed by Cloud Tasks.
             -  User-Agent: This will be set to ``"Google-Cloud-Tasks"``.
-            -  X-Google-\*: Google use only.
-            -  X-AppEngine-\*: Google use only.
+            -  ``X-Google-*``: Google use only.
+            -  ``X-AppEngine-*``: Google use only.
 
             ``Content-Type`` won't be set by Cloud Tasks. You can
             explicitly set ``Content-Type`` to a media type when the
@@ -143,6 +150,8 @@ class HttpRequest(proto.Message):
 
             This type of authorization should generally only be used
             when calling Google APIs hosted on \*.googleapis.com.
+
+            This field is a member of `oneof`_ ``authorization_header``.
         oidc_token (google.cloud.tasks_v2.types.OidcToken):
             If specified, an
             `OIDC <https://developers.google.com/identity/protocols/OpenIDConnect>`__
@@ -152,6 +161,8 @@ class HttpRequest(proto.Message):
             This type of authorization can be used for many scenarios,
             including calling Cloud Run, or endpoints where you intend
             to validate the token yourself.
+
+            This field is a member of `oneof`_ ``authorization_header``.
     """
 
     url = proto.Field(proto.STRING, number=1,)
@@ -292,8 +303,8 @@ class AppEngineHttpRequest(proto.Message):
             The headers below cannot be set or overridden:
 
             -  ``Host``
-            -  ``X-Google-\*``
-            -  ``X-AppEngine-\*``
+            -  ``X-Google-*``
+            -  ``X-AppEngine-*``
 
             In addition, Cloud Tasks sets some headers when the task is
             dispatched, such as headers containing information about the

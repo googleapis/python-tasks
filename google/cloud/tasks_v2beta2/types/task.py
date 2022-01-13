@@ -28,6 +28,14 @@ __protobuf__ = proto.module(
 
 class Task(proto.Message):
     r"""A unit of scheduled work.
+
+    This message has `oneof`_ fields (mutually exclusive fields).
+    For each oneof, at most one member field can be set at the same time.
+    Setting any member of the oneof automatically clears all other
+    members.
+
+    .. _oneof: https://proto-plus-python.readthedocs.io/en/stable/fields.html#oneofs-mutually-exclusive-fields
+
     Attributes:
         name (str):
             Optionally caller-specified in
@@ -63,6 +71,8 @@ class Task(proto.Message):
             An App Engine task is a task that has
             [AppEngineHttpRequest][google.cloud.tasks.v2beta2.AppEngineHttpRequest]
             set.
+
+            This field is a member of `oneof`_ ``payload_type``.
         pull_message (google.cloud.tasks_v2beta2.types.PullMessage):
             [LeaseTasks][google.cloud.tasks.v2beta2.CloudTasks.LeaseTasks]
             to process the task. Can be set only if
@@ -71,6 +81,8 @@ class Task(proto.Message):
 
             A pull task is a task that has
             [PullMessage][google.cloud.tasks.v2beta2.PullMessage] set.
+
+            This field is a member of `oneof`_ ``payload_type``.
         schedule_time (google.protobuf.timestamp_pb2.Timestamp):
             The time when the task is scheduled to be attempted.
 
@@ -129,6 +141,7 @@ class Task(proto.Message):
 
 class TaskStatus(proto.Message):
     r"""Status of the task.
+
     Attributes:
         attempt_dispatch_count (int):
             Output only. The number of attempts
@@ -169,6 +182,7 @@ class TaskStatus(proto.Message):
 
 class AttemptStatus(proto.Message):
     r"""The status of a task attempt.
+
     Attributes:
         schedule_time (google.protobuf.timestamp_pb2.Timestamp):
             Output only. The time that this attempt was scheduled.

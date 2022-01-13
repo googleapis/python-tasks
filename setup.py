@@ -21,16 +21,15 @@ import setuptools
 
 name = "google-cloud-tasks"
 description = "Cloud Tasks API API client library"
-version = "2.5.1"
+version = "2.7.2"
 release_status = "Development Status :: 5 - Production/Stable"
 dependencies = [
     # NOTE: Maintainers, please do not require google-api-core>=2.x.x
     # Until this issue is closed
     # https://github.com/googleapis/google-cloud-python/issues/10566
-    "google-api-core[grpc] >= 1.26.0, <3.0.0dev",
+    "google-api-core[grpc] >= 1.28.0, <3.0.0dev",
     "grpc-google-iam-v1 >= 0.12.3, < 0.13dev",
     "proto-plus >= 0.4.0",
-    "packaging >= 14.3",
 ]
 
 extras = {"libcst": "libcst >= 0.2.5"}
@@ -69,6 +68,8 @@ setuptools.setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Operating System :: OS Independent",
         "Topic :: Internet",
     ],

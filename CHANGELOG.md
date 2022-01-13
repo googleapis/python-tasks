@@ -4,6 +4,61 @@
 
 [1]: https://pypi.org/project/google-cloud-tasks/#history
 
+### [2.7.2](https://www.github.com/googleapis/python-tasks/compare/v2.7.1...v2.7.2) (2022-01-08)
+
+
+### Documentation
+
+* fix docstring formatting ([#196](https://www.github.com/googleapis/python-tasks/issues/196)) ([e7a3461](https://www.github.com/googleapis/python-tasks/commit/e7a3461a34229c210e63590370fa6eee4d06630a))
+
+### [2.7.1](https://www.github.com/googleapis/python-tasks/compare/v2.7.0...v2.7.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* **deps:** drop packaging dependency ([72f150f](https://www.github.com/googleapis/python-tasks/commit/72f150fe39313173ac6c02616b6ca4466f5855fe))
+* **deps:** require google-api-core >= 1.28.0 ([72f150f](https://www.github.com/googleapis/python-tasks/commit/72f150fe39313173ac6c02616b6ca4466f5855fe))
+
+
+### Documentation
+
+* list oneofs in docstring ([72f150f](https://www.github.com/googleapis/python-tasks/commit/72f150fe39313173ac6c02616b6ca4466f5855fe))
+
+## [2.7.0](https://www.github.com/googleapis/python-tasks/compare/v2.6.0...v2.7.0) (2021-10-15)
+
+
+### Features
+
+* add support for python 3.10 ([#181](https://www.github.com/googleapis/python-tasks/issues/181)) ([0a40ab0](https://www.github.com/googleapis/python-tasks/commit/0a40ab01070018fc3ca32008f55c18e2b65aa23b))
+
+## [2.6.0](https://www.github.com/googleapis/python-tasks/compare/v2.5.3...v2.6.0) (2021-10-08)
+
+
+### Features
+
+* add context manager support in client ([#173](https://www.github.com/googleapis/python-tasks/issues/173)) ([ceec8f1](https://www.github.com/googleapis/python-tasks/commit/ceec8f173af696d26cf367af2d969bf98987df2a))
+
+## [2.6.0](https://www.github.com/googleapis/python-tasks/compare/v2.5.3...v2.6.0) (2021-10-07)
+
+
+### Features
+
+* add context manager support in client ([#173](https://www.github.com/googleapis/python-tasks/issues/173)) ([ceec8f1](https://www.github.com/googleapis/python-tasks/commit/ceec8f173af696d26cf367af2d969bf98987df2a))
+
+### [2.5.3](https://www.github.com/googleapis/python-tasks/compare/v2.5.2...v2.5.3) (2021-09-30)
+
+
+### Bug Fixes
+
+* improper types in pagers generation ([0feec1e](https://www.github.com/googleapis/python-tasks/commit/0feec1e0d1e4847e2722920c8afdc597ecd92e3f))
+
+### [2.5.2](https://www.github.com/googleapis/python-tasks/compare/v2.5.1...v2.5.2) (2021-09-24)
+
+
+### Bug Fixes
+
+* add 'dict' annotation type to 'request' ([42d768b](https://www.github.com/googleapis/python-tasks/commit/42d768b9f302aef3258f4abc413199070bcd2a8d))
+
 ### [2.5.1](https://www.github.com/googleapis/python-tasks/compare/v2.5.0...v2.5.1) (2021-07-28)
 
 
