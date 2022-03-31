@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-tasks/#history
 
+### [1.5.1](https://github.com/googleapis/python-tasks/compare/v1.5.0...v1.5.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* **deps:** require google-api-core >= 1.31.5, >= 2.3.2 on v1 release ([#237](https://github.com/googleapis/python-tasks/issues/237)) ([507b44c](https://github.com/googleapis/python-tasks/commit/507b44cea6518496d1743cd5ca79652dafe7f972))
+
 ## [1.5.0](https://www.github.com/googleapis/python-tasks/compare/v1.4.0...v1.5.0) (2020-02-24)
 
 
