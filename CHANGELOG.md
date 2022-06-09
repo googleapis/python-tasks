@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-tasks/#history
 
+## [1.5.2](https://github.com/googleapis/python-tasks/compare/v1.5.1...v1.5.2) (2022-06-09)
+
+
+### Bug Fixes
+
+* **deps:** require protobuf<4.0.0 on v1 branch ([#268](https://github.com/googleapis/python-tasks/issues/268)) ([a2cc376](https://github.com/googleapis/python-tasks/commit/a2cc376830253bffcd73595b58697747de9c24be))
+
 ### [1.5.1](https://github.com/googleapis/python-tasks/compare/v1.5.0...v1.5.1) (2022-03-25)
 
 
