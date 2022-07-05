@@ -5115,7 +5115,6 @@ def test_cloud_tasks_transport_auth_adc(transport_class):
     [
         transports.CloudTasksGrpcTransport,
         transports.CloudTasksGrpcAsyncIOTransport,
-        transports.CloudTasksRestTransport,
     ],
 )
 def test_cloud_tasks_transport_auth_gdch_credentials(transport_class):
