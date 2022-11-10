@@ -16,7 +16,18 @@
 from collections import OrderedDict
 import os
 import re
-from typing import Dict, Mapping, Optional, Sequence, Tuple, Type, Union, cast
+from typing import (
+    Dict,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+    cast,
+)
 
 from google.api_core import client_options as client_options_lib
 from google.api_core import exceptions as core_exceptions
@@ -67,7 +78,7 @@ class CloudTasksClientMeta(type):
 
     def get_transport_class(
         cls,
-        label: str = None,
+        label: Optional[str] = None,
     ) -> Type[CloudTasksTransport]:
         """Returns an appropriate transport class.
 
@@ -368,7 +379,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
         self,
         *,
         credentials: Optional[ga_credentials.Credentials] = None,
-        transport: Union[str, CloudTasksTransport, None] = None,
+        transport: Optional[Union[str, CloudTasksTransport]] = None,
         client_options: Optional[Union[client_options_lib.ClientOptions, dict]] = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
     ) -> None:
@@ -466,11 +477,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def list_queues(
         self,
-        request: Union[cloudtasks.ListQueuesRequest, dict] = None,
+        request: Optional[Union[cloudtasks.ListQueuesRequest, dict]] = None,
         *,
-        parent: str = None,
+        parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListQueuesPager:
         r"""Lists queues.
@@ -582,11 +593,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def get_queue(
         self,
-        request: Union[cloudtasks.GetQueueRequest, dict] = None,
+        request: Optional[Union[cloudtasks.GetQueueRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> queue.Queue:
         r"""Gets a queue.
@@ -688,12 +699,12 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def create_queue(
         self,
-        request: Union[cloudtasks.CreateQueueRequest, dict] = None,
+        request: Optional[Union[cloudtasks.CreateQueueRequest, dict]] = None,
         *,
-        parent: str = None,
-        queue: gct_queue.Queue = None,
+        parent: Optional[str] = None,
+        queue: Optional[gct_queue.Queue] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> gct_queue.Queue:
         r"""Creates a queue.
@@ -821,12 +832,12 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def update_queue(
         self,
-        request: Union[cloudtasks.UpdateQueueRequest, dict] = None,
+        request: Optional[Union[cloudtasks.UpdateQueueRequest, dict]] = None,
         *,
-        queue: gct_queue.Queue = None,
-        update_mask: field_mask_pb2.FieldMask = None,
+        queue: Optional[gct_queue.Queue] = None,
+        update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> gct_queue.Queue:
         r"""Updates a queue.
@@ -961,11 +972,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def delete_queue(
         self,
-        request: Union[cloudtasks.DeleteQueueRequest, dict] = None,
+        request: Optional[Union[cloudtasks.DeleteQueueRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a queue.
@@ -1062,11 +1073,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def purge_queue(
         self,
-        request: Union[cloudtasks.PurgeQueueRequest, dict] = None,
+        request: Optional[Union[cloudtasks.PurgeQueueRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> queue.Queue:
         r"""Purges a queue by deleting all of its tasks.
@@ -1173,11 +1184,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def pause_queue(
         self,
-        request: Union[cloudtasks.PauseQueueRequest, dict] = None,
+        request: Optional[Union[cloudtasks.PauseQueueRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> queue.Queue:
         r"""Pauses the queue.
@@ -1286,11 +1297,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def resume_queue(
         self,
-        request: Union[cloudtasks.ResumeQueueRequest, dict] = None,
+        request: Optional[Union[cloudtasks.ResumeQueueRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> queue.Queue:
         r"""Resume a queue.
@@ -1406,11 +1417,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def get_iam_policy(
         self,
-        request: Union[iam_policy_pb2.GetIamPolicyRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.GetIamPolicyRequest, dict]] = None,
         *,
-        resource: str = None,
+        resource: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> policy_pb2.Policy:
         r"""Gets the access control policy for a
@@ -1577,11 +1588,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def set_iam_policy(
         self,
-        request: Union[iam_policy_pb2.SetIamPolicyRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.SetIamPolicyRequest, dict]] = None,
         *,
-        resource: str = None,
+        resource: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> policy_pb2.Policy:
         r"""Sets the access control policy for a
@@ -1752,12 +1763,12 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def test_iam_permissions(
         self,
-        request: Union[iam_policy_pb2.TestIamPermissionsRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.TestIamPermissionsRequest, dict]] = None,
         *,
-        resource: str = None,
-        permissions: Sequence[str] = None,
+        resource: Optional[str] = None,
+        permissions: Optional[MutableSequence[str]] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> iam_policy_pb2.TestIamPermissionsResponse:
         r"""Returns permissions that a caller has on a
@@ -1811,7 +1822,7 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            permissions (Sequence[str]):
+            permissions (MutableSequence[str]):
                 The set of permissions to check for the ``resource``.
                 Permissions with wildcards (such as '*' or 'storage.*')
                 are not allowed. For more information see `IAM
@@ -1875,11 +1886,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def list_tasks(
         self,
-        request: Union[cloudtasks.ListTasksRequest, dict] = None,
+        request: Optional[Union[cloudtasks.ListTasksRequest, dict]] = None,
         *,
-        parent: str = None,
+        parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListTasksPager:
         r"""Lists the tasks in a queue.
@@ -2000,11 +2011,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def get_task(
         self,
-        request: Union[cloudtasks.GetTaskRequest, dict] = None,
+        request: Optional[Union[cloudtasks.GetTaskRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> task.Task:
         r"""Gets a task.
@@ -2101,12 +2112,12 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def create_task(
         self,
-        request: Union[cloudtasks.CreateTaskRequest, dict] = None,
+        request: Optional[Union[cloudtasks.CreateTaskRequest, dict]] = None,
         *,
-        parent: str = None,
-        task: gct_task.Task = None,
+        parent: Optional[str] = None,
+        task: Optional[gct_task.Task] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> gct_task.Task:
         r"""Creates a task and adds it to a queue.
@@ -2257,11 +2268,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def delete_task(
         self,
-        request: Union[cloudtasks.DeleteTaskRequest, dict] = None,
+        request: Optional[Union[cloudtasks.DeleteTaskRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a task.
@@ -2351,11 +2362,11 @@ class CloudTasksClient(metaclass=CloudTasksClientMeta):
 
     def run_task(
         self,
-        request: Union[cloudtasks.RunTaskRequest, dict] = None,
+        request: Optional[Union[cloudtasks.RunTaskRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> task.Task:
         r"""Forces a task to run now.
