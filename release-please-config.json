@@ -7,17 +7,17 @@
         "google/cloud/tasks/gapic_version.py",
         {
           "type": "json",
-          "path": "samples/generated_samples/snippet_metadata_tasks_v2.json",
+          "path": "samples/generated_samples/snippet_metadata_google.cloud.tasks.v2beta2.json",
           "jsonpath": "$.clientLibrary.version"
         },
         {
           "type": "json",
-          "path": "samples/generated_samples/snippet_metadata_tasks_v2beta2.json",
+          "path": "samples/generated_samples/snippet_metadata_google.cloud.tasks.v2.json",
           "jsonpath": "$.clientLibrary.version"
         },
         {
           "type": "json",
-          "path": "samples/generated_samples/snippet_metadata_tasks_v2beta3.json",
+          "path": "samples/generated_samples/snippet_metadata_google.cloud.tasks.v2beta3.json",
           "jsonpath": "$.clientLibrary.version"
         }
       ]
