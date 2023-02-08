@@ -14,24 +14,21 @@
 # limitations under the License.
 #
 
-from google.auth.transport.requests import AuthorizedSession  # type: ignore
-import json  # type: ignore
-import grpc  # type: ignore
-from google.auth.transport.grpc import SslCredentials  # type: ignore
-from google.auth import credentials as ga_credentials  # type: ignore
-from google.api_core import exceptions as core_exceptions
-from google.api_core import retry as retries
-from google.api_core import rest_helpers
-from google.api_core import rest_streaming
-from google.api_core import path_template
-from google.api_core import gapic_v1
-
-from google.protobuf import json_format
-from requests import __version__ as requests_version
 import dataclasses
+import json  # type: ignore
 import re
 from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
 import warnings
+
+from google.api_core import gapic_v1, path_template, rest_helpers, rest_streaming
+from google.api_core import exceptions as core_exceptions
+from google.api_core import retry as retries
+from google.auth import credentials as ga_credentials  # type: ignore
+from google.auth.transport.grpc import SslCredentials  # type: ignore
+from google.auth.transport.requests import AuthorizedSession  # type: ignore
+from google.protobuf import json_format
+import grpc  # type: ignore
+from requests import __version__ as requests_version
 
 try:
     OptionalRetry = Union[retries.Retry, gapic_v1.method._MethodDefault]
@@ -39,17 +36,18 @@ except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.Retry, object]  # type: ignore
 
 
-from google.cloud.tasks_v2beta2.types import cloudtasks
-from google.cloud.tasks_v2beta2.types import queue
-from google.cloud.tasks_v2beta2.types import queue as gct_queue
-from google.cloud.tasks_v2beta2.types import task
-from google.cloud.tasks_v2beta2.types import task as gct_task
 from google.iam.v1 import iam_policy_pb2  # type: ignore
 from google.iam.v1 import policy_pb2  # type: ignore
 from google.protobuf import empty_pb2  # type: ignore
 
-from .base import CloudTasksTransport, DEFAULT_CLIENT_INFO as BASE_DEFAULT_CLIENT_INFO
+from google.cloud.tasks_v2.types import cloudtasks
+from google.cloud.tasks_v2.types import queue
+from google.cloud.tasks_v2.types import queue as gct_queue
+from google.cloud.tasks_v2.types import task
+from google.cloud.tasks_v2.types import task as gct_task
 
+from .base import CloudTasksTransport
+from .base import DEFAULT_CLIENT_INFO as BASE_DEFAULT_CLIENT_INFO
 
 DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
     gapic_version=BASE_DEFAULT_CLIENT_INFO.gapic_version,
@@ -73,18 +71,6 @@ class CloudTasksRestInterceptor:
 
     .. code-block:: python
         class MyCustomCloudTasksInterceptor(CloudTasksRestInterceptor):
-            def pre_acknowledge_task(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def pre_cancel_lease(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def post_cancel_lease(self, response):
-                logging.log(f"Received response: {response}")
-                return response
-
             def pre_create_queue(self, request, metadata):
                 logging.log(f"Received request: {request}")
                 return request, metadata
@@ -133,14 +119,6 @@ class CloudTasksRestInterceptor:
                 logging.log(f"Received response: {response}")
                 return response
 
-            def pre_lease_tasks(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def post_lease_tasks(self, response):
-                logging.log(f"Received response: {response}")
-                return response
-
             def pre_list_queues(self, request, metadata):
                 logging.log(f"Received request: {request}")
                 return request, metadata
@@ -170,14 +148,6 @@ class CloudTasksRestInterceptor:
                 return request, metadata
 
             def post_purge_queue(self, response):
-                logging.log(f"Received response: {response}")
-                return response
-
-            def pre_renew_lease(self, request, metadata):
-                logging.log(f"Received request: {request}")
-                return request, metadata
-
-            def post_renew_lease(self, response):
                 logging.log(f"Received response: {response}")
                 return response
 
@@ -226,31 +196,12 @@ class CloudTasksRestInterceptor:
 
 
     """
-    def pre_acknowledge_task(self, request: cloudtasks.AcknowledgeTaskRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.AcknowledgeTaskRequest, Sequence[Tuple[str, str]]]:
-        """Pre-rpc interceptor for acknowledge_task
 
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the CloudTasks server.
-        """
-        return request, metadata
-
-    def pre_cancel_lease(self, request: cloudtasks.CancelLeaseRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.CancelLeaseRequest, Sequence[Tuple[str, str]]]:
-        """Pre-rpc interceptor for cancel_lease
-
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the CloudTasks server.
-        """
-        return request, metadata
-
-    def post_cancel_lease(self, response: task.Task) -> task.Task:
-        """Post-rpc interceptor for cancel_lease
-
-        Override in a subclass to manipulate the response
-        after it is returned by the CloudTasks server but before
-        it is returned to user code.
-        """
-        return response
-    def pre_create_queue(self, request: cloudtasks.CreateQueueRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.CreateQueueRequest, Sequence[Tuple[str, str]]]:
+    def pre_create_queue(
+        self,
+        request: cloudtasks.CreateQueueRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[cloudtasks.CreateQueueRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for create_queue
 
         Override in a subclass to manipulate the request or metadata
@@ -266,7 +217,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_create_task(self, request: cloudtasks.CreateTaskRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.CreateTaskRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_create_task(
+        self, request: cloudtasks.CreateTaskRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.CreateTaskRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for create_task
 
         Override in a subclass to manipulate the request or metadata
@@ -282,7 +236,12 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_delete_queue(self, request: cloudtasks.DeleteQueueRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.DeleteQueueRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_delete_queue(
+        self,
+        request: cloudtasks.DeleteQueueRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[cloudtasks.DeleteQueueRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for delete_queue
 
         Override in a subclass to manipulate the request or metadata
@@ -290,7 +249,9 @@ class CloudTasksRestInterceptor:
         """
         return request, metadata
 
-    def pre_delete_task(self, request: cloudtasks.DeleteTaskRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.DeleteTaskRequest, Sequence[Tuple[str, str]]]:
+    def pre_delete_task(
+        self, request: cloudtasks.DeleteTaskRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.DeleteTaskRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for delete_task
 
         Override in a subclass to manipulate the request or metadata
@@ -298,7 +259,11 @@ class CloudTasksRestInterceptor:
         """
         return request, metadata
 
-    def pre_get_iam_policy(self, request: iam_policy_pb2.GetIamPolicyRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[iam_policy_pb2.GetIamPolicyRequest, Sequence[Tuple[str, str]]]:
+    def pre_get_iam_policy(
+        self,
+        request: iam_policy_pb2.GetIamPolicyRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[iam_policy_pb2.GetIamPolicyRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for get_iam_policy
 
         Override in a subclass to manipulate the request or metadata
@@ -314,7 +279,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_get_queue(self, request: cloudtasks.GetQueueRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.GetQueueRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_get_queue(
+        self, request: cloudtasks.GetQueueRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.GetQueueRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for get_queue
 
         Override in a subclass to manipulate the request or metadata
@@ -330,7 +298,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_get_task(self, request: cloudtasks.GetTaskRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.GetTaskRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_get_task(
+        self, request: cloudtasks.GetTaskRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.GetTaskRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for get_task
 
         Override in a subclass to manipulate the request or metadata
@@ -346,23 +317,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_lease_tasks(self, request: cloudtasks.LeaseTasksRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.LeaseTasksRequest, Sequence[Tuple[str, str]]]:
-        """Pre-rpc interceptor for lease_tasks
 
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the CloudTasks server.
-        """
-        return request, metadata
-
-    def post_lease_tasks(self, response: cloudtasks.LeaseTasksResponse) -> cloudtasks.LeaseTasksResponse:
-        """Post-rpc interceptor for lease_tasks
-
-        Override in a subclass to manipulate the response
-        after it is returned by the CloudTasks server but before
-        it is returned to user code.
-        """
-        return response
-    def pre_list_queues(self, request: cloudtasks.ListQueuesRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.ListQueuesRequest, Sequence[Tuple[str, str]]]:
+    def pre_list_queues(
+        self, request: cloudtasks.ListQueuesRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.ListQueuesRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for list_queues
 
         Override in a subclass to manipulate the request or metadata
@@ -370,7 +328,9 @@ class CloudTasksRestInterceptor:
         """
         return request, metadata
 
-    def post_list_queues(self, response: cloudtasks.ListQueuesResponse) -> cloudtasks.ListQueuesResponse:
+    def post_list_queues(
+        self, response: cloudtasks.ListQueuesResponse
+    ) -> cloudtasks.ListQueuesResponse:
         """Post-rpc interceptor for list_queues
 
         Override in a subclass to manipulate the response
@@ -378,7 +338,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_list_tasks(self, request: cloudtasks.ListTasksRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.ListTasksRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_list_tasks(
+        self, request: cloudtasks.ListTasksRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.ListTasksRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for list_tasks
 
         Override in a subclass to manipulate the request or metadata
@@ -386,7 +349,9 @@ class CloudTasksRestInterceptor:
         """
         return request, metadata
 
-    def post_list_tasks(self, response: cloudtasks.ListTasksResponse) -> cloudtasks.ListTasksResponse:
+    def post_list_tasks(
+        self, response: cloudtasks.ListTasksResponse
+    ) -> cloudtasks.ListTasksResponse:
         """Post-rpc interceptor for list_tasks
 
         Override in a subclass to manipulate the response
@@ -394,7 +359,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_pause_queue(self, request: cloudtasks.PauseQueueRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.PauseQueueRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_pause_queue(
+        self, request: cloudtasks.PauseQueueRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.PauseQueueRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for pause_queue
 
         Override in a subclass to manipulate the request or metadata
@@ -410,7 +378,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_purge_queue(self, request: cloudtasks.PurgeQueueRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.PurgeQueueRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_purge_queue(
+        self, request: cloudtasks.PurgeQueueRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.PurgeQueueRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for purge_queue
 
         Override in a subclass to manipulate the request or metadata
@@ -426,23 +397,12 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_renew_lease(self, request: cloudtasks.RenewLeaseRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.RenewLeaseRequest, Sequence[Tuple[str, str]]]:
-        """Pre-rpc interceptor for renew_lease
 
-        Override in a subclass to manipulate the request or metadata
-        before they are sent to the CloudTasks server.
-        """
-        return request, metadata
-
-    def post_renew_lease(self, response: task.Task) -> task.Task:
-        """Post-rpc interceptor for renew_lease
-
-        Override in a subclass to manipulate the response
-        after it is returned by the CloudTasks server but before
-        it is returned to user code.
-        """
-        return response
-    def pre_resume_queue(self, request: cloudtasks.ResumeQueueRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.ResumeQueueRequest, Sequence[Tuple[str, str]]]:
+    def pre_resume_queue(
+        self,
+        request: cloudtasks.ResumeQueueRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[cloudtasks.ResumeQueueRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for resume_queue
 
         Override in a subclass to manipulate the request or metadata
@@ -458,7 +418,10 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_run_task(self, request: cloudtasks.RunTaskRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.RunTaskRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_run_task(
+        self, request: cloudtasks.RunTaskRequest, metadata: Sequence[Tuple[str, str]]
+    ) -> Tuple[cloudtasks.RunTaskRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for run_task
 
         Override in a subclass to manipulate the request or metadata
@@ -474,7 +437,12 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_set_iam_policy(self, request: iam_policy_pb2.SetIamPolicyRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[iam_policy_pb2.SetIamPolicyRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_set_iam_policy(
+        self,
+        request: iam_policy_pb2.SetIamPolicyRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[iam_policy_pb2.SetIamPolicyRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for set_iam_policy
 
         Override in a subclass to manipulate the request or metadata
@@ -490,7 +458,12 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_test_iam_permissions(self, request: iam_policy_pb2.TestIamPermissionsRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[iam_policy_pb2.TestIamPermissionsRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_test_iam_permissions(
+        self,
+        request: iam_policy_pb2.TestIamPermissionsRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[iam_policy_pb2.TestIamPermissionsRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for test_iam_permissions
 
         Override in a subclass to manipulate the request or metadata
@@ -498,7 +471,9 @@ class CloudTasksRestInterceptor:
         """
         return request, metadata
 
-    def post_test_iam_permissions(self, response: iam_policy_pb2.TestIamPermissionsResponse) -> iam_policy_pb2.TestIamPermissionsResponse:
+    def post_test_iam_permissions(
+        self, response: iam_policy_pb2.TestIamPermissionsResponse
+    ) -> iam_policy_pb2.TestIamPermissionsResponse:
         """Post-rpc interceptor for test_iam_permissions
 
         Override in a subclass to manipulate the response
@@ -506,7 +481,12 @@ class CloudTasksRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_update_queue(self, request: cloudtasks.UpdateQueueRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[cloudtasks.UpdateQueueRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_update_queue(
+        self,
+        request: cloudtasks.UpdateQueueRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[cloudtasks.UpdateQueueRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for update_queue
 
         Override in a subclass to manipulate the request or metadata
@@ -545,20 +525,21 @@ class CloudTasksRestTransport(CloudTasksTransport):
 
     """
 
-    def __init__(self, *,
-            host: str = 'cloudtasks.googleapis.com',
-            credentials: Optional[ga_credentials.Credentials] = None,
-            credentials_file: Optional[str] = None,
-            scopes: Optional[Sequence[str]] = None,
-            client_cert_source_for_mtls: Optional[Callable[[
-                ], Tuple[bytes, bytes]]] = None,
-            quota_project_id: Optional[str] = None,
-            client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
-            always_use_jwt_access: Optional[bool] = False,
-            url_scheme: str = 'https',
-            interceptor: Optional[CloudTasksRestInterceptor] = None,
-            api_audience: Optional[str] = None,
-            ) -> None:
+    def __init__(
+        self,
+        *,
+        host: str = "cloudtasks.googleapis.com",
+        credentials: Optional[ga_credentials.Credentials] = None,
+        credentials_file: Optional[str] = None,
+        scopes: Optional[Sequence[str]] = None,
+        client_cert_source_for_mtls: Optional[Callable[[], Tuple[bytes, bytes]]] = None,
+        quota_project_id: Optional[str] = None,
+        client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
+        always_use_jwt_access: Optional[bool] = False,
+        url_scheme: str = "https",
+        interceptor: Optional[CloudTasksRestInterceptor] = None,
+        api_audience: Optional[str] = None,
+    ) -> None:
         """Instantiate the transport.
 
         Args:
@@ -597,7 +578,9 @@ class CloudTasksRestTransport(CloudTasksTransport):
         # credentials object
         maybe_url_match = re.match("^(?P<scheme>http(?:s)?://)?(?P<host>.*)$", host)
         if maybe_url_match is None:
-            raise ValueError(f"Unexpected hostname structure: {host}")  # pragma: NO COVER
+            raise ValueError(
+                f"Unexpected hostname structure: {host}"
+            )  # pragma: NO COVER
 
         url_match_items = maybe_url_match.groupdict()
 
@@ -608,204 +591,44 @@ class CloudTasksRestTransport(CloudTasksTransport):
             credentials=credentials,
             client_info=client_info,
             always_use_jwt_access=always_use_jwt_access,
-            api_audience=api_audience
+            api_audience=api_audience,
         )
         self._session = AuthorizedSession(
-            self._credentials, default_host=self.DEFAULT_HOST)
+            self._credentials, default_host=self.DEFAULT_HOST
+        )
         if client_cert_source_for_mtls:
             self._session.configure_mtls_channel(client_cert_source_for_mtls)
         self._interceptor = interceptor or CloudTasksRestInterceptor()
         self._prep_wrapped_messages(client_info)
 
-    class _AcknowledgeTask(CloudTasksRestStub):
-        def __hash__(self):
-            return hash("AcknowledgeTask")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
-
-        def __call__(self,
-                request: cloudtasks.AcknowledgeTaskRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ):
-            r"""Call the acknowledge task method over HTTP.
-
-            Args:
-                request (~.cloudtasks.AcknowledgeTaskRequest):
-                    The request object. Request message for acknowledging a task using
-                [AcknowledgeTask][google.cloud.tasks.v2beta2.CloudTasks.AcknowledgeTask].
-
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, str]]): Strings which should be
-                    sent along with the request as metadata.
-            """
-
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*/tasks/*}:acknowledge',
-                'body': '*',
-            },
-            ]
-            request, metadata = self._interceptor.pre_acknowledge_task(request, metadata)
-            pb_request = cloudtasks.AcknowledgeTaskRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-
-            # Jsonify the request body
-
-            body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
-            query_params.update(self._get_unset_required_fields(query_params))
-
-            query_params["$alt"] = "json;enum-encoding=int"
-
-            # Send the request
-            headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
-            response = getattr(self._session, method)(
-                "{host}{uri}".format(host=self._host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-                data=body,
-                )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-    class _CancelLease(CloudTasksRestStub):
-        def __hash__(self):
-            return hash("CancelLease")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
-
-        def __call__(self,
-                request: cloudtasks.CancelLeaseRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> task.Task:
-            r"""Call the cancel lease method over HTTP.
-
-            Args:
-                request (~.cloudtasks.CancelLeaseRequest):
-                    The request object. Request message for canceling a lease using
-                [CancelLease][google.cloud.tasks.v2beta2.CloudTasks.CancelLease].
-
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, str]]): Strings which should be
-                    sent along with the request as metadata.
-
-            Returns:
-                ~.task.Task:
-                    A unit of scheduled work.
-            """
-
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*/tasks/*}:cancelLease',
-                'body': '*',
-            },
-            ]
-            request, metadata = self._interceptor.pre_cancel_lease(request, metadata)
-            pb_request = cloudtasks.CancelLeaseRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-
-            # Jsonify the request body
-
-            body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
-            query_params.update(self._get_unset_required_fields(query_params))
-
-            query_params["$alt"] = "json;enum-encoding=int"
-
-            # Send the request
-            headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
-            response = getattr(self._session, method)(
-                "{host}{uri}".format(host=self._host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-                data=body,
-                )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-            # Return the response
-            resp = task.Task()
-            pb_resp = task.Task.pb(resp)
-
-            json_format.Parse(response.content, pb_resp, ignore_unknown_fields=True)
-            resp = self._interceptor.post_cancel_lease(resp)
-            return resp
-
     class _CreateQueue(CloudTasksRestStub):
         def __hash__(self):
             return hash("CreateQueue")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.CreateQueueRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> gct_queue.Queue:
+        def __call__(
+            self,
+            request: cloudtasks.CreateQueueRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> gct_queue.Queue:
             r"""Call the create queue method over HTTP.
 
             Args:
                 request (~.cloudtasks.CreateQueueRequest):
                     The request object. Request message for
-                [CreateQueue][google.cloud.tasks.v2beta2.CloudTasks.CreateQueue].
+                [CreateQueue][google.cloud.tasks.v2.CloudTasks.CreateQueue].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -819,16 +642,17 @@ class CloudTasksRestTransport(CloudTasksTransport):
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
                 Configurable properties include rate
-                limits, retry options, target types, and
+                limits, retry options, queue types, and
                 others.
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{parent=projects/*/locations/*}/queues',
-                'body': 'queue',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{parent=projects/*/locations/*}/queues",
+                    "body": "queue",
+                },
             ]
             request, metadata = self._interceptor.pre_create_queue(request, metadata)
             pb_request = cloudtasks.CreateQueueRequest.pb(request)
@@ -837,33 +661,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -882,25 +708,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("CreateTask")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.CreateTaskRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> gct_task.Task:
+        def __call__(
+            self,
+            request: cloudtasks.CreateTaskRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> gct_task.Task:
             r"""Call the create task method over HTTP.
 
             Args:
                 request (~.cloudtasks.CreateTaskRequest):
                     The request object. Request message for
-                [CreateTask][google.cloud.tasks.v2beta2.CloudTasks.CreateTask].
+                [CreateTask][google.cloud.tasks.v2.CloudTasks.CreateTask].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -913,11 +744,12 @@ class CloudTasksRestTransport(CloudTasksTransport):
                     A unit of scheduled work.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{parent=projects/*/locations/*/queues/*}/tasks',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{parent=projects/*/locations/*/queues/*}/tasks",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_create_task(request, metadata)
             pb_request = cloudtasks.CreateTaskRequest.pb(request)
@@ -926,33 +758,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -971,25 +805,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("DeleteQueue")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.DeleteQueueRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ):
+        def __call__(
+            self,
+            request: cloudtasks.DeleteQueueRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ):
             r"""Call the delete queue method over HTTP.
 
             Args:
                 request (~.cloudtasks.DeleteQueueRequest):
                     The request object. Request message for
-                [DeleteQueue][google.cloud.tasks.v2beta2.CloudTasks.DeleteQueue].
+                [DeleteQueue][google.cloud.tasks.v2.CloudTasks.DeleteQueue].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -998,37 +837,40 @@ class CloudTasksRestTransport(CloudTasksTransport):
                     sent along with the request as metadata.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'delete',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "delete",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*}",
+                },
             ]
             request, metadata = self._interceptor.pre_delete_queue(request, metadata)
             pb_request = cloudtasks.DeleteQueueRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1039,25 +881,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("DeleteTask")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.DeleteTaskRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ):
+        def __call__(
+            self,
+            request: cloudtasks.DeleteTaskRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ):
             r"""Call the delete task method over HTTP.
 
             Args:
                 request (~.cloudtasks.DeleteTaskRequest):
                     The request object. Request message for deleting a task using
-                [DeleteTask][google.cloud.tasks.v2beta2.CloudTasks.DeleteTask].
+                [DeleteTask][google.cloud.tasks.v2.CloudTasks.DeleteTask].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -1066,37 +913,40 @@ class CloudTasksRestTransport(CloudTasksTransport):
                     sent along with the request as metadata.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'delete',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*/tasks/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "delete",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*/tasks/*}",
+                },
             ]
             request, metadata = self._interceptor.pre_delete_task(request, metadata)
             pb_request = cloudtasks.DeleteTaskRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1107,19 +957,24 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("GetIamPolicy")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: iam_policy_pb2.GetIamPolicyRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> policy_pb2.Policy:
+        def __call__(
+            self,
+            request: iam_policy_pb2.GetIamPolicyRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> policy_pb2.Policy:
             r"""Call the get iam policy method over HTTP.
 
             Args:
@@ -1210,11 +1065,12 @@ class CloudTasksRestTransport(CloudTasksTransport):
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{resource=projects/*/locations/*/queues/*}:getIamPolicy',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{resource=projects/*/locations/*/queues/*}:getIamPolicy",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_get_iam_policy(request, metadata)
             pb_request = request
@@ -1223,33 +1079,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1268,25 +1126,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("GetQueue")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.GetQueueRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> queue.Queue:
+        def __call__(
+            self,
+            request: cloudtasks.GetQueueRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> queue.Queue:
             r"""Call the get queue method over HTTP.
 
             Args:
                 request (~.cloudtasks.GetQueueRequest):
                     The request object. Request message for
-                [GetQueue][google.cloud.tasks.v2beta2.CloudTasks.GetQueue].
+                [GetQueue][google.cloud.tasks.v2.CloudTasks.GetQueue].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -1300,42 +1163,45 @@ class CloudTasksRestTransport(CloudTasksTransport):
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
                 Configurable properties include rate
-                limits, retry options, target types, and
+                limits, retry options, queue types, and
                 others.
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*}",
+                },
             ]
             request, metadata = self._interceptor.pre_get_queue(request, metadata)
             pb_request = cloudtasks.GetQueueRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1354,25 +1220,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("GetTask")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.GetTaskRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> task.Task:
+        def __call__(
+            self,
+            request: cloudtasks.GetTaskRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> task.Task:
             r"""Call the get task method over HTTP.
 
             Args:
                 request (~.cloudtasks.GetTaskRequest):
                     The request object. Request message for getting a task using
-                [GetTask][google.cloud.tasks.v2beta2.CloudTasks.GetTask].
+                [GetTask][google.cloud.tasks.v2.CloudTasks.GetTask].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -1385,37 +1256,40 @@ class CloudTasksRestTransport(CloudTasksTransport):
                     A unit of scheduled work.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*/tasks/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*/tasks/*}",
+                },
             ]
             request, metadata = self._interceptor.pre_get_task(request, metadata)
             pb_request = cloudtasks.GetTaskRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1430,120 +1304,34 @@ class CloudTasksRestTransport(CloudTasksTransport):
             resp = self._interceptor.post_get_task(resp)
             return resp
 
-    class _LeaseTasks(CloudTasksRestStub):
-        def __hash__(self):
-            return hash("LeaseTasks")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
-
-        def __call__(self,
-                request: cloudtasks.LeaseTasksRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> cloudtasks.LeaseTasksResponse:
-            r"""Call the lease tasks method over HTTP.
-
-            Args:
-                request (~.cloudtasks.LeaseTasksRequest):
-                    The request object. Request message for leasing tasks using
-                [LeaseTasks][google.cloud.tasks.v2beta2.CloudTasks.LeaseTasks].
-
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, str]]): Strings which should be
-                    sent along with the request as metadata.
-
-            Returns:
-                ~.cloudtasks.LeaseTasksResponse:
-                    Response message for leasing tasks using
-                [LeaseTasks][google.cloud.tasks.v2beta2.CloudTasks.LeaseTasks].
-
-            """
-
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{parent=projects/*/locations/*/queues/*}/tasks:lease',
-                'body': '*',
-            },
-            ]
-            request, metadata = self._interceptor.pre_lease_tasks(request, metadata)
-            pb_request = cloudtasks.LeaseTasksRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-
-            # Jsonify the request body
-
-            body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
-            query_params.update(self._get_unset_required_fields(query_params))
-
-            query_params["$alt"] = "json;enum-encoding=int"
-
-            # Send the request
-            headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
-            response = getattr(self._session, method)(
-                "{host}{uri}".format(host=self._host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-                data=body,
-                )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-            # Return the response
-            resp = cloudtasks.LeaseTasksResponse()
-            pb_resp = cloudtasks.LeaseTasksResponse.pb(resp)
-
-            json_format.Parse(response.content, pb_resp, ignore_unknown_fields=True)
-            resp = self._interceptor.post_lease_tasks(resp)
-            return resp
-
     class _ListQueues(CloudTasksRestStub):
         def __hash__(self):
             return hash("ListQueues")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.ListQueuesRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> cloudtasks.ListQueuesResponse:
+        def __call__(
+            self,
+            request: cloudtasks.ListQueuesRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> cloudtasks.ListQueuesResponse:
             r"""Call the list queues method over HTTP.
 
             Args:
                 request (~.cloudtasks.ListQueuesRequest):
                     The request object. Request message for
-                [ListQueues][google.cloud.tasks.v2beta2.CloudTasks.ListQueues].
+                [ListQueues][google.cloud.tasks.v2.CloudTasks.ListQueues].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -1554,41 +1342,44 @@ class CloudTasksRestTransport(CloudTasksTransport):
             Returns:
                 ~.cloudtasks.ListQueuesResponse:
                     Response message for
-                [ListQueues][google.cloud.tasks.v2beta2.CloudTasks.ListQueues].
+                [ListQueues][google.cloud.tasks.v2.CloudTasks.ListQueues].
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v2beta2/{parent=projects/*/locations/*}/queues',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v2/{parent=projects/*/locations/*}/queues",
+                },
             ]
             request, metadata = self._interceptor.pre_list_queues(request, metadata)
             pb_request = cloudtasks.ListQueuesRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1607,25 +1398,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("ListTasks")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.ListTasksRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> cloudtasks.ListTasksResponse:
+        def __call__(
+            self,
+            request: cloudtasks.ListTasksRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> cloudtasks.ListTasksResponse:
             r"""Call the list tasks method over HTTP.
 
             Args:
                 request (~.cloudtasks.ListTasksRequest):
                     The request object. Request message for listing tasks using
-                [ListTasks][google.cloud.tasks.v2beta2.CloudTasks.ListTasks].
+                [ListTasks][google.cloud.tasks.v2.CloudTasks.ListTasks].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -1636,41 +1432,44 @@ class CloudTasksRestTransport(CloudTasksTransport):
             Returns:
                 ~.cloudtasks.ListTasksResponse:
                     Response message for listing tasks using
-                [ListTasks][google.cloud.tasks.v2beta2.CloudTasks.ListTasks].
+                [ListTasks][google.cloud.tasks.v2.CloudTasks.ListTasks].
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v2beta2/{parent=projects/*/locations/*/queues/*}/tasks',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v2/{parent=projects/*/locations/*/queues/*}/tasks",
+                },
             ]
             request, metadata = self._interceptor.pre_list_tasks(request, metadata)
             pb_request = cloudtasks.ListTasksRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1689,25 +1488,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("PauseQueue")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.PauseQueueRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> queue.Queue:
+        def __call__(
+            self,
+            request: cloudtasks.PauseQueueRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> queue.Queue:
             r"""Call the pause queue method over HTTP.
 
             Args:
                 request (~.cloudtasks.PauseQueueRequest):
                     The request object. Request message for
-                [PauseQueue][google.cloud.tasks.v2beta2.CloudTasks.PauseQueue].
+                [PauseQueue][google.cloud.tasks.v2.CloudTasks.PauseQueue].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -1721,16 +1525,17 @@ class CloudTasksRestTransport(CloudTasksTransport):
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
                 Configurable properties include rate
-                limits, retry options, target types, and
+                limits, retry options, queue types, and
                 others.
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*}:pause',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*}:pause",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_pause_queue(request, metadata)
             pb_request = cloudtasks.PauseQueueRequest.pb(request)
@@ -1739,33 +1544,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1784,25 +1591,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("PurgeQueue")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.PurgeQueueRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> queue.Queue:
+        def __call__(
+            self,
+            request: cloudtasks.PurgeQueueRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> queue.Queue:
             r"""Call the purge queue method over HTTP.
 
             Args:
                 request (~.cloudtasks.PurgeQueueRequest):
                     The request object. Request message for
-                [PurgeQueue][google.cloud.tasks.v2beta2.CloudTasks.PurgeQueue].
+                [PurgeQueue][google.cloud.tasks.v2.CloudTasks.PurgeQueue].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -1816,16 +1628,17 @@ class CloudTasksRestTransport(CloudTasksTransport):
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
                 Configurable properties include rate
-                limits, retry options, target types, and
+                limits, retry options, queue types, and
                 others.
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*}:purge',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*}:purge",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_purge_queue(request, metadata)
             pb_request = cloudtasks.PurgeQueueRequest.pb(request)
@@ -1834,33 +1647,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1875,118 +1690,34 @@ class CloudTasksRestTransport(CloudTasksTransport):
             resp = self._interceptor.post_purge_queue(resp)
             return resp
 
-    class _RenewLease(CloudTasksRestStub):
-        def __hash__(self):
-            return hash("RenewLease")
-
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
-
-        @classmethod
-        def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
-
-        def __call__(self,
-                request: cloudtasks.RenewLeaseRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> task.Task:
-            r"""Call the renew lease method over HTTP.
-
-            Args:
-                request (~.cloudtasks.RenewLeaseRequest):
-                    The request object. Request message for renewing a lease using
-                [RenewLease][google.cloud.tasks.v2beta2.CloudTasks.RenewLease].
-
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, str]]): Strings which should be
-                    sent along with the request as metadata.
-
-            Returns:
-                ~.task.Task:
-                    A unit of scheduled work.
-            """
-
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*/tasks/*}:renewLease',
-                'body': '*',
-            },
-            ]
-            request, metadata = self._interceptor.pre_renew_lease(request, metadata)
-            pb_request = cloudtasks.RenewLeaseRequest.pb(request)
-            transcoded_request = path_template.transcode(http_options, pb_request)
-
-            # Jsonify the request body
-
-            body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
-            query_params.update(self._get_unset_required_fields(query_params))
-
-            query_params["$alt"] = "json;enum-encoding=int"
-
-            # Send the request
-            headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
-            response = getattr(self._session, method)(
-                "{host}{uri}".format(host=self._host, uri=uri),
-                timeout=timeout,
-                headers=headers,
-                params=rest_helpers.flatten_query_params(query_params, strict=True),
-                data=body,
-                )
-
-            # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
-            # subclass.
-            if response.status_code >= 400:
-                raise core_exceptions.from_http_response(response)
-
-            # Return the response
-            resp = task.Task()
-            pb_resp = task.Task.pb(resp)
-
-            json_format.Parse(response.content, pb_resp, ignore_unknown_fields=True)
-            resp = self._interceptor.post_renew_lease(resp)
-            return resp
-
     class _ResumeQueue(CloudTasksRestStub):
         def __hash__(self):
             return hash("ResumeQueue")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.ResumeQueueRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> queue.Queue:
+        def __call__(
+            self,
+            request: cloudtasks.ResumeQueueRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> queue.Queue:
             r"""Call the resume queue method over HTTP.
 
             Args:
                 request (~.cloudtasks.ResumeQueueRequest):
                     The request object. Request message for
-                [ResumeQueue][google.cloud.tasks.v2beta2.CloudTasks.ResumeQueue].
+                [ResumeQueue][google.cloud.tasks.v2.CloudTasks.ResumeQueue].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -2000,16 +1731,17 @@ class CloudTasksRestTransport(CloudTasksTransport):
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
                 Configurable properties include rate
-                limits, retry options, target types, and
+                limits, retry options, queue types, and
                 others.
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*}:resume',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*}:resume",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_resume_queue(request, metadata)
             pb_request = cloudtasks.ResumeQueueRequest.pb(request)
@@ -2018,33 +1750,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2063,25 +1797,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("RunTask")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.RunTaskRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> task.Task:
+        def __call__(
+            self,
+            request: cloudtasks.RunTaskRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> task.Task:
             r"""Call the run task method over HTTP.
 
             Args:
                 request (~.cloudtasks.RunTaskRequest):
                     The request object. Request message for forcing a task to run now using
-                [RunTask][google.cloud.tasks.v2beta2.CloudTasks.RunTask].
+                [RunTask][google.cloud.tasks.v2.CloudTasks.RunTask].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -2094,11 +1833,12 @@ class CloudTasksRestTransport(CloudTasksTransport):
                     A unit of scheduled work.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{name=projects/*/locations/*/queues/*/tasks/*}:run',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{name=projects/*/locations/*/queues/*/tasks/*}:run",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_run_task(request, metadata)
             pb_request = cloudtasks.RunTaskRequest.pb(request)
@@ -2107,33 +1847,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2152,19 +1894,24 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("SetIamPolicy")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: iam_policy_pb2.SetIamPolicyRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> policy_pb2.Policy:
+        def __call__(
+            self,
+            request: iam_policy_pb2.SetIamPolicyRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> policy_pb2.Policy:
             r"""Call the set iam policy method over HTTP.
 
             Args:
@@ -2255,11 +2002,12 @@ class CloudTasksRestTransport(CloudTasksTransport):
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{resource=projects/*/locations/*/queues/*}:setIamPolicy',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{resource=projects/*/locations/*/queues/*}:setIamPolicy",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_set_iam_policy(request, metadata)
             pb_request = request
@@ -2268,33 +2016,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2313,19 +2063,24 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("TestIamPermissions")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: iam_policy_pb2.TestIamPermissionsRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> iam_policy_pb2.TestIamPermissionsResponse:
+        def __call__(
+            self,
+            request: iam_policy_pb2.TestIamPermissionsRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> iam_policy_pb2.TestIamPermissionsResponse:
             r"""Call the test iam permissions method over HTTP.
 
             Args:
@@ -2342,46 +2097,51 @@ class CloudTasksRestTransport(CloudTasksTransport):
                     Response message for ``TestIamPermissions`` method.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v2beta2/{resource=projects/*/locations/*/queues/*}:testIamPermissions',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v2/{resource=projects/*/locations/*/queues/*}:testIamPermissions",
+                    "body": "*",
+                },
             ]
-            request, metadata = self._interceptor.pre_test_iam_permissions(request, metadata)
+            request, metadata = self._interceptor.pre_test_iam_permissions(
+                request, metadata
+            )
             pb_request = request
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2400,25 +2160,30 @@ class CloudTasksRestTransport(CloudTasksTransport):
         def __hash__(self):
             return hash("UpdateQueue")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: cloudtasks.UpdateQueueRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> gct_queue.Queue:
+        def __call__(
+            self,
+            request: cloudtasks.UpdateQueueRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> gct_queue.Queue:
             r"""Call the update queue method over HTTP.
 
             Args:
                 request (~.cloudtasks.UpdateQueueRequest):
                     The request object. Request message for
-                [UpdateQueue][google.cloud.tasks.v2beta2.CloudTasks.UpdateQueue].
+                [UpdateQueue][google.cloud.tasks.v2.CloudTasks.UpdateQueue].
 
                 retry (google.api_core.retry.Retry): Designation of what errors, if any,
                     should be retried.
@@ -2432,16 +2197,17 @@ class CloudTasksRestTransport(CloudTasksTransport):
                 tasks. Queues are configured to manage
                 how those tasks are dispatched.
                 Configurable properties include rate
-                limits, retry options, target types, and
+                limits, retry options, queue types, and
                 others.
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'patch',
-                'uri': '/v2beta2/{queue.name=projects/*/locations/*/queues/*}',
-                'body': 'queue',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "patch",
+                    "uri": "/v2/{queue.name=projects/*/locations/*/queues/*}",
+                    "body": "queue",
+                },
             ]
             request, metadata = self._interceptor.pre_update_queue(request, metadata)
             pb_request = cloudtasks.UpdateQueueRequest.pb(request)
@@ -2450,33 +2216,35 @@ class CloudTasksRestTransport(CloudTasksTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2492,164 +2260,119 @@ class CloudTasksRestTransport(CloudTasksTransport):
             return resp
 
     @property
-    def acknowledge_task(self) -> Callable[
-            [cloudtasks.AcknowledgeTaskRequest],
-            empty_pb2.Empty]:
+    def create_queue(
+        self,
+    ) -> Callable[[cloudtasks.CreateQueueRequest], gct_queue.Queue]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._AcknowledgeTask(self._session, self._host, self._interceptor) # type: ignore
+        return self._CreateQueue(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def cancel_lease(self) -> Callable[
-            [cloudtasks.CancelLeaseRequest],
-            task.Task]:
+    def create_task(self) -> Callable[[cloudtasks.CreateTaskRequest], gct_task.Task]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._CancelLease(self._session, self._host, self._interceptor) # type: ignore
+        return self._CreateTask(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def create_queue(self) -> Callable[
-            [cloudtasks.CreateQueueRequest],
-            gct_queue.Queue]:
+    def delete_queue(
+        self,
+    ) -> Callable[[cloudtasks.DeleteQueueRequest], empty_pb2.Empty]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._CreateQueue(self._session, self._host, self._interceptor) # type: ignore
+        return self._DeleteQueue(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def create_task(self) -> Callable[
-            [cloudtasks.CreateTaskRequest],
-            gct_task.Task]:
+    def delete_task(self) -> Callable[[cloudtasks.DeleteTaskRequest], empty_pb2.Empty]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._CreateTask(self._session, self._host, self._interceptor) # type: ignore
+        return self._DeleteTask(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def delete_queue(self) -> Callable[
-            [cloudtasks.DeleteQueueRequest],
-            empty_pb2.Empty]:
+    def get_iam_policy(
+        self,
+    ) -> Callable[[iam_policy_pb2.GetIamPolicyRequest], policy_pb2.Policy]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._DeleteQueue(self._session, self._host, self._interceptor) # type: ignore
+        return self._GetIamPolicy(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def delete_task(self) -> Callable[
-            [cloudtasks.DeleteTaskRequest],
-            empty_pb2.Empty]:
+    def get_queue(self) -> Callable[[cloudtasks.GetQueueRequest], queue.Queue]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._DeleteTask(self._session, self._host, self._interceptor) # type: ignore
+        return self._GetQueue(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def get_iam_policy(self) -> Callable[
-            [iam_policy_pb2.GetIamPolicyRequest],
-            policy_pb2.Policy]:
+    def get_task(self) -> Callable[[cloudtasks.GetTaskRequest], task.Task]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._GetIamPolicy(self._session, self._host, self._interceptor) # type: ignore
+        return self._GetTask(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def get_queue(self) -> Callable[
-            [cloudtasks.GetQueueRequest],
-            queue.Queue]:
+    def list_queues(
+        self,
+    ) -> Callable[[cloudtasks.ListQueuesRequest], cloudtasks.ListQueuesResponse]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._GetQueue(self._session, self._host, self._interceptor) # type: ignore
+        return self._ListQueues(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def get_task(self) -> Callable[
-            [cloudtasks.GetTaskRequest],
-            task.Task]:
+    def list_tasks(
+        self,
+    ) -> Callable[[cloudtasks.ListTasksRequest], cloudtasks.ListTasksResponse]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._GetTask(self._session, self._host, self._interceptor) # type: ignore
+        return self._ListTasks(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def lease_tasks(self) -> Callable[
-            [cloudtasks.LeaseTasksRequest],
-            cloudtasks.LeaseTasksResponse]:
+    def pause_queue(self) -> Callable[[cloudtasks.PauseQueueRequest], queue.Queue]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._LeaseTasks(self._session, self._host, self._interceptor) # type: ignore
+        return self._PauseQueue(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def list_queues(self) -> Callable[
-            [cloudtasks.ListQueuesRequest],
-            cloudtasks.ListQueuesResponse]:
+    def purge_queue(self) -> Callable[[cloudtasks.PurgeQueueRequest], queue.Queue]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ListQueues(self._session, self._host, self._interceptor) # type: ignore
+        return self._PurgeQueue(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def list_tasks(self) -> Callable[
-            [cloudtasks.ListTasksRequest],
-            cloudtasks.ListTasksResponse]:
+    def resume_queue(self) -> Callable[[cloudtasks.ResumeQueueRequest], queue.Queue]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ListTasks(self._session, self._host, self._interceptor) # type: ignore
+        return self._ResumeQueue(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def pause_queue(self) -> Callable[
-            [cloudtasks.PauseQueueRequest],
-            queue.Queue]:
+    def run_task(self) -> Callable[[cloudtasks.RunTaskRequest], task.Task]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._PauseQueue(self._session, self._host, self._interceptor) # type: ignore
+        return self._RunTask(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def purge_queue(self) -> Callable[
-            [cloudtasks.PurgeQueueRequest],
-            queue.Queue]:
+    def set_iam_policy(
+        self,
+    ) -> Callable[[iam_policy_pb2.SetIamPolicyRequest], policy_pb2.Policy]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._PurgeQueue(self._session, self._host, self._interceptor) # type: ignore
+        return self._SetIamPolicy(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def renew_lease(self) -> Callable[
-            [cloudtasks.RenewLeaseRequest],
-            task.Task]:
+    def test_iam_permissions(
+        self,
+    ) -> Callable[
+        [iam_policy_pb2.TestIamPermissionsRequest],
+        iam_policy_pb2.TestIamPermissionsResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._RenewLease(self._session, self._host, self._interceptor) # type: ignore
+        return self._TestIamPermissions(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def resume_queue(self) -> Callable[
-            [cloudtasks.ResumeQueueRequest],
-            queue.Queue]:
+    def update_queue(
+        self,
+    ) -> Callable[[cloudtasks.UpdateQueueRequest], gct_queue.Queue]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ResumeQueue(self._session, self._host, self._interceptor) # type: ignore
-
-    @property
-    def run_task(self) -> Callable[
-            [cloudtasks.RunTaskRequest],
-            task.Task]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._RunTask(self._session, self._host, self._interceptor) # type: ignore
-
-    @property
-    def set_iam_policy(self) -> Callable[
-            [iam_policy_pb2.SetIamPolicyRequest],
-            policy_pb2.Policy]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._SetIamPolicy(self._session, self._host, self._interceptor) # type: ignore
-
-    @property
-    def test_iam_permissions(self) -> Callable[
-            [iam_policy_pb2.TestIamPermissionsRequest],
-            iam_policy_pb2.TestIamPermissionsResponse]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._TestIamPermissions(self._session, self._host, self._interceptor) # type: ignore
-
-    @property
-    def update_queue(self) -> Callable[
-            [cloudtasks.UpdateQueueRequest],
-            gct_queue.Queue]:
-        # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
-        # In C++ this would require a dynamic_cast
-        return self._UpdateQueue(self._session, self._host, self._interceptor) # type: ignore
+        return self._UpdateQueue(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
     def kind(self) -> str:
@@ -2659,6 +2382,4 @@ class CloudTasksRestTransport(CloudTasksTransport):
         self._session.close()
 
 
-__all__=(
-    'CloudTasksRestTransport',
-)
+__all__ = ("CloudTasksRestTransport",)
